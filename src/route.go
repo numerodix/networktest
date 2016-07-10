@@ -29,6 +29,18 @@ type RouteExecution struct {
 }
 
 
+type Network struct {
+    Iface string
+    Network string
+    Netmask string
+}
+
+type Gateway struct {
+    Iface string
+    Gateway string
+}
+
+
 func Route() RouteExecution {
     // Construct the args
     var executable = "/sbin/route"
@@ -104,12 +116,6 @@ func Route() RouteExecution {
 }
 
 
-type Network struct {
-    Iface string
-    Network string
-    Netmask string
-}
-
 func (routeExec RouteExecution) GetNetworks() []Network {
     rx := regexp.MustCompile("^[1-9]")
     var networks = []Network{}
@@ -127,4 +133,22 @@ func (routeExec RouteExecution) GetNetworks() []Network {
     }
 
     return networks
+}
+
+func (routeExec RouteExecution) GetGateways() []Gateway {
+    rx := regexp.MustCompile("UG")
+    var gateways = []Gateway{}
+
+    for i := range routeExec.Lines {
+        var line = routeExec.Lines[i]
+
+        if rx.MatchString(line.Flags) {
+            gateways = append(gateways, Gateway{
+                Iface: line.Iface,
+                Gateway: line.Gateway,
+            })
+        }
+    }
+
+    return gateways
 }

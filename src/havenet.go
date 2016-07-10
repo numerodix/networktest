@@ -81,5 +81,6 @@ func main() {
 
 
     var route = Route()
-    fmt.Printf("route exec: %s\n", route.GetNetworks())
+    fmt.Printf("networks: %s\n", route.GetNetworks())
+    fmt.Printf("gateways: %s\n", route.GetGateways())
 }
