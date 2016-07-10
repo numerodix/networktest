@@ -86,4 +86,45 @@ func main() {
 
     var ifconfig = Ifconfig()
     fmt.Printf("ifconfig: %s\n", ifconfig)
+
+
+
+
+
+
+
+
+    fmt.Printf(" + Scanning for networks...\n")
+    var networks = route.GetNetworks()
+    for i := range networks {
+        var network = networks[i]
+
+        var iface = fmt.Sprintf("<%s>", network.Iface)
+        var netw = network.Network
+        var mask = network.Netmask
+        fmt.Printf("    %-10s  %-15s / %s\n", iface, netw, mask)
+    }
+
+    fmt.Printf(" + Detecting ips...\n")
+    var ifaceBlocks = ifconfig.IfaceBlocks
+    for i := range ifaceBlocks {
+        var ifaceBlock = ifaceBlocks[i]
+
+        var iface = fmt.Sprintf("<%s>", ifaceBlock.Iface)
+        var ip = ifaceBlock.IPv4
+        var mask = ifaceBlock.Mask
+        fmt.Printf("    %-10s  %-15s / %s\n", iface, ip, mask)
+    }
+
+    fmt.Printf(" + Detecting gateways...\n")
+    var gws = route.GetGateways()
+    for i := range gws {
+        var gw = gws[i]
+
+        var iface = fmt.Sprintf("<%s>", gw.Iface)
+        var ip = gw.Gateway
+        fmt.Printf("    %-10s  %-15s\n", iface, ip)
+    }
+
+    // TODO: sort by ip ascending
 }
