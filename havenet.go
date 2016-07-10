@@ -57,6 +57,10 @@ func Ping(ch chan CommandResult, host string, cnt int, timeout int) {
 func main() {
 //    hosts := []string{"yahoo.com", "google.com"}
     hosts := []string{
+        "192.168.1.1",
+        "192.228.79.201",
+        "127.0.0.1",
+        "127.0.1.1",
         "localhost",
         "yahoo.com",
         "google.com",
@@ -69,6 +73,7 @@ func main() {
         "www.aftenposten.no",
         "www.bonjourchine.com",
         "github.com",
+        "youtube.com",
     }
 //    hosts := []string{"localhost"}
     ch := make(chan CommandResult)
