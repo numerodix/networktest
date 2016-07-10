@@ -4,7 +4,7 @@ import (
     "bytes"
 //    "errors"
     "fmt"
-    "log"
+//    "log"
     "os/exec"
     "regexp"
     "strconv"
@@ -13,16 +13,14 @@ import (
 
 
 type CommandResult struct {
+    Id string
     FValue float64
     SValue string
     Error error
 }
 
 
-func Ping(pingch chan CommandResult, host string, cnt int, timeout int) {
-    // Prepare return variables
-    etime := -1.0
-
+func Ping(ch chan CommandResult, host string, cnt int, timeout int) {
     // Construct the args
     var executable = "ping"
     var args []string
@@ -38,7 +36,7 @@ func Ping(pingch chan CommandResult, host string, cnt int, timeout int) {
     // Invoke the cmd
     err := cmd.Run()
     if err != nil {
-        pingch <- CommandResult{FValue: etime, Error: err}
+        ch <- CommandResult{Id: host, Error: err}
         return
     }
 
@@ -48,23 +46,51 @@ func Ping(pingch chan CommandResult, host string, cnt int, timeout int) {
     var time_s = rx.FindStringSubmatch(stdout)[1]
     var time, err2 = strconv.ParseFloat(time_s, 64)
     if err2 != nil {
-        pingch <- CommandResult{FValue: etime, Error: err2}
+        ch <- CommandResult{Id: host, Error: err2}
         return
     }
 
-    pingch <- CommandResult{FValue: time, Error: nil}
+    ch <- CommandResult{Id: host, FValue: time}
 }
 
 
 func main() {
 //    hosts := []string{"yahoo.com", "google.com"}
-    hosts := []string{"localhost"}
-
-    for i := range hosts {
-        pingch := make(chan CommandResult)
-        go Ping(pingch, hosts[i], 1, 2)
-        pingres := <-pingch
-
-        log.Println("time: ", pingres.FValue)
+    hosts := []string{
+        "localhost",
+        "yahoo.com",
+        "google.com",
+        "juventuz.com",
+        "twitter.com",
+        "facebook.com",
+        "gmail.com",
+        "golang.org",
+        "www.nu.nl",
+        "www.aftenposten.no",
+        "www.bonjourchine.com",
+        "github.com",
     }
+//    hosts := []string{"localhost"}
+    ch := make(chan CommandResult)
+
+    // Launch
+    for i := range hosts {
+        go Ping(ch, hosts[i], 1, 2)
+    }
+
+    // Collect
+    sum := 0.0
+    for i := range hosts {
+        cmdres := <-ch
+
+        if cmdres.Error != nil {
+            fmt.Printf("Err: %s: %s\n", cmdres.Id, cmdres.Error)
+            continue
+        }
+
+        sum += cmdres.FValue
+        fmt.Printf("%-2d  %-34s: %.1f ms\n", i, cmdres.Id, cmdres.FValue)
+    }
+
+    fmt.Printf("Total time: %.1f ms\n", sum)
 }
