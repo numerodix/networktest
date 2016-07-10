@@ -10,9 +10,9 @@ import (
     "fmt"
 //    "log"
     "os/exec"
-//    "regexp"
+    "regexp"
 //    "strconv"
-//    "strings"
+    "strings"
 )
 
 
@@ -90,10 +90,93 @@ func Ifconfig() IfconfigExecution {
                 TX packets:9246 errors:0 dropped:0 overruns:0 carrier:0
                 collisions:0 txqueuelen:1000 
                 RX bytes:3175200 (3.1 MB)  TX bytes:2228700 (2.2 MB)
+
     */
 
+    // Parse the output into iface blocks
+    var stdout = out.String()
+    var blocks = strings.Split(stdout, "\n\n")
+    var ifaceBlocks = []IfaceBlock{}
+    rxIface := regexp.MustCompile("^[^ ]+")
+    rxLinkEncap := regexp.MustCompile("Link encap:(.*)")
+    rxHwAddr := regexp.MustCompile("HWaddr ([^ ]+)")
+    rxIpv4 := regexp.MustCompile("inet addr:([^ ]+)")
+    rxBcast := regexp.MustCompile("Bcast:([^ ]+)")
+    rxMask := regexp.MustCompile("Mask:([^ ]+)")
+    rxIpv6 := regexp.MustCompile("inet6 addr: ([^ ]+)")
+    rxScope := regexp.MustCompile("Scope:([^ ]+)")
+    rxPreMtu := regexp.MustCompile("(.*)MTU")
+    rxMtu := regexp.MustCompile("MTU:([^ ]+)")
+
+    for i := range blocks {
+        var block = blocks[i]
+
+        // If the block is empty skip it
+        if strings.TrimSpace(block) == "" {
+            continue
+        }
+
+        // Line starts with an iface
+        var iface = rxIface.FindStringSubmatch(block)[0]
+
+        var linkEncapPart = strings.Split(block[10:], "  ")[0]
+        var linkEncap = rxLinkEncap.FindStringSubmatch(linkEncapPart)[1]
+
+        var hwAddr = ""
+        if rxHwAddr.MatchString(block) {
+            hwAddr = rxHwAddr.FindStringSubmatch(block)[1]
+        }
+
+        var ipv4 = ""
+        if rxIpv4.MatchString(block) {
+            ipv4 = rxIpv4.FindStringSubmatch(block)[1]
+        }
+
+        var bcast = ""
+        if rxBcast.MatchString(block) {
+            bcast = rxBcast.FindStringSubmatch(block)[1]
+        }
+
+        var mask = ""
+        if rxMask.MatchString(block) {
+            mask = rxMask.FindStringSubmatch(block)[1]
+        }
+
+        var ipv6 = ""
+        if rxIpv6.MatchString(block) {
+            ipv6 = rxIpv6.FindStringSubmatch(block)[1]
+        }
+
+        var scope = ""
+        if rxScope.MatchString(block) {
+            scope = rxScope.FindStringSubmatch(block)[1]
+        }
+
+        var status = ""
+        if rxPreMtu.MatchString(block) {
+            status = rxPreMtu.FindStringSubmatch(block)[1]
+        }
+
+        var mtu = ""
+        if rxMtu.MatchString(block) {
+            mtu = rxMtu.FindStringSubmatch(block)[1]
+        }
+
+        ifaceBlocks = append(ifaceBlocks, IfaceBlock{
+            Iface: strings.TrimSpace(iface),
+            LinkEncap: strings.TrimSpace(linkEncap),
+            HWaddr: strings.TrimSpace(hwAddr),
+            IPv4: strings.TrimSpace(ipv4),
+            Broadcast: strings.TrimSpace(bcast),
+            Mask: strings.TrimSpace(mask),
+            IPv6: strings.TrimSpace(ipv6),
+            Scope: strings.TrimSpace(scope),
+            Status: strings.TrimSpace(status),
+            Mtu: strings.TrimSpace(mtu),
+        })
+    }
 
     return IfconfigExecution{
-        IfaceBlocks: []IfaceBlock{},
+        IfaceBlocks: ifaceBlocks,
     }
 }

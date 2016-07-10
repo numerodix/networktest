@@ -83,4 +83,7 @@ func main() {
     var route = Route()
     fmt.Printf("networks: %s\n", route.GetNetworks())
     fmt.Printf("gateways: %s\n", route.GetGateways())
+
+    var ifconfig = Ifconfig()
+    fmt.Printf("ifconfig: %s\n", ifconfig)
 }
