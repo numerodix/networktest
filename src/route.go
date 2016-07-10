@@ -1,3 +1,7 @@
+/*
+    Handles invocation of /sbin/route and parsing its output.
+*/
+
 package main
 
 import (

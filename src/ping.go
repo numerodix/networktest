@@ -1,3 +1,7 @@
+/*
+    Handles invocation of ping and parsing its output.
+*/
+
 package main
 
 import (
