@@ -1,62 +1,39 @@
 package main
 
 import (
-    "bytes"
-//    "errors"
-    "fmt"
+//    "bytes"
+    "errors"
+//    "fmt"
     "log"
-    "os/exec"
-    "regexp"
-    "strconv"
+//    "os/exec"
+//    "regexp"
+//    "strconv"
 //    "strings"
 )
 
 
-func Ping(host string, cnt int, timeout int) (float64, error) {
+type CommandResult struct {
+    FValue float64
+    SValue string
+    Error error
+}
 
-    // Construct the args
-    var executable = "ping"
-    var args []string
-    args = append(args, fmt.Sprintf("-c%d", cnt))
-    args = append(args, fmt.Sprintf("-W%d", timeout))
-    args = append(args, host)
 
-    // Construct the cmd
-    cmd := exec.Command(executable, args...)
-    var out bytes.Buffer
-    cmd.Stdout = &out
+func Ping(pingch chan CommandResult) {
+    fvalue := 0.0
+    err := errors.New("")
 
-    // Invoke the cmd
-    err := cmd.Run()
-    if err != nil {
-        log.Fatal(err)
-        return -1, err
-    }
-
-    // Parse the time= value
-    var stdout = out.String()
-    rx := regexp.MustCompile("time=([^ ]*)")
-    var time_s = rx.FindStringSubmatch(stdout)[1]
-    var time, err2 = strconv.ParseFloat(time_s, 64)
-    if err2 != nil {
-        log.Fatal(err2)
-        return -1, err2
-    }
-
-    return time, nil
+    pingch <- CommandResult{FValue: fvalue, Error: err}
 }
 
 
 func main() {
 //    hosts := []string{"yahoo.com", "google.com"}
-    hosts := []string{"localhost"}
+//    hosts := []string{"localhost"}
 
-    for i := range hosts {
-        time, err := Ping(hosts[i], 1, 2)
-        if err != nil {
-            log.Fatal(err)
-        }
+    pingch := make(chan CommandResult)
+    go Ping(pingch)
+    pingres := <-pingch
 
-        log.Println(fmt.Sprintf("%-14s  ping: %.1f ms", hosts[i], time))
-    }
+    log.Println("time: ", pingres.FValue)
 }
