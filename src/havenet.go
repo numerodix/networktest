@@ -89,6 +89,27 @@ func main() {
 
 
 
+    // Do local pings
+    var localPings = make(map[string]PingExecution)
+
+    var ifaceBlocks = ifconfig.IfaceBlocks
+    for i := range ifaceBlocks {
+        var ifaceBlock = ifaceBlocks[i]
+        var ip = ifaceBlock.IPv4
+
+        localPings[ip] = Ping(ip, 1, 2)
+    }
+
+    var gws = route.GetGateways()
+    for i := range gws {
+        var gw = gws[i]
+        var ip = gw.Gateway
+
+        localPings[ip] = Ping(ip, 1, 2)
+    }
+
+
+
 
 
     col := ColorBrush{enabled:true}
@@ -108,30 +129,33 @@ func main() {
     }
 
     fmt.Printf(col.yellow(" + Detecting ips...\n"))
-    var ifaceBlocks = ifconfig.IfaceBlocks
+//    var ifaceBlocks = ifconfig.IfaceBlocks
     for i := range ifaceBlocks {
         var ifaceBlock = ifaceBlocks[i]
 
         var iface = fmt.Sprintf("<%s>", ifaceBlock.Iface)
         var ip = ifaceBlock.IPv4
         var mask = ifaceBlock.Mask
+        var ping = localPings[ip].Time
         var ifaceS = col.magenta(fmt.Sprintf("%-10s", iface))
         var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var maskS = col.cyan(fmt.Sprintf("/ %s", mask))
-        fmt.Printf("    %s  %s %s\n", ifaceS, ipS, maskS)
+        var maskS = col.cyan(fmt.Sprintf("/ %-15s", mask))
+        var pingS = col.green(fmt.Sprintf("%.3f ms", ping))
+        fmt.Printf("    %s  %s %s   ping: %s\n", ifaceS, ipS, maskS, pingS)
     }
 
     fmt.Printf(col.yellow(" + Detecting gateways...\n"))
-    var gws = route.GetGateways()
+//    var gws = route.GetGateways()
     for i := range gws {
         var gw = gws[i]
 
         var iface = fmt.Sprintf("<%s>", gw.Iface)
         var ip = gw.Gateway
+        var ping = localPings[ip].Time
         var ifaceS = col.magenta(fmt.Sprintf("%-10s", iface))
         var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        fmt.Printf("    %s  %s\n", ifaceS, ipS)
+        var pingS = col.green(fmt.Sprintf("%.3f ms", ping))
+        fmt.Printf("    %s  %s   ping: %s\n", ifaceS, ipS, pingS)
     }
 
-    // TODO: sort by ip ascending
 }
