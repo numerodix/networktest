@@ -9,9 +9,11 @@ import (
 //    "errors"
     "fmt"
 //    "log"
+    "net"
     "os/exec"
     "regexp"
 //    "strconv"
+    "sort"
     "strings"
 )
 
@@ -37,6 +39,20 @@ type Network struct {
     Iface string
     Network string
     Netmask string
+}
+
+// Sorting for []Network
+type ByNetwork []Network
+func (ns ByNetwork) Len() int {
+    return len(ns)
+}
+func (ns ByNetwork) Swap(i, j int) {
+    ns[i], ns[j] = ns[j], ns[i]
+}
+func (ns ByNetwork) Less(i, j int) bool {
+    var xIp = net.ParseIP(ns[i].Network)
+    var yIp = net.ParseIP(ns[j].Network)
+    return LessIPs(xIp, yIp)
 }
 
 type Gateway struct {
@@ -135,6 +151,8 @@ func (routeExec RouteExecution) GetNetworks() []Network {
             })
         }
     }
+
+    sort.Sort(ByNetwork(networks))
 
     return networks
 }

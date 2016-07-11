@@ -9,8 +9,10 @@ import (
 //    "errors"
     "fmt"
 //    "log"
+    "net"
     "os/exec"
     "regexp"
+    "sort"
 //    "strconv"
     "strings"
 )
@@ -27,6 +29,20 @@ type IfaceBlock struct {
     Scope string
     Status string
     Mtu string
+}
+
+// Sorting for []IfaceBlock
+type ByIPv4 []IfaceBlock
+func (ibs ByIPv4) Len() int {
+    return len(ibs)
+}
+func (ibs ByIPv4) Swap(i, j int) {
+    ibs[i], ibs[j] = ibs[j], ibs[i]
+}
+func (ibs ByIPv4) Less(i, j int) bool {
+    var xIp = net.ParseIP(ibs[i].IPv4)
+    var yIp = net.ParseIP(ibs[j].IPv4)
+    return LessIPs(xIp, yIp)
 }
 
 type IfconfigExecution struct {
@@ -175,6 +191,8 @@ func Ifconfig() IfconfigExecution {
             Mtu: strings.TrimSpace(mtu),
         })
     }
+
+    sort.Sort(ByIPv4(ifaceBlocks))
 
     return IfconfigExecution{
         IfaceBlocks: ifaceBlocks,
