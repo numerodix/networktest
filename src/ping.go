@@ -9,6 +9,7 @@ import (
 //    "errors"
     "fmt"
 //    "log"
+    "os"
     "os/exec"
     "regexp"
     "strconv"
@@ -37,6 +38,7 @@ func Ping(host string, cnt int, timeout int) PingExecution {
     cmd.Stdout = &out
 
     // Invoke the cmd
+    os.Setenv("LC_ALL", "C")
     err := cmd.Run()
     if err != nil {
         return PingExecution{

@@ -10,6 +10,7 @@ import (
     "fmt"
 //    "log"
     "net"
+    "os"
     "os/exec"
     "regexp"
 //    "strconv"
@@ -73,6 +74,7 @@ func Route() RouteExecution {
     cmd.Stdout = &out
 
     // Invoke the cmd
+    os.Setenv("LC_ALL", "C")
     err := cmd.Run()
     if err != nil {
         return RouteExecution{

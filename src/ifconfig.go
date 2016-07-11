@@ -10,6 +10,7 @@ import (
     "fmt"
 //    "log"
     "net"
+    "os"
     "os/exec"
     "regexp"
     "sort"
@@ -63,6 +64,7 @@ func Ifconfig() IfconfigExecution {
     cmd.Stdout = &out
 
     // Invoke the cmd
+    os.Setenv("LC_ALL", "C")
     err := cmd.Run()
     if err != nil {
         return IfconfigExecution{
