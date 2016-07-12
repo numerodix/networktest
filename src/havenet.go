@@ -40,6 +40,7 @@ func SpawnAndCollect(pingHosts map[string]PingExecution) {
 
 
 func main() {
+    // Detect local network info
     var route = Route()
     var ifconfig = Ifconfig()
 
@@ -83,6 +84,11 @@ func main() {
         "nu.nl",
         "yahoo.com",
         "youtube.com",
+
+        "aftenposten.no",
+        "www.bonjourchine.com",
+        "golang.org",
+        "juventuz.com",
     }
 
     var inetPings = make(map[string]PingExecution)
@@ -107,6 +113,7 @@ func main() {
 
 
     col := ColorBrush{enabled:true}
+    ft := Formatter{colorBrush:col}
 
     /* 
         LOCAL NETWORK
@@ -117,41 +124,33 @@ func main() {
     for i := range networks {
         var network = networks[i]
 
-        var iface = fmt.Sprintf("<%s>", network.Iface)
-        var netw = network.Network
-        var mask = network.Netmask
-        var ifaceS = col.magenta(fmt.Sprintf("%-10s", iface))
-        var netwS = col.green(fmt.Sprintf("%-15s", netw))
-        var maskS = col.cyan(fmt.Sprintf("/ %s", mask))
-        fmt.Printf("    %s  %s %s\n", ifaceS, netwS, maskS)
+        var ifaceFmt = ft.FormatIfaceField(network.Iface)
+        var netwFmt = ft.FormatIpField(network.Network)
+        var maskFmt = ft.FormatSubnetField(network.Netmask)
+        fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
 
     fmt.Printf(col.yellow(" + Detecting ips...\n"))
     for i := range ifaceBlocks {
         var ifaceBlock = ifaceBlocks[i]
 
-        var iface = fmt.Sprintf("<%s>", ifaceBlock.Iface)
-        var ip = ifaceBlock.IPv4
-        var mask = ifaceBlock.Mask
-        var ping = netPings[ip].Time
-        var ifaceS = col.magenta(fmt.Sprintf("%-10s", iface))
-        var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var maskS = col.cyan(fmt.Sprintf("/ %-15s", mask))
-        var pingS = col.green(fmt.Sprintf("%.3f ms", ping))
-        fmt.Printf("    %s  %s %s   ping: %s\n", ifaceS, ipS, maskS, pingS)
+        var pingExec = netPings[ifaceBlock.IPv4]
+        var ifaceFmt = ft.FormatIfaceField(ifaceBlock.Iface)
+        var ipFmt = ft.FormatIpField(ifaceBlock.IPv4)
+        var maskFmt = ft.FormatSubnetField(ifaceBlock.Mask)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
 
     fmt.Printf(col.yellow(" + Detecting gateways...\n"))
     for i := range gws {
         var gw = gws[i]
 
-        var iface = fmt.Sprintf("<%s>", gw.Iface)
-        var ip = gw.Gateway
-        var ping = netPings[ip].Time
-        var ifaceS = col.magenta(fmt.Sprintf("%-10s", iface))
-        var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var pingS = col.green(fmt.Sprintf("%.3f ms", ping))
-        fmt.Printf("    %s  %s   ping: %s\n", ifaceS, ipS, pingS)
+        var pingExec = netPings[gw.Gateway]
+        var ifaceFmt = ft.FormatIfaceField(gw.Iface)
+        var ipFmt = ft.FormatIpField(gw.Gateway)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
     }
 
     /* 
@@ -160,32 +159,30 @@ func main() {
 
     fmt.Printf(col.yellow(" + Testing internet connection...\n"))
     for name, ip := range inetDnsServers {
-        var ping = inetPings[ip].Time
-        var nameS = col.cyan(fmt.Sprintf("%s", name))
-        var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var pingS = col.green(fmt.Sprintf("%.1f ms", ping))
-        fmt.Printf("    %s  %s   ping: %s\n", nameS, ipS, pingS)
+        var pingExec = inetPings[ip]
+        var nameFmt = ft.FormatHostField(name)
+        var ipFmt = ft.FormatIpField(ip)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s  %s   ping: %s\n", nameFmt, ipFmt, pingFmt)
     }
 
     fmt.Printf(col.yellow(" + Detecting dns servers...\n"))
     for i := range netDnsServers {
         var host = netDnsServers[i]
 
-        var ip = host
-        var ping = inetPings[host].Time
-        var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var pingS = col.green(fmt.Sprintf("%.1f ms", ping))
-        fmt.Printf("    %s   ping: %s\n", ipS, pingS)
+        var pingExec = inetPings[host]
+        var ipFmt = ft.FormatIpField(host)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 
     fmt.Printf(col.yellow(" + Testing internet dns...\n"))
     for i := range inetHosts {
         var host = inetHosts[i]
 
-        var ip = host
-        var ping = inetPings[host].Time
-        var ipS = col.green(fmt.Sprintf("%-15s", ip))
-        var pingS = col.green(fmt.Sprintf("%.1f ms", ping))
-        fmt.Printf("    %s   ping: %s\n", ipS, pingS)
+        var pingExec = inetPings[host]
+        var ipFmt = ft.FormatIpField(host)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 }
