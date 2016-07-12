@@ -88,7 +88,7 @@ func DoInetPings(inetDnsServers map[string]string, netDnsServers []string,
 }
 
 
-func DisplayLocalNetwork(col ColorBrush, ft Formatter,
+func DisplayLocalNetwork(ft Formatter,
                          ifconfig IfconfigExecution,
                          route RouteExecution,
                          netPings map[string]PingExecution) {
@@ -96,7 +96,7 @@ func DisplayLocalNetwork(col ColorBrush, ft Formatter,
     var gws = route.GetGateways()
     var ifaceBlocks = ifconfig.IfaceBlocks
 
-    fmt.Printf(col.yellow(" + Scanning for networks...\n"))
+    println(ft.FormatHeader("Scanning for networks"))
     var networks = route.GetNetworks()
     for i := range networks {
         var network = networks[i]
@@ -107,7 +107,7 @@ func DisplayLocalNetwork(col ColorBrush, ft Formatter,
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
 
-    fmt.Printf(col.yellow(" + Detecting ips...\n"))
+    println(ft.FormatHeader("Detecting ips"))
     for i := range ifaceBlocks {
         var ifaceBlock = ifaceBlocks[i]
 
@@ -119,7 +119,7 @@ func DisplayLocalNetwork(col ColorBrush, ft Formatter,
         fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
 
-    fmt.Printf(col.yellow(" + Detecting gateways...\n"))
+    println(ft.FormatHeader("Detecting gateways"))
     for i := range gws {
         var gw = gws[i]
 
@@ -132,12 +132,12 @@ func DisplayLocalNetwork(col ColorBrush, ft Formatter,
 }
 
 
-func DisplayInetConnectivity(col ColorBrush, ft Formatter,
+func DisplayInetConnectivity(ft Formatter,
                              inetDnsServers map[string]string, netDnsServers []string,
                              inetHosts []string,
                              inetPings map[string]PingExecution) {
 
-    fmt.Printf(col.yellow(" + Testing internet connection...\n"))
+    println(ft.FormatHeader("Testing internet connection"))
     for name, ip := range inetDnsServers {
         var pingExec = inetPings[ip]
         var nameFmt = ft.FormatHostField(name)
@@ -146,7 +146,7 @@ func DisplayInetConnectivity(col ColorBrush, ft Formatter,
         fmt.Printf("    %s  %s   ping: %s\n", nameFmt, ipFmt, pingFmt)
     }
 
-    fmt.Printf(col.yellow(" + Detecting dns servers...\n"))
+    println(ft.FormatHeader("Detecting dns servers"))
     for i := range netDnsServers {
         var host = netDnsServers[i]
 
@@ -156,7 +156,7 @@ func DisplayInetConnectivity(col ColorBrush, ft Formatter,
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 
-    fmt.Printf(col.yellow(" + Testing internet dns...\n"))
+    println(ft.FormatHeader("Testing internet dns"))
     for i := range inetHosts {
         var host = inetHosts[i]
 
@@ -180,7 +180,7 @@ func main() {
     var netPings = DoNetPings(ifconfig, route)
 
     // Display local network info
-    DisplayLocalNetwork(col, ft, ifconfig, route, netPings)
+    DisplayLocalNetwork(ft, ifconfig, route, netPings)
 
     // Do remote pings
     inetDnsServers := make(map[string]string)
@@ -199,15 +199,10 @@ func main() {
         "nu.nl",
         "yahoo.com",
         "youtube.com",
-
-        "aftenposten.no",
-        "www.bonjourchine.com",
-        "golang.org",
-        "juventuz.com",
     }
 
     var inetPings = DoInetPings(inetDnsServers, netDnsServers, inetHosts)
 
     // Display inet connectivity info
-    DisplayInetConnectivity(col, ft, inetDnsServers, netDnsServers, inetHosts, inetPings)
+    DisplayInetConnectivity(ft, inetDnsServers, netDnsServers, inetHosts, inetPings)
 }

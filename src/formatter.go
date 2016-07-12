@@ -22,6 +22,11 @@ func (ft *Formatter) FormatPingTime(pingExec PingExecution) string {
 }
 
 
+func (ft *Formatter) FormatHeader(msg string) string {
+    var msgFmt = ft.colorBrush.yellow(fmt.Sprintf(" + %s...", msg))
+    return msgFmt
+}
+
 func (ft *Formatter) FormatIfaceField(iface string) string {
     iface = fmt.Sprintf("<%s>", iface)
     var ifaceFmt = ft.colorBrush.magenta(fmt.Sprintf("%-10s", iface))
