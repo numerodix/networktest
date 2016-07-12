@@ -191,12 +191,12 @@ func main() {
     }
 
     inetHosts := []string{
+        "bitbucket.org",
         "facebook.com",
         "github.com",
         "gmail.com",
         "google.com",
         "twitter.com",
-        "nu.nl",
         "yahoo.com",
         "youtube.com",
     }
