@@ -39,13 +39,7 @@ func SpawnAndCollect(pingHosts map[string]PingExecution) {
 }
 
 
-func main() {
-    // Detect local network info
-    var route = Route()
-    var ifconfig = Ifconfig()
-
-
-    // Do local pings
+func DoNetPings(ifconfig IfconfigExecution, route RouteExecution) map[string]PingExecution {
     var netPings = make(map[string]PingExecution)
 
     var ifaceBlocks = ifconfig.IfaceBlocks
@@ -66,31 +60,12 @@ func main() {
 
     SpawnAndCollect(netPings)
 
+    return netPings
+}
 
-    // Do remote pings
-    inetDnsServers := make(map[string]string)
-    inetDnsServers["b.root-servers.net."] = "192.228.79.201"
 
-    netDnsServers := []string{
-        "127.0.1.1",
-    }
-
-    inetHosts := []string{
-        "facebook.com",
-        "github.com",
-        "gmail.com",
-        "google.com",
-        "twitter.com",
-        "nu.nl",
-        "yahoo.com",
-        "youtube.com",
-
-        "aftenposten.no",
-        "www.bonjourchine.com",
-        "golang.org",
-        "juventuz.com",
-    }
-
+func DoInetPings(inetDnsServers map[string]string, netDnsServers []string,
+                 inetHosts []string) map[string]PingExecution {
     var inetPings = make(map[string]PingExecution)
 
     for _, ip := range inetDnsServers {
@@ -109,15 +84,17 @@ func main() {
 
     SpawnAndCollect(inetPings)
 
+    return inetPings
+}
 
 
+func DisplayLocalNetwork(col ColorBrush, ft Formatter,
+                         ifconfig IfconfigExecution,
+                         route RouteExecution,
+                         netPings map[string]PingExecution) {
 
-    col := ColorBrush{enabled:true}
-    ft := Formatter{colorBrush:col}
-
-    /* 
-        LOCAL NETWORK
-    */
+    var gws = route.GetGateways()
+    var ifaceBlocks = ifconfig.IfaceBlocks
 
     fmt.Printf(col.yellow(" + Scanning for networks...\n"))
     var networks = route.GetNetworks()
@@ -152,10 +129,13 @@ func main() {
         var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
     }
+}
 
-    /* 
-        INTERNET
-    */
+
+func DisplayInetConnectivity(col ColorBrush, ft Formatter,
+                             inetDnsServers map[string]string, netDnsServers []string,
+                             inetHosts []string,
+                             inetPings map[string]PingExecution) {
 
     fmt.Printf(col.yellow(" + Testing internet connection...\n"))
     for name, ip := range inetDnsServers {
@@ -185,4 +165,49 @@ func main() {
         var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
+}
+
+
+func main() {
+    col := ColorBrush{enabled:true}
+    ft := Formatter{colorBrush:col}
+
+    // Detect local network info
+    var route = Route()
+    var ifconfig = Ifconfig()
+
+    // Do local pings
+    var netPings = DoNetPings(ifconfig, route)
+
+    // Display local network info
+    DisplayLocalNetwork(col, ft, ifconfig, route, netPings)
+
+    // Do remote pings
+    inetDnsServers := make(map[string]string)
+    inetDnsServers["b.root-servers.net."] = "192.228.79.201"
+
+    netDnsServers := []string{
+        "127.0.1.1",
+    }
+
+    inetHosts := []string{
+        "facebook.com",
+        "github.com",
+        "gmail.com",
+        "google.com",
+        "twitter.com",
+        "nu.nl",
+        "yahoo.com",
+        "youtube.com",
+
+        "aftenposten.no",
+        "www.bonjourchine.com",
+        "golang.org",
+        "juventuz.com",
+    }
+
+    var inetPings = DoInetPings(inetDnsServers, netDnsServers, inetHosts)
+
+    // Display inet connectivity info
+    DisplayInetConnectivity(col, ft, inetDnsServers, netDnsServers, inetHosts, inetPings)
 }
