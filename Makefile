@@ -9,7 +9,8 @@ run: bin/havenet
 	bin/havenet
 
 bin/havenet: src/*.go
-	go build -o bin/havenet src/*.go
+	# CGO_ENABLED=0 to enable a static build
+	CGO_ENABLED=0 go build -o bin/havenet src/*.go
 
 
 clean:
