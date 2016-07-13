@@ -234,9 +234,7 @@ func main() {
     inetDnsServers := make(map[string]string)
     inetDnsServers["b.root-servers.net."] = "192.228.79.201"
 
-    netDnsServers := []string{
-        "127.0.1.1",
-    }
+    var netDnsServers = DetectNameservers()
 
     inetHosts := []string{
         "bitbucket.org",
