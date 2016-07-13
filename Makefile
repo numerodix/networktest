@@ -8,7 +8,7 @@ test:
 run: bin/havenet
 	bin/havenet
 
-bin/havenet: src/havenet.go
+bin/havenet: src/*.go
 	go build -o bin/havenet src/*.go
 
 
