@@ -149,6 +149,9 @@ func DisplayLocalNetwork(ft Formatter,
         var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
+    if len(ifaceBlocks) == 0 {
+        fmt.Printf("    %s\n", ft.FormatError("none found"))
+    }
 
     println(ft.FormatHeader("Detecting gateways"))
     for i := range gws {
