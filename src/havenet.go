@@ -240,14 +240,14 @@ func main() {
     var netDnsServers = DetectNameservers()
 
     inetHosts := []string{
-        "bitbucket.org",
+//        "bitbucket.org",
         "facebook.com",
-        "github.com",
+//        "github.com",
         "gmail.com",
         "google.com",
         "twitter.com",
         "yahoo.com",
-        "youtube.com",
+//        "youtube.com",
     }
 
     // Do inet pings
