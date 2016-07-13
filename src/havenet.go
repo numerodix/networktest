@@ -225,6 +225,11 @@ func main() {
     // Display local network info
     DisplayLocalNetwork(ft, ifconfig, route, lanIps, netPings)
 
+    // If we didn't find any lan ips, don't test inet connectivity
+    if len(lanIps) == 0 {
+        return
+    }
+
     // Do remote pings
     inetDnsServers := make(map[string]string)
     inetDnsServers["b.root-servers.net."] = "192.228.79.201"
