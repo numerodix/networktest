@@ -53,7 +53,7 @@ func (ns ByNetwork) Swap(i, j int) {
 func (ns ByNetwork) Less(i, j int) bool {
     var xIp = net.ParseIP(ns[i].Network)
     var yIp = net.ParseIP(ns[j].Network)
-    return LessIPs(xIp, yIp)
+    return IPIsLesser(xIp, yIp)
 }
 
 type Gateway struct {

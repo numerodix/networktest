@@ -43,7 +43,7 @@ func (ibs ByIPv4) Swap(i, j int) {
 func (ibs ByIPv4) Less(i, j int) bool {
     var xIp = net.ParseIP(ibs[i].IPv4)
     var yIp = net.ParseIP(ibs[j].IPv4)
-    return LessIPs(xIp, yIp)
+    return IPIsLesser(xIp, yIp)
 }
 
 type IfconfigExecution struct {
@@ -178,6 +178,12 @@ func Ifconfig() IfconfigExecution {
         var mtu = ""
         if rxMtu.MatchString(block) {
             mtu = rxMtu.FindStringSubmatch(block)[1]
+        }
+
+        // Exclude block if the ipv4 ip is not detected (we're not on the
+        // network)
+        if ipv4 == "" {
+            continue
         }
 
         ifaceBlocks = append(ifaceBlocks, IfaceBlock{
