@@ -106,6 +106,9 @@ func DisplayLocalNetwork(ft Formatter,
         var maskFmt = ft.FormatSubnetField(network.Netmask)
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
+    if len(networks) == 0 {
+        fmt.Printf("    %s\n", ft.FormatError("none found"))
+    }
 
     println(ft.FormatHeader("Detecting ips"))
     for i := range ifaceBlocks {
@@ -128,6 +131,9 @@ func DisplayLocalNetwork(ft Formatter,
         var ipFmt = ft.FormatIpField(gw.Gateway)
         var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
+    }
+    if len(gws) == 0 {
+        fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
 }
 
