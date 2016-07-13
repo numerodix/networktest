@@ -32,6 +32,7 @@ func NetworkContains(ip string, mask string, candidateIp string) bool {
     var ipStruct = net.ParseIP(ip)
 
     var maskIP = net.ParseIP(mask)
+    // an IP is an array of 16 bytes, the last 4 are the ipv4 address
     var maskStruct = net.IPv4Mask(maskIP[12], maskIP[13], maskIP[14], maskIP[15])
 
     var netStruct = net.IPNet{IP:ipStruct, Mask:maskStruct}
