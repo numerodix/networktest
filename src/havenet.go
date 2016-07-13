@@ -5,6 +5,7 @@ import (
 //    "errors"
     "fmt"
 //    "log"
+//    "net"
 //    "os/exec"
 //    "regexp"
 //    "strconv"
@@ -88,9 +89,36 @@ func DoInetPings(inetDnsServers map[string]string, netDnsServers []string,
 }
 
 
+func DetectLanIps(ifconfig IfconfigExecution, route RouteExecution) []string {
+    var gws = route.GetGateways()
+    var ifaceBlocks = ifconfig.IfaceBlocks
+
+    var lanIps []string
+
+    for i := range gws {
+        var gw = gws[i]
+
+        for j := range ifaceBlocks {
+            var ifaceBlock = ifaceBlocks[j]
+
+            var gwIp = gw.Gateway
+            var hostIp = ifaceBlock.IPv4
+            var maskIp = ifaceBlock.Mask
+
+            if NetworkContains(hostIp, maskIp, gwIp) {
+                lanIps = append(lanIps, hostIp)
+            }
+        }
+    }
+
+    return lanIps
+}
+
+
 func DisplayLocalNetwork(ft Formatter,
                          ifconfig IfconfigExecution,
                          route RouteExecution,
+                         lanIps []string,
                          netPings map[string]PingExecution) {
 
     var gws = route.GetGateways()
@@ -132,6 +160,12 @@ func DisplayLocalNetwork(ft Formatter,
         var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
     }
+    for i := range lanIps {
+        var lanIp = lanIps[i]
+
+        var ipFmt = ft.FormatLanIpField(lanIp)
+        fmt.Printf("     ip:        %s\n", ipFmt)
+    }
     if len(gws) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
@@ -149,7 +183,7 @@ func DisplayInetConnectivity(ft Formatter,
         var nameFmt = ft.FormatHostField(name)
         var ipFmt = ft.FormatIpField(ip)
         var pingFmt = ft.FormatPingTime(pingExec)
-        fmt.Printf("    %s  %s   ping: %s\n", nameFmt, ipFmt, pingFmt)
+        fmt.Printf("    %s  %s  ping: %s\n", nameFmt, ipFmt, pingFmt)
     }
 
     println(ft.FormatHeader("Detecting dns servers"))
@@ -185,8 +219,11 @@ func main() {
     // Do local pings
     var netPings = DoNetPings(ifconfig, route)
 
+    // Detect ips on local area network
+    var lanIps = DetectLanIps(ifconfig, route)
+
     // Display local network info
-    DisplayLocalNetwork(ft, ifconfig, route, netPings)
+    DisplayLocalNetwork(ft, ifconfig, route, lanIps, netPings)
 
     // Do remote pings
     inetDnsServers := make(map[string]string)
@@ -207,6 +244,7 @@ func main() {
         "youtube.com",
     }
 
+    // Do inet pings
     var inetPings = DoInetPings(inetDnsServers, netDnsServers, inetHosts)
 
     // Display inet connectivity info
