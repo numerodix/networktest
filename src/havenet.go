@@ -1,15 +1,7 @@
 package main
 
 import (
-//    "bytes"
-//    "errors"
     "fmt"
-//    "log"
-//    "net"
-//    "os/exec"
-//    "regexp"
-//    "strconv"
-//    "strings"
 )
 
 

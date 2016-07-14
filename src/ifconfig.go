@@ -6,15 +6,12 @@ package main
 
 import (
     "bytes"
-//    "errors"
     "fmt"
-//    "log"
     "net"
     "os"
     "os/exec"
     "regexp"
     "sort"
-//    "strconv"
     "strings"
 )
 

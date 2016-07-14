@@ -1,3 +1,7 @@
+/*
+    Handles reading of /etc/resolv.conf
+*/
+
 package main
 
 import (
