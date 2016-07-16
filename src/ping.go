@@ -92,6 +92,13 @@ func Ping(host string, cnt int, timeout int) PingExecution {
     // Parse the time= value
     var stdout = out.String()
     rx := regexp.MustCompile("time=([^ ]*)")
+    if !rx.MatchString(stdout) {
+        return PingExecution{
+            Host: host,
+            Error: fmt.Errorf("Failed to parse ping output: %q", stdout),
+        }
+    }
+
     var time_s = rx.FindStringSubmatch(stdout)[1]
     var time, err2 = strconv.ParseFloat(time_s, 64)
     if err2 != nil {
