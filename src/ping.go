@@ -58,7 +58,7 @@ func Ping(host string, cnt int, timeout int) PingExecution {
         // Use the pid to detect if the process exists
         var _, err = os.FindProcess(cmd.Process.Pid)
 
-        // It it doesn't:
+        // If it doesn't:
         // - it's still forking (not yet running)
         // - or it exited already (we check stdout to see if it's non-empty)
         if err == nil && out.String() != "" {
