@@ -11,6 +11,7 @@ import (
     "os/exec"
     "regexp"
     "strconv"
+    "time"
 )
 
 
@@ -34,14 +35,48 @@ func Ping(host string, cnt int, timeout int) PingExecution {
     var out bytes.Buffer
     cmd.Stdout = &out
 
-    // Invoke the cmd
+    // Launch the cmd
     os.Setenv("LC_ALL", "C")
-    err := cmd.Run()
+    err := cmd.Start()
     if err != nil {
         return PingExecution{
             Host: host,
             Error: fmt.Errorf("Failed to run ping: %q", err),
         }
+    }
+
+    // Poll for it to complete:
+    // We can't really count on ping's -W parameter to bound the execution of
+    // ping itself, because -W limits how long ping will wait for the response
+    // packet. But before the ICMP packet can be sent the hostname has to be
+    // resolved using DNS, and that's not included in the bound set by -W. So
+    // instead we launch the process and kill the ping process once timeout has
+    // been reached. This *should* guarantee that this function always honors
+    // the intended timeout.
+    var elapsedMs = 0
+    for {
+        // Use the pid to detect if the process exists
+        var _, err = os.FindProcess(cmd.Process.Pid)
+
+        // It it doesn't:
+        // - it's still forking (not yet running)
+        // - or it exited already (we check stdout to see if it's non-empty)
+        if err == nil && out.String() != "" {
+            break
+        }
+
+        // We reached the timeout, so kill the process and return an error
+        if elapsedMs >= (timeout * 1000) {
+            err = cmd.Process.Kill()
+            return PingExecution{
+                Host: host,
+                Error: fmt.Errorf("Failed to run ping: %q", err),
+            }
+        }
+
+        // The process hasn't finished yet, so wait a while and loop around
+        time.Sleep(50 * time.Millisecond)
+        elapsedMs += 50
     }
 
     /* Output:
