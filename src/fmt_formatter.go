@@ -55,13 +55,13 @@ func (ft *Formatter) FormatIpField(ip string) string {
 }
 
 func (ft *Formatter) FormatIp6Field(ip net.IP) string {
-    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%s", ip))
+    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%39s", ip))
     return ipFmt
 }
 
 func (ft *Formatter) FormatMask6Field(mask net.IPMask) string {
     var ones, _ = mask.Size()
-    var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %d", ones))
+    var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %3d", ones))
     return subnetFmt
 }
 
