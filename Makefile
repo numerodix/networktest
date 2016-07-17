@@ -7,6 +7,7 @@ test:
 
 run: bin/havenet
 	bin/havenet
+	bin/havenet -6
 
 bin/havenet: src/*.go
 	# CGO_ENABLED=0 to enable a static build

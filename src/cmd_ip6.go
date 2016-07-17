@@ -20,7 +20,7 @@ func DisplayLocalNetwork6(ft Formatter,
         var netwFmt = ft.FormatIp6Field(ip6AddrBlock.Network.IP)
         var maskFmt = ft.FormatMask6Field(ip6AddrBlock.Network.Mask)
         var scopeFmt = ft.FormatScope6Field(ip6AddrBlock.Scope)
-        fmt.Printf("    %s  %s %s   %s\n", ifaceFmt, netwFmt, maskFmt, scopeFmt)
+        fmt.Printf("    %s  %s %s  %s\n", ifaceFmt, netwFmt, maskFmt, scopeFmt)
     }
     if len(ip6AddrBlocks) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
