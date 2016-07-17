@@ -6,34 +6,34 @@ import (
 
 
 func DisplayLocalNetwork6(ft Formatter,
-                          ip6Ips Ip6IpAddrExecution) {
+                          ip6Ips Ip6AddrExecution) {
 
-    var ip6IpAddrBlocks = ip6Ips.Ip6IpAddrBlocks
+    var ip6AddrBlocks = ip6Ips.Ip6AddrBlocks
 
     fmt.Printf("%s\n", ft.FormatHeader("Scanning for networks"))
-    for i := range ip6IpAddrBlocks {
-        var ip6IpAddrBlock = ip6IpAddrBlocks[i]
+    for i := range ip6AddrBlocks {
+        var ip6AddrBlock = ip6AddrBlocks[i]
 
-        var ifaceFmt = ft.FormatIfaceField(ip6IpAddrBlock.Iface)
-        var netwFmt = ft.FormatIp6Field(ip6IpAddrBlock.Network.IP)
-        var maskFmt = ft.FormatMask6Field(ip6IpAddrBlock.Network.Mask)
-        var scopeFmt = ft.FormatScope6Field(ip6IpAddrBlock.Scope)
+        var ifaceFmt = ft.FormatIfaceField(ip6AddrBlock.Iface)
+        var netwFmt = ft.FormatIp6Field(ip6AddrBlock.Network.IP)
+        var maskFmt = ft.FormatMask6Field(ip6AddrBlock.Network.Mask)
+        var scopeFmt = ft.FormatScope6Field(ip6AddrBlock.Scope)
         fmt.Printf("    %s  %s %s   %s\n", ifaceFmt, netwFmt, maskFmt, scopeFmt)
     }
-    if len(ip6IpAddrBlocks) == 0 {
+    if len(ip6AddrBlocks) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
 
     fmt.Printf("%s\n", ft.FormatHeader("Detecting ips"))
-    for i := range ip6IpAddrBlocks {
-        var ip6IpAddrBlock = ip6IpAddrBlocks[i]
+    for i := range ip6AddrBlocks {
+        var ip6AddrBlock = ip6AddrBlocks[i]
 
-        var ifaceFmt = ft.FormatIfaceField(ip6IpAddrBlock.Iface)
-        var ipFmt = ft.FormatIp6Field(ip6IpAddrBlock.IPv6)
-        var maskFmt = ft.FormatMask6Field(ip6IpAddrBlock.Network.Mask)
+        var ifaceFmt = ft.FormatIfaceField(ip6AddrBlock.Iface)
+        var ipFmt = ft.FormatIp6Field(ip6AddrBlock.IPv6)
+        var maskFmt = ft.FormatMask6Field(ip6AddrBlock.Network.Mask)
         fmt.Printf("    %s  %s %s\n", ifaceFmt, ipFmt, maskFmt)
     }
-    if len(ip6IpAddrBlocks) == 0 {
+    if len(ip6AddrBlocks) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
 }

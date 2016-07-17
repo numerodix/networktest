@@ -11,20 +11,20 @@ import (
 )
 
 
-type Ip6IpAddrBlock struct {
+type Ip6AddrBlock struct {
     Iface string
     IPv6 net.IP
     Network net.IPNet
     Scope string
 }
 
-type Ip6IpAddrExecution struct {
-    Ip6IpAddrBlocks []Ip6IpAddrBlock
+type Ip6AddrExecution struct {
+    Ip6AddrBlocks []Ip6AddrBlock
     Error error
 }
 
 
-func Ip6IpAddr() Ip6IpAddrExecution {
+func Ip6IpAddr() Ip6AddrExecution {
     // Construct the args
     var executable = "/sbin/ip"
     var args []string
@@ -41,7 +41,7 @@ func Ip6IpAddr() Ip6IpAddrExecution {
     os.Setenv("LC_ALL", "C")
     err := cmd.Run()
     if err != nil {
-        return Ip6IpAddrExecution{
+        return Ip6AddrExecution{
             Error: fmt.Errorf("Failed to run %s: %q", executable, err),
         }
     }
@@ -69,7 +69,7 @@ func Ip6IpAddr() Ip6IpAddrExecution {
     rxInet6 := regexp.MustCompile(
         "^[ ]{4}inet6 ([a-f0-9:]+)/([0-9]+) scope ([A-Za-z0-9]+)")
 
-    var ip6IpAddrBlocks = []Ip6IpAddrBlock{}
+    var ip6AddrBlocks = []Ip6AddrBlock{}
 
     // loop variables
     var iface = ""
@@ -94,12 +94,12 @@ func Ip6IpAddr() Ip6IpAddrExecution {
             var _, ipnet, err = net.ParseCIDR(ipNet)
 
             if err != nil {
-                return Ip6IpAddrExecution{
+                return Ip6AddrExecution{
                     Error: fmt.Errorf("Failed to parse ipnet %s: %q", ipNet, err),
                 }
             }
 
-            ip6IpAddrBlocks = append(ip6IpAddrBlocks, Ip6IpAddrBlock{
+            ip6AddrBlocks = append(ip6AddrBlocks, Ip6AddrBlock{
                 Iface: iface,
                 IPv6: ip,
                 Network: *ipnet,
@@ -108,7 +108,7 @@ func Ip6IpAddr() Ip6IpAddrExecution {
         }
     }
 
-    return Ip6IpAddrExecution{
-        Ip6IpAddrBlocks: ip6IpAddrBlocks,
+    return Ip6AddrExecution{
+        Ip6AddrBlocks: ip6AddrBlocks,
     }
 }
