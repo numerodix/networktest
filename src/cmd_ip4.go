@@ -6,7 +6,8 @@ import (
 
 
 func PingJob(ch chan PingExecution, host string, cnt int, timeout int) {
-    ch <- Ping(host, cnt, timeout)
+    var pinger = newPinger4()
+    ch <- pinger.Ping(host, cnt, timeout)
 }
 
 
