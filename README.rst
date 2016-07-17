@@ -17,7 +17,7 @@ To build::
     
     $ make
 
-To run::
+To detect IPv4 networking::
 
     $ bin/havenet
      + Scanning for networks...
@@ -43,3 +43,17 @@ To run::
         google.com        ping: 41.10 ms
         twitter.com       ping: 130.0 ms
         yahoo.com         ping: 154.0 ms
+
+To detect IPv6 networking::
+
+    $ bin/havenet -6
+     + Scanning for networks...
+        <lo>                                            ::1 / 128  [scope: host]
+        <eth0>                                       fe80:: /  64  [scope: link]
+        <wlan0>                                      fe80:: /  64  [scope: link]
+     + Detecting ips...
+        <lo>                                            ::1 / 128  ping: 0.047 ms
+        <eth0>                    fe80::16da:fae1:c9ea:a4b9 /  64  ping: N/A
+        <wlan0>                   fe80::762f:fe64:b7c7:7b7a /  64  ping: N/A
+     + Detecting gateways...
+        none found
