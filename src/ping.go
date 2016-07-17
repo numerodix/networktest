@@ -91,7 +91,7 @@ func Ping(host string, cnt int, timeout int) PingExecution {
 
     // Parse the time= value
     var stdout = out.String()
-    rx := regexp.MustCompile("time=([^ ]*)")
+    rx := regexp.MustCompile("time=([0-9.]*)")
     if !rx.MatchString(stdout) {
         return PingExecution{
             Host: host,
