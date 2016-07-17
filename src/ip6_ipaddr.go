@@ -24,7 +24,7 @@ type Ip6AddrExecution struct {
 }
 
 
-func Ip6IpAddr() Ip6AddrExecution {
+func Ip6Addr() Ip6AddrExecution {
     // Construct the args
     var executable = "/sbin/ip"
     var args []string

@@ -6,9 +6,11 @@ import (
 
 
 func DisplayLocalNetwork6(ft Formatter,
-                          ip6Ips Ip6AddrExecution) {
+                          ip6Ips Ip6AddrExecution,
+                          ip6Routes Ip6RouteExecution) {
 
     var ip6AddrBlocks = ip6Ips.Ip6AddrBlocks
+    var ip6RouteBlocks = ip6Routes.Ip6RouteBlocks
 
     fmt.Printf("%s\n", ft.FormatHeader("Scanning for networks"))
     for i := range ip6AddrBlocks {
@@ -36,6 +38,24 @@ func DisplayLocalNetwork6(ft Formatter,
     if len(ip6AddrBlocks) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
+
+    fmt.Printf("%s\n", ft.FormatHeader("Detecting gateways"))
+    for i := range ip6RouteBlocks {
+        var ip6RouteBlock = ip6RouteBlocks[i]
+
+        var ifaceFmt = ft.FormatIfaceField(ip6RouteBlock.Iface)
+        var ipFmt = ft.FormatIp6Field(ip6RouteBlock.IPv6)
+        fmt.Printf("    %s  %s\n", ifaceFmt, ipFmt)
+    }
+/*    for i := range lanIps {
+        var lanIp = lanIps[i]
+
+        var ipFmt = ft.FormatLanIpField(lanIp)
+        fmt.Printf("     ip:        %s\n", ipFmt)
+    } */
+    if len(ip6RouteBlocks) == 0 {
+        fmt.Printf("    %s\n", ft.FormatError("none found"))
+    }
 }
 
 
@@ -44,7 +64,8 @@ func HaveNet6() {
     ft := Formatter{colorBrush:col}
 
     // Detect local network info
-    var ip6Ips = Ip6IpAddr()
+    var ip6Ips = Ip6Addr()
+    var ip6Routes = Ip6Route()
 
     // Do local pings
 //    var netPings = DoNetPings(ifconfig, route)
@@ -53,5 +74,5 @@ func HaveNet6() {
 //    var lanIps = DetectLanIps(ifconfig, route)
 
     // Display local network info
-    DisplayLocalNetwork6(ft, ip6Ips)
+    DisplayLocalNetwork6(ft, ip6Ips, ip6Routes)
 }
