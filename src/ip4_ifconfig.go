@@ -71,7 +71,7 @@ func Ifconfig() IfconfigExecution {
 
     /* Output:
       $ /sbin/ifconfig -a
-      docker0   Link encap:Ethernet  HWaddr 02:42:4d:ed:8b:26  
+      docker0   Link encap:Ethernet  HWaddr 05:64:a7:9f:4d:02  
                 inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0
                 UP BROADCAST MULTICAST  MTU:1500  Metric:1
                 RX packets:0 errors:0 dropped:0 overruns:0 frame:0
@@ -79,9 +79,9 @@ func Ifconfig() IfconfigExecution {
                 collisions:0 txqueuelen:0 
                 RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
       
-      eth0      Link encap:Ethernet  HWaddr 14:da:e9:d5:3f:a2  
+      eth0      Link encap:Ethernet  HWaddr a9:e1:4f:97:7a:41  
                 inet addr:192.168.1.6  Bcast:192.168.1.255  Mask:255.255.255.0
-                inet6 addr: fe80::16da:e9ff:fed5:3fa2/64 Scope:Link
+                inet6 addr: fe80::16da:fae1:c9ea:a4b9/64 Scope:Link
                 UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
                 RX packets:19707243 errors:0 dropped:0 overruns:0 frame:0
                 TX packets:14390808 errors:0 dropped:0 overruns:0 carrier:0
@@ -97,9 +97,9 @@ func Ifconfig() IfconfigExecution {
                 collisions:0 txqueuelen:0 
                 RX bytes:93221522 (93.2 MB)  TX bytes:93221522 (93.2 MB)
       
-      wlan0     Link encap:Ethernet  HWaddr 74:2f:68:ad:d6:23  
+      wlan0     Link encap:Ethernet  HWaddr 1e:f5:5b:83:71:ad  
                 inet addr:192.168.1.8  Bcast:192.168.1.255  Mask:255.255.255.0
-                inet6 addr: fe80::762f:68ff:fead:d623/64 Scope:Link
+                inet6 addr: fe80::762f:fe64:b7c7:7b7a/64 Scope:Link
                 UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
                 RX packets:18451 errors:0 dropped:0 overruns:0 frame:0
                 TX packets:9246 errors:0 dropped:0 overruns:0 carrier:0
