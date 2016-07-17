@@ -61,6 +61,30 @@ func DoNetPings6(ip6Addrs Ip6AddrExecution,
 }
 
 
+func DoInetPings6(inetDnsServers map[string]string, netDnsServers []string,
+                  inetHosts []string) map[string]PingExecution {
+    var inetPings = make(map[string]PingExecution)
+
+    for _, ip := range inetDnsServers {
+        inetPings[ip] = PingExecution{}
+    }
+
+    for i := range netDnsServers {
+        var host = netDnsServers[i]
+        inetPings[host] = PingExecution{}
+    }
+
+    for i := range inetHosts {
+        var host = inetHosts[i]
+        inetPings[host] = PingExecution{}
+    }
+
+    SpawnAndCollect6(inetPings)
+
+    return inetPings
+}
+
+
 func DetectLanIps6(ip6Addrs Ip6AddrExecution,
                    ip6Routes Ip6RouteExecution) []net.IP {
 
@@ -145,6 +169,42 @@ func DisplayLocalNetwork6(ft Formatter,
 }
 
 
+func DisplayInetConnectivity6(ft Formatter,
+                             inetDnsServers map[string]string, netDnsServers []string,
+                             inetHosts []string,
+                             inetPings map[string]PingExecution) {
+
+    fmt.Printf("%s\n", ft.FormatHeader("Testing internet connection"))
+    for name, ip := range inetDnsServers {
+        var pingExec = inetPings[ip]
+        var nameFmt = ft.FormatHostField(name)
+        var ipFmt = ft.FormatIpField(ip)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s  %s  ping: %s\n", nameFmt, ipFmt, pingFmt)
+    }
+
+    fmt.Printf("%s\n", ft.FormatHeader("Detecting dns servers"))
+    for i := range netDnsServers {
+        var host = netDnsServers[i]
+
+        var pingExec = inetPings[host]
+        var ipFmt = ft.FormatIpField(host)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
+    }
+
+    fmt.Printf("%s\n", ft.FormatHeader("Testing internet dns"))
+    for i := range inetHosts {
+        var host = inetHosts[i]
+
+        var pingExec = inetPings[host]
+        var ipFmt = ft.FormatIpField(host)
+        var pingFmt = ft.FormatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
+    }
+}
+
+
 func HaveNet6() {
     col := ColorBrush{enabled:!TerminalIsDumb()}
     ft := Formatter{colorBrush:col}
@@ -161,4 +221,29 @@ func HaveNet6() {
 
     // Display local network info
     DisplayLocalNetwork6(ft, ip6Addrs, ip6Routes, lanIps, netPings)
+
+    // If we didn't find any lan ips, don't test inet connectivity
+    if len(lanIps) == 0 {
+        return
+    }
+
+    // Do remote pings
+    inetDnsServers := make(map[string]string)
+    inetDnsServers["b.root-servers.net."] = "2001:500:84::b"
+
+    var netDnsServers = DetectNameservers()
+
+    inetHosts := []string{
+        "facebook.com",
+        "gmail.com",
+        "google.com",
+        "twitter.com",
+        "yahoo.com",
+    }
+
+    // Do inet pings
+    var inetPings = DoInetPings6(inetDnsServers, netDnsServers, inetHosts)
+
+    // Display inet connectivity info
+    DisplayInetConnectivity6(ft, inetDnsServers, netDnsServers, inetHosts, inetPings)
 }
