@@ -9,6 +9,7 @@ type ColorBrush struct {
     enabled bool
 }
 
+
 func colorize(enabled bool, s string, id int, bold bool) string {
     if enabled {
         var boldInt = "0"

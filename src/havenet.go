@@ -116,7 +116,7 @@ func DisplayLocalNetwork(ft Formatter,
     var gws = route.GetGateways()
     var ifaceBlocks = ifconfig.IfaceBlocks
 
-    println(ft.FormatHeader("Scanning for networks"))
+    fmt.Printf("%s\n", ft.FormatHeader("Scanning for networks"))
     var networks = route.GetNetworks()
     for i := range networks {
         var network = networks[i]
@@ -130,7 +130,7 @@ func DisplayLocalNetwork(ft Formatter,
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
 
-    println(ft.FormatHeader("Detecting ips"))
+    fmt.Printf("%s\n", ft.FormatHeader("Detecting ips"))
     for i := range ifaceBlocks {
         var ifaceBlock = ifaceBlocks[i]
 
@@ -145,7 +145,7 @@ func DisplayLocalNetwork(ft Formatter,
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
 
-    println(ft.FormatHeader("Detecting gateways"))
+    fmt.Printf("%s\n", ft.FormatHeader("Detecting gateways"))
     for i := range gws {
         var gw = gws[i]
 
@@ -172,7 +172,7 @@ func DisplayInetConnectivity(ft Formatter,
                              inetHosts []string,
                              inetPings map[string]PingExecution) {
 
-    println(ft.FormatHeader("Testing internet connection"))
+    fmt.Printf("%s\n", ft.FormatHeader("Testing internet connection"))
     for name, ip := range inetDnsServers {
         var pingExec = inetPings[ip]
         var nameFmt = ft.FormatHostField(name)
@@ -181,7 +181,7 @@ func DisplayInetConnectivity(ft Formatter,
         fmt.Printf("    %s  %s  ping: %s\n", nameFmt, ipFmt, pingFmt)
     }
 
-    println(ft.FormatHeader("Detecting dns servers"))
+    fmt.Printf("%s\n", ft.FormatHeader("Detecting dns servers"))
     for i := range netDnsServers {
         var host = netDnsServers[i]
 
@@ -191,7 +191,7 @@ func DisplayInetConnectivity(ft Formatter,
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 
-    println(ft.FormatHeader("Testing internet dns"))
+    fmt.Printf("%s\n", ft.FormatHeader("Testing internet dns"))
     for i := range inetHosts {
         var host = inetHosts[i]
 
@@ -204,7 +204,7 @@ func DisplayInetConnectivity(ft Formatter,
 
 
 func main() {
-    col := ColorBrush{enabled:true}
+    col := ColorBrush{enabled:!TerminalIsDumb()}
     ft := Formatter{colorBrush:col}
 
     // Detect local network info
@@ -232,14 +232,11 @@ func main() {
     var netDnsServers = DetectNameservers()
 
     inetHosts := []string{
-//        "bitbucket.org",
         "facebook.com",
-//        "github.com",
         "gmail.com",
         "google.com",
         "twitter.com",
         "yahoo.com",
-//        "youtube.com",
     }
 
     // Do inet pings

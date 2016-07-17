@@ -2,6 +2,7 @@ package main
 
 import (
     "net"
+    "os"
 )
 
 
@@ -40,4 +41,19 @@ func NetworkContains(ip string, mask string, candidateIp string) bool {
     var candidateStruct = net.ParseIP(candidateIp)
 
     return netStruct.Contains(candidateStruct)
+}
+
+
+/*
+    Detect whether we are connected to a terminal (TERM set) and whether the
+    terminal is dumb (does not support ansi control codes).
+*/
+func TerminalIsDumb() bool {
+    var term = os.Getenv("TERM")
+
+    if term == "" || term == "dumb" {
+        return true
+    }
+
+    return false
 }
