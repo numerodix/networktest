@@ -49,6 +49,11 @@ func (ft *Formatter) FormatLanIpField(ip string) string {
     return ipFmt
 }
 
+func (ft *Formatter) FormatLanIp6Field(ip net.IP) string {
+    var ipFmt = ft.colorBrush.bgreen(fmt.Sprintf("%39s", ip))
+    return ipFmt
+}
+
 func (ft *Formatter) FormatIpField(ip string) string {
     var ipFmt = ft.colorBrush.green(fmt.Sprintf("%15s", ip))
     return ipFmt

@@ -2,14 +2,40 @@ package main
 
 import (
     "fmt"
+    "net"
 )
 
 
-func DisplayLocalNetwork6(ft Formatter,
-                          ip6Ips Ip6AddrExecution,
-                          ip6Routes Ip6RouteExecution) {
+func DetectLanIps6(ip6Addrs Ip6AddrExecution,
+                   ip6Routes Ip6RouteExecution) []net.IP {
 
-    var ip6AddrBlocks = ip6Ips.Ip6AddrBlocks
+    var ip6AddrBlocks = ip6Addrs.Ip6AddrBlocks
+    var ip6RouteBlocks = ip6Routes.Ip6RouteBlocks
+
+    var lanIps []net.IP
+
+    for i := range ip6RouteBlocks {
+        var ip6RouteBlock = ip6RouteBlocks[i]
+
+        for j := range ip6AddrBlocks {
+            var ip6AddrBlock = ip6AddrBlocks[j]
+
+            if ip6AddrBlock.Network.Contains(ip6RouteBlock.IPv6) {
+                lanIps = append(lanIps, ip6RouteBlock.IPv6)
+            }
+        }
+    }
+
+    return lanIps
+}
+
+
+func DisplayLocalNetwork6(ft Formatter,
+                          ip6Addrs Ip6AddrExecution,
+                          ip6Routes Ip6RouteExecution,
+                          lanIps []net.IP) {
+
+    var ip6AddrBlocks = ip6Addrs.Ip6AddrBlocks
     var ip6RouteBlocks = ip6Routes.Ip6RouteBlocks
 
     fmt.Printf("%s\n", ft.FormatHeader("Scanning for networks"))
@@ -47,12 +73,12 @@ func DisplayLocalNetwork6(ft Formatter,
         var ipFmt = ft.FormatIp6Field(ip6RouteBlock.IPv6)
         fmt.Printf("    %s  %s\n", ifaceFmt, ipFmt)
     }
-/*    for i := range lanIps {
+    for i := range lanIps {
         var lanIp = lanIps[i]
 
-        var ipFmt = ft.FormatLanIpField(lanIp)
+        var ipFmt = ft.FormatLanIp6Field(lanIp)
         fmt.Printf("     ip:        %s\n", ipFmt)
-    } */
+    }
     if len(ip6RouteBlocks) == 0 {
         fmt.Printf("    %s\n", ft.FormatError("none found"))
     }
@@ -64,15 +90,15 @@ func HaveNet6() {
     ft := Formatter{colorBrush:col}
 
     // Detect local network info
-    var ip6Ips = Ip6Addr()
+    var ip6Addrs = Ip6Addr()
     var ip6Routes = Ip6Route()
 
     // Do local pings
 //    var netPings = DoNetPings(ifconfig, route)
 
     // Detect ips on local area network
-//    var lanIps = DetectLanIps(ifconfig, route)
+    var lanIps = DetectLanIps6(ip6Addrs, ip6Routes)
 
     // Display local network info
-    DisplayLocalNetwork6(ft, ip6Ips, ip6Routes)
+    DisplayLocalNetwork6(ft, ip6Addrs, ip6Routes, lanIps)
 }
