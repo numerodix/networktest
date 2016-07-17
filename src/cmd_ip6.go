@@ -44,7 +44,10 @@ func DoNetPings6(ip6Addrs Ip6AddrExecution,
         var ip6AddrBlock = ip6AddrBlocks[i]
         var ip = ip6AddrBlock.IPv6.String()
 
-        netPings[ip] = PingExecution{}
+        // Exclude link scope as ping6 cannot use it
+        if ip6AddrBlock.Scope != "link" {
+            netPings[ip] = PingExecution{}
+        }
     }
 
     var ip6RouteBlocks = ip6Routes.Ip6RouteBlocks
@@ -136,11 +139,16 @@ func DisplayLocalNetwork6(ft Formatter,
     for i := range ip6AddrBlocks {
         var ip6AddrBlock = ip6AddrBlocks[i]
 
-        var pingExec = netPings[ip6AddrBlock.IPv6.String()]
+        // Link scope is excluded
+        var pingFmt = ft.FormatError("N/A")
+        if ip6AddrBlock.Scope != "link" {
+            var pingExec = netPings[ip6AddrBlock.IPv6.String()]
+            pingFmt = ft.FormatPingTime(pingExec)
+        }
+
         var ifaceFmt = ft.FormatIfaceField(ip6AddrBlock.Iface)
         var ipFmt = ft.FormatIp6Field(ip6AddrBlock.IPv6)
         var maskFmt = ft.FormatMask6Field(ip6AddrBlock.Network.Mask)
-        var pingFmt = ft.FormatPingTime(pingExec)
         fmt.Printf("    %s  %s %s  ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
     if len(ip6AddrBlocks) == 0 {

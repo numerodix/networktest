@@ -103,7 +103,7 @@ func Ip6Addr() Ip6AddrExecution {
                 Iface: iface,
                 IPv6: ip,
                 Network: *ipnet,
-                Scope: scope,
+                Scope: strings.ToLower(scope),
             })
         }
     }
