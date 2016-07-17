@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "net"
 )
 
 
@@ -50,6 +51,22 @@ func (ft *Formatter) FormatLanIpField(ip string) string {
 
 func (ft *Formatter) FormatIpField(ip string) string {
     var ipFmt = ft.colorBrush.green(fmt.Sprintf("%15s", ip))
+    return ipFmt
+}
+
+func (ft *Formatter) FormatIp6Field(ip net.IP) string {
+    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%s", ip))
+    return ipFmt
+}
+
+func (ft *Formatter) FormatMask6Field(mask net.IPMask) string {
+    var ones, _ = mask.Size()
+    var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %d", ones))
+    return subnetFmt
+}
+
+func (ft *Formatter) FormatScope6Field(scope string) string {
+    var ipFmt = ft.colorBrush.yellow(fmt.Sprintf("[scope: %s]", scope))
     return ipFmt
 }
 

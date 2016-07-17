@@ -203,7 +203,7 @@ func DisplayInetConnectivity(ft Formatter,
 }
 
 
-func main() {
+func HaveNet4() {
     col := ColorBrush{enabled:!TerminalIsDumb()}
     ft := Formatter{colorBrush:col}
 

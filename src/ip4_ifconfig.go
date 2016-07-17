@@ -65,7 +65,7 @@ func Ifconfig() IfconfigExecution {
     err := cmd.Run()
     if err != nil {
         return IfconfigExecution{
-            Error: fmt.Errorf("Failed to run ifconfig: %q", err),
+            Error: fmt.Errorf("Failed to run %s: %q", executable, err),
         }
     }
 

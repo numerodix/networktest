@@ -75,7 +75,7 @@ func Route() RouteExecution {
     err := cmd.Run()
     if err != nil {
         return RouteExecution{
-            Error: fmt.Errorf("Failed to run route: %q", err),
+            Error: fmt.Errorf("Failed to run %s: %q", executable, err),
         }
     }
 
