@@ -44,12 +44,12 @@ func (ft *Formatter) FormatHostField(host string) string {
 }
 
 func (ft *Formatter) FormatLanIpField(ip string) string {
-    var ipFmt = ft.colorBrush.bgreen(fmt.Sprintf("%-15s", ip))
+    var ipFmt = ft.colorBrush.bgreen(fmt.Sprintf("%15s", ip))
     return ipFmt
 }
 
 func (ft *Formatter) FormatIpField(ip string) string {
-    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%-15s", ip))
+    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%15s", ip))
     return ipFmt
 }
 
