@@ -21,7 +21,7 @@ func DetectLanIps6(ip6Addrs Ip6AddrExecution,
             var ip6AddrBlock = ip6AddrBlocks[j]
 
             if ip6AddrBlock.Network.Contains(ip6RouteBlock.IPv6) {
-                lanIps = append(lanIps, ip6RouteBlock.IPv6)
+                lanIps = append(lanIps, ip6AddrBlock.IPv6)
             }
         }
     }
