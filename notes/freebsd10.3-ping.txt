@@ -1,0 +1,6 @@
+# ping -c1 -W2 gooule.com
+PING google.com (216.58.212.238): 56 data bytes
+
+--- google.com ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss, 1 packets out of wait time
+round-trip min/avg/max/stddev = 37.746/37.746/37.746/0.000 ms
