@@ -1,4 +1,4 @@
-# ifconfig
+$ ifconfig
 em0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
 	options=9b<RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM>
 	ether 08:00:27:f2:34:a1
