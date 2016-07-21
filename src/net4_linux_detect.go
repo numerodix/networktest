@@ -42,7 +42,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
              valid_lft forever preferred_lft forever
     */
 
-    // We will read by lines
+    // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
     // Prepare regex objects
@@ -74,6 +74,8 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 continue
             }
 
+            var netMasked = ipMaskToNet4(ipnet.IP, ipnet.Mask)
+
             // XXX move to convenience function?
             var mask = net.IPv4(
                 ipnet.Mask[0],
@@ -81,6 +83,10 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 ipnet.Mask[2],
                 ipnet.Mask[3])
 
+            info.Nets = append(info.Nets, Network{
+                Iface: Interface{Name: iface},
+                Ip: netMasked,
+            })
             info.Ips = append(info.Ips, IpAddr{
                 Iface: Interface{Name: iface},
                 Ip: ipobj,

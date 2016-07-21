@@ -23,6 +23,23 @@ func Test_linuxParseIpAddr4(t *testing.T) {
 
     linuxParseIpAddr4(ip4AddrOutput, &info)
 
+    // Errors
+    assertIntEq(t, 0, len(info.Errs), "Errs does not match")
+
+    // Networks
+    assertStrEq(t, "lo", info.Nets[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "127.0.0.0", info.Nets[0].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ff000000", info.Nets[0].Ip.Mask.String(), "Mask does not match")
+
+    assertStrEq(t, "eth0", info.Nets[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.0", info.Nets[1].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ffffff00", info.Nets[1].Ip.Mask.String(), "Mask does not match")
+
+    assertStrEq(t, "wlan0", info.Nets[2].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.0", info.Nets[2].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ffffff00", info.Nets[2].Ip.Mask.String(), "Mask does not match")
+
+    // Ips
     assertStrEq(t, "lo", info.Ips[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "127.0.0.1", info.Ips[0].Ip.String(), "Ip does not match")
     assertStrEq(t, "255.0.0.0", info.Ips[0].Mask.String(), "Mask does not match")
