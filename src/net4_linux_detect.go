@@ -74,6 +74,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 continue
             }
 
+            // XXX move to convenience function?
             var mask = net.IPv4(
                 ipnet.Mask[0],
                 ipnet.Mask[1],

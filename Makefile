@@ -6,7 +6,7 @@ test:
 	make run
 
 unittest:
-	(cd src && go test)
+	(cd src && go test -v -cover)
 
 run: bin/havenet
 	bin/havenet
