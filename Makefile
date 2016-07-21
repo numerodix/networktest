@@ -14,7 +14,6 @@ run: bin/havenet
 
 bin/havenet: src/*.go
 	# CGO_ENABLED=0 to enable a static build
-#	ls src/*.go | grep -v '_test.go'
 	CGO_ENABLED=0 go build -o bin/havenet $(shell ls src/*.go | grep -v '_test.go')
 
 
