@@ -5,7 +5,7 @@ import "strings"
 import "testing"
 
 
-func TestProcMgr_False(t *testing.T) {
+func Test_ProcMgr_false(t *testing.T) {
     var mgr = ProcMgr("false")
     var res = mgr.run()
 
@@ -17,7 +17,7 @@ func TestProcMgr_False(t *testing.T) {
     assertStrEq(t, "exit status 1", res.err.Error(), "err does not match")
 }
 
-func TestProcMgr_Ls(t *testing.T) {
+func Test_ProcMgr_ls(t *testing.T) {
     var mgr = ProcMgr("ls", "/dyhfi8345rh")
     var res = mgr.run()
 
@@ -31,7 +31,7 @@ func TestProcMgr_Ls(t *testing.T) {
     assertStrEq(t, "exit status 2", res.err.Error(), "err does not match")
 }
 
-func TestProcMgr_True(t *testing.T) {
+func Test_ProcMgr_true(t *testing.T) {
     var mgr = ProcMgr("true")
     var res = mgr.run()
 
@@ -42,7 +42,7 @@ func TestProcMgr_True(t *testing.T) {
     assertPtrIsNull(t, res.err, "err does not match")
 }
 
-func TestProcMgr_Uname(t *testing.T) {
+func Test_ProcMgr_uname(t *testing.T) {
     var mgr = ProcMgr("uname")
     var res = mgr.run()
 
