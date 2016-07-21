@@ -7,11 +7,12 @@ import "runtime"
 type NetDetectUi struct {
     col ColorBrush
     ft Formatter
+    ipver int
     osName string
 }
 
 
-func NetworkDetector() NetDetectUi {
+func NetworkDetector(ipver int) NetDetectUi {
     var col = ColorBrush{
         enabled: !TerminalIsDumb(),
     }
@@ -20,6 +21,7 @@ func NetworkDetector() NetDetectUi {
     }
 
     var ui = NetDetectUi{
+        ipver: ipver,
         col: col,
         ft: ft,
         osName: runtime.GOOS,
