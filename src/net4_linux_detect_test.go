@@ -18,6 +18,13 @@ const ip4AddrOutput = `
 `
 
 
+const ip4RouteOutput = `
+default via 192.168.1.1 dev eth0  proto static 
+192.168.1.0/24 dev eth0  proto kernel  scope link  src 192.168.1.6  metric 1 
+192.168.1.0/24 dev wlan0  proto kernel  scope link  src 192.168.1.10  metric 9
+`
+
+
 func Test_linuxParseIpAddr4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
@@ -27,6 +34,8 @@ func Test_linuxParseIpAddr4(t *testing.T) {
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
 
     // Networks
+    assertIntEq(t, 3, len(info.Nets), "wrong number of networks")
+
     assertStrEq(t, "lo", info.Nets[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "127.0.0.0", info.Nets[0].Ip.IP.String(), "Ip does not match")
     assertStrEq(t, "ff000000", info.Nets[0].Ip.Mask.String(), "Mask does not match")
@@ -40,6 +49,8 @@ func Test_linuxParseIpAddr4(t *testing.T) {
     assertStrEq(t, "ffffff00", info.Nets[2].Ip.Mask.String(), "Mask does not match")
 
     // Ips
+    assertIntEq(t, 3, len(info.Ips), "wrong number of ips")
+
     assertStrEq(t, "lo", info.Ips[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "127.0.0.1", info.Ips[0].Ip.String(), "Ip does not match")
     assertStrEq(t, "255.0.0.0", info.Ips[0].Mask.String(), "Mask does not match")
@@ -51,4 +62,20 @@ func Test_linuxParseIpAddr4(t *testing.T) {
     assertStrEq(t, "wlan0", info.Ips[2].Iface.Name, "Iface does not match")
     assertStrEq(t, "192.168.1.10", info.Ips[2].Ip.String(), "Ip does not match")
     assertStrEq(t, "255.255.255.0", info.Ips[2].Mask.String(), "Mask does not match")
+}
+
+
+func Test_linuxParseIpRoute4(t *testing.T) {
+    var info = IP4NetworkInfo{}
+
+    linuxParseIpRoute4(ip4RouteOutput, &info)
+
+    // Errors
+    assertIntEq(t, 0, len(info.Errs), "Errs does not match")
+
+    // Gateways
+    assertIntEq(t, 1, len(info.Gws), "wrong number of gws")
+
+    assertStrEq(t, "eth0", info.Gws[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.1", info.Gws[0].Ip.String(), "Ip does not match")
 }

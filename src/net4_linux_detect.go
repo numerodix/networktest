@@ -10,7 +10,8 @@ func linuxDetectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
     linuxDetectIpAddr4(&info)
-    fmt.Printf("%s\n", info)
+    linuxDetectIpRoute4(&info)
+    unixDetectNsHosts4(&info)
 
     return info
 }
@@ -28,6 +29,20 @@ func linuxDetectIpAddr4(info *IP4NetworkInfo) {
 
     // Extract the output
     linuxParseIpAddr4(res.stdout, info)
+}
+
+func linuxDetectIpRoute4(info *IP4NetworkInfo) {
+    var mgr = ProcMgr("/sbin/ip", "-4", "route", "show")
+    var res = mgr.run()
+
+    // The command failed :(
+    if res.err != nil {
+        // XXX print some kind of useful error
+        return
+    }
+
+    // Extract the output
+    linuxParseIpRoute4(res.stdout, info)
 }
 
 
@@ -83,6 +98,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 ipnet.Mask[2],
                 ipnet.Mask[3])
 
+            // Populate info
             info.Nets = append(info.Nets, Network{
                 Iface: Interface{Name: iface},
                 Ip: netMasked,
@@ -91,6 +107,42 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 Iface: Interface{Name: iface},
                 Ip: ipobj,
                 Mask: mask,
+            })
+        }
+    }
+}
+
+
+func linuxParseIpRoute4(stdout string, info *IP4NetworkInfo) {
+    /* Output:
+      $ /sbin/ip -4 route show
+      default via 192.168.1.1 dev eth0  proto static 
+      192.168.1.0/24 dev eth0  proto kernel  scope link  src 192.168.1.6  metric 1 
+    */
+
+    // We will read line by line
+    var lines = strings.Split(stdout, "\n")
+
+    // Prepare regex objects
+    rxIface := regexp.MustCompile("^default via ([0-9.]+) dev ([^ ]+)")
+
+    // loop variables
+    var iface = ""
+    var ip = ""
+
+    for i := range lines {
+        var line = lines[i]
+
+        if rxIface.MatchString(line) {
+            ip = rxIface.FindStringSubmatch(line)[1]
+            iface = rxIface.FindStringSubmatch(line)[2]
+
+            var ipobj = net.ParseIP(ip)
+
+            // Populate info
+            info.Gws = append(info.Gws, Gateway{
+                Iface: Interface{Name: iface},
+                Ip: ipobj,
             })
         }
     }

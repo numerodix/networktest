@@ -1,0 +1,7 @@
+- Platform: XXX  Network: ipv4
+- Networks
+- Ips
+- Gateways
+- Inet conn
+- Dns servers
+- Internet dns
