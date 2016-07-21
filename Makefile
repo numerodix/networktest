@@ -5,6 +5,9 @@ test:
 	make clean
 	make run
 
+unittest:
+	(cd src && go test)
+
 run: bin/havenet
 	bin/havenet
 	bin/havenet -6

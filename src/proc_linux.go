@@ -1,7 +1,7 @@
 package main
 
 import "bytes"
-import "fmt"
+//import "fmt"
 import "os"
 import "os/exec"
 import "syscall"
@@ -34,11 +34,6 @@ func (mgr *ProcessManager) run() ProcessResult {
     // Invoke the cmd
     os.Setenv("LC_ALL", "C")  // Make sure we don't get localized output
     var err = cmd.Run()
-    if err != nil {
-        return ProcessResult{
-            err: fmt.Errorf("Failed to run %s %s: %q", mgr.exe, mgr.args, err),
-        }
-    }
 
     // Capture stdout, stderr
     var stderr = errBuffer.String()
