@@ -61,6 +61,7 @@ type IP4NetworkInfo struct {
     Ips []IpAddr
     Gws []Gateway
     NsHosts []NsServer
+    Errs []error
 
     // GetAllIfaces()
     // GetNetsForIface(iface)
