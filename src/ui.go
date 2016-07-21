@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "runtime"
+import "strings"
 
 
 type NetDetectUi struct {
@@ -21,9 +22,9 @@ func NetworkDetector(ipver int) NetDetectUi {
     }
 
     var ui = NetDetectUi{
-        ipver: ipver,
         col: col,
         ft: ft,
+        ipver: ipver,
         osName: runtime.GOOS,
     }
 
@@ -34,7 +35,14 @@ func NetworkDetector(ipver int) NetDetectUi {
 func run(ui *NetDetectUi) {
     var info = linuxDetectNetConn4()
 
+    displayPlatform(ui)
     displayLocalNet(ui, &info)
+}
+
+
+func displayPlatform(ui *NetDetectUi) {
+    var plat = strings.Title(ui.osName)
+    fmt.Printf("Platform: %s\n", ui.col.cyan(plat))
 }
 
 
