@@ -70,6 +70,13 @@ func assertPtrIsNull(t *testing.T, a interface{}, msg string) {
     }
 }
 
+func assertPtrNotNull(t *testing.T, a interface{}, msg string) {
+    if a == nil {
+        t.Errorf("%s: Pointer is nil: %d, [%s] at %s",
+                 _getFuncName(), a, msg, _getFuncFileLine())
+    }
+}
+
 func assertStrEq(t *testing.T, a, b string, msg string) {
     if a != b {
         t.Errorf("%s: Strings do not match: '%s' != '%s' [%s] at %s",

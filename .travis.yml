@@ -4,6 +4,7 @@ go:
     - 1.6
 
 script:
+    - make unittest
     - make test
 
 notifications:
