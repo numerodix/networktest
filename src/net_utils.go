@@ -15,3 +15,14 @@ func ipMaskToNet4(ip net.IP, mask net.IPMask) net.IPNet {
 
     return ipnet
 }
+
+
+func ipnetToMask4(ipnet *net.IPNet) net.IP {
+    var mask = net.IPv4(
+        ipnet.Mask[0],
+        ipnet.Mask[1],
+        ipnet.Mask[2],
+        ipnet.Mask[3])
+
+    return mask
+}
