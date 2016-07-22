@@ -83,3 +83,21 @@ func Test_bsdParseIfconfig4(t *testing.T) {
     assertStrEq(t, "127.0.0.1", info.Ips[1].Ip.String(), "Ip does not match")
     assertStrEq(t, "255.0.0.0", info.Ips[1].Mask.String(), "Mask does not match")
 }
+
+
+func Test_bsdParseNetstat4(t *testing.T) {
+    var info = IP4NetworkInfo{}
+
+    var ft = Formatter{}
+    var detector = BsdNetworkDetector4(ft)
+    detector.parseNetstat4(netstat4Output, &info)
+
+    // Errors
+    assertIntEq(t, 0, len(info.Errs), "Errs does not match")
+
+    // Gateways
+    assertIntEq(t, 1, len(info.Gws), "wrong number of gws")
+
+    assertStrEq(t, "em0", info.Gws[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "10.0.2.2", info.Gws[0].Ip.String(), "Ip does not match")
+}

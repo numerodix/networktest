@@ -47,7 +47,6 @@ func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
     // Parsing failed :(
     for _, err := range info.Errs {
         lnd.ft.printError("Failed to parse ipv4 network info", err)
-        return
     }
 }
 
@@ -67,7 +66,6 @@ func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
     // Parsing failed :(
     for _, err := range info.Errs {
         lnd.ft.printError("Failed to parse ipv4 network info", err)
-        return
     }
 }
 

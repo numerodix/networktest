@@ -23,7 +23,7 @@ func (bnd *BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
     bnd.detectIfconfig4(&info)
-//    fnd.detectIpRoute4(&info)
+    bnd.detectNetstat4(&info)
 
     var und = UnixNetworkDetector4(bnd.ft)
     und.detectNsHosts4(&info)
@@ -48,7 +48,26 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
     // Parsing failed :(
     for _, err := range info.Errs {
         bnd.ft.printError("Failed to parse ipv4 network info", err)
+    }
+}
+
+
+func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
+    var mgr = ProcMgr("/sbin/netstat", "-n", "-r")
+    var res = mgr.run()
+
+    // The command failed :(
+    if res.err != nil {
+        bnd.ft.printError("Failed to detect ipv4 routes", res.err)
         return
+    }
+
+    // Extract the output
+    bnd.parseNetstat4(res.stdout, info)
+
+    // Parsing failed :(
+    for _, err := range info.Errs {
+        bnd.ft.printError("Failed to parse ipv4 routes info", err)
     }
 }
 
@@ -131,3 +150,75 @@ func (bnd *BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
 }
 
 
+func (bnd *BsdNetDetect4) parseNetstat4(stdout string, info *IP4NetworkInfo) {
+    /* Output:
+      $ /sbin/netstat -n -r
+      Routing tables
+      
+      Internet:
+      Destination        Gateway            Flags      Netif Expire
+      default            10.0.2.2           UGS         em0
+      10.0.2.0/24        link#1             U           em0
+      10.0.2.15          link#1             UHS         lo0
+      127.0.0.1          link#2             UH          lo0
+      
+      Internet6:
+      Destination                       Gateway                       Flags      Netif Expire
+      ::/96                             ::1                           UGRS        lo0
+      ::1                               link#2                        UH          lo0
+      ::ffff:0.0.0.0/96                 ::1                           UGRS        lo0
+      fe80::/10                         ::1                           UGRS        lo0
+      fe80::%em0/64                     link#1                        U           em0
+      fe80::a00:27ff:fef2:34a1%em0      link#1                        UHS         lo0
+      fe80::%lo0/64                     link#2                        U           lo0
+      fe80::1%lo0                       link#2                        UHS         lo0
+      ff01::%em0/32                     fe80::a00:27ff:fef2:34a1%em0  U           em0
+      ff01::%lo0/32                     ::1                           U           lo0
+      ff02::/16                         ::1                           UGRS        lo0
+      ff02::%em0/32                     fe80::a00:27ff:fef2:34a1%em0  U           em0
+      ff02::%lo0/32                     ::1                           U           lo0
+    */
+
+    // We will read line by line
+    var lines = strings.Split(stdout, "\n")
+
+    // Prepare regex objects
+    rxLabel4 := regexp.MustCompile("^Internet:")
+    rxLabel6 := regexp.MustCompile("^Internet6:")
+    rxFlags := regexp.MustCompile("^default[ \t]+([0-9.]+)[ \t]+([^ ]+)[ \t]+([^ ]+)")
+    rxGw := regexp.MustCompile("G")
+
+    // Loop variables
+    var scope4 = false
+    var iface = ""
+    var ip = ""
+    var flags = ""
+
+    for _, line := range lines {
+        if !scope4 && rxLabel4.MatchString(line) {
+            scope4 = true
+            continue
+        }
+
+        if scope4 && rxLabel6.MatchString(line) {
+            scope4 = false
+            break
+        }
+
+        if scope4 && rxFlags.MatchString(line) {
+            ip = rxFlags.FindStringSubmatch(line)[1]
+            flags = rxFlags.FindStringSubmatch(line)[2]
+            iface = rxFlags.FindStringSubmatch(line)[3]
+
+            if rxGw.MatchString(flags) {
+                var ipobj = net.ParseIP(ip)
+
+                // Populate info
+                info.Gws = append(info.Gws, Gateway{
+                    Iface: Interface{Name: iface},
+                    Ip: ipobj,
+                })
+            }
+        }
+    }
+}
