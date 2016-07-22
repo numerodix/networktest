@@ -2,6 +2,7 @@ package main
 
 //import "fmt"
 import "net"
+import "sort"
 
 
 type Interface struct {
@@ -30,6 +31,18 @@ func (net *Network) maskAsString() string {
     return mask.String()
 }
 
+// Sorting for Network
+type ByNetwork []Network
+func (nets ByNetwork) Len() int {
+    return len(nets)
+}
+func (nets ByNetwork) Swap(i, j int) {
+    nets[i], nets[j] = nets[j], nets[i]
+}
+func (nets ByNetwork) Less(i, j int) bool {
+    return ipIsLesser(nets[i].Ip.IP, nets[j].Ip.IP)
+}
+
 
 type IpAddr struct {
     Iface Interface
@@ -56,6 +69,18 @@ func (ipa *IpAddr) maskAsString() string {
     return ipa.Mask.String()
 }
 
+// Sorting for IpAddr
+type ByIpAddr []IpAddr
+func (ipas ByIpAddr) Len() int {
+    return len(ipas)
+}
+func (ipas ByIpAddr) Swap(i, j int) {
+    ipas[i], ipas[j] = ipas[j], ipas[i]
+}
+func (ipas ByIpAddr) Less(i, j int) bool {
+    return ipIsLesser(ipas[i].Ip, ipas[j].Ip)
+}
+
 
 type Gateway struct {
     Iface Interface
@@ -72,6 +97,18 @@ func (gw *Gateway) ipAsString() string {
     return gw.Ip.String()
 }
 
+// Sorting for Gateway
+type ByGateway []Gateway
+func (gws ByGateway) Len() int {
+    return len(gws)
+}
+func (gws ByGateway) Swap(i, j int) {
+    gws[i], gws[j] = gws[j], gws[i]
+}
+func (gws ByGateway) Less(i, j int) bool {
+    return ipIsLesser(gws[i].Ip, gws[j].Ip)
+}
+
 
 type NsServer struct {
     Ip net.IP
@@ -80,6 +117,18 @@ type NsServer struct {
     // Is6
 
     // IpAsString
+}
+
+// Sorting for NsServer
+type ByNsServer []NsServer
+func (nss ByNsServer) Len() int {
+    return len(nss)
+}
+func (nss ByNsServer) Swap(i, j int) {
+    nss[i], nss[j] = nss[j], nss[i]
+}
+func (nss ByNsServer) Less(i, j int) bool {
+    return ipIsLesser(nss[i].Ip, nss[j].Ip)
 }
 
 
@@ -95,6 +144,31 @@ type IP4NetworkInfo struct {
     // GetNetsForIface(iface)
     // 
 }
+
+func (info *IP4NetworkInfo) getSortedNets() []Network {
+    var nets = info.Nets
+    sort.Sort(ByNetwork(nets))
+    return nets
+}
+
+func (info *IP4NetworkInfo) getSortedIps() []IpAddr {
+    var ips = info.Ips
+    sort.Sort(ByIpAddr(ips))
+    return ips
+}
+
+func (info *IP4NetworkInfo) getSortedGws() []Gateway {
+    var gws = info.Gws
+    sort.Sort(ByGateway(gws))
+    return gws
+}
+
+func (info *IP4NetworkInfo) getSortedNsHosts() []NsServer {
+    var nss = info.NsHosts
+    sort.Sort(ByNsServer(nss))
+    return nss
+}
+
 
 func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
     var ips = []IpAddr{}

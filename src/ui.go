@@ -49,7 +49,7 @@ func (ui *NetDetectUi) displayPlatform() {
 func (ui *NetDetectUi) displayLocalNet(info *IP4NetworkInfo) {
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Scanning for networks"))
-    for _, net := range info.Nets {
+    for _, net := range info.getSortedNets() {
         var ifaceFmt = ui.ft.formatIfaceField(net.Iface.Name)
         var netwFmt = ui.ft.formatIpField(net.ipAsString())
         var maskFmt = ui.ft.formatSubnetField(net.maskAsString())
@@ -60,7 +60,7 @@ func (ui *NetDetectUi) displayLocalNet(info *IP4NetworkInfo) {
     }
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Detecting ips"))
-    for _, ip := range info.Ips {
+    for _, ip := range info.getSortedIps() {
 //        var pingExec = netPings[ifaceBlock.IPv4]
         var ifaceFmt = ui.ft.formatIfaceField(ip.Iface.Name)
         var ipFmt = ui.ft.formatIpField(ip.ipAsString())
@@ -73,7 +73,7 @@ func (ui *NetDetectUi) displayLocalNet(info *IP4NetworkInfo) {
     }
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Detecting gateways"))
-    for _, gw := range info.Gws {
+    for _, gw := range info.getSortedGws() {
 //        var pingExec = netPings[gw.Gateway]
         var ifaceFmt = ui.ft.formatIfaceField(gw.Iface.Name)
         var ipFmt = ui.ft.formatIpField(gw.ipAsString())
