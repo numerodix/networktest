@@ -42,17 +42,19 @@ func (ui *NetDetectUi) run() {
     case "linux":
         var linuxDet = LinuxNetworkDetector4(ui.ft)
         info = linuxDet.detectNetConn4()
-        break
 
     // BSD userland
     case "darwin":
+        fallthrough
     case "dragonfly":
+        fallthrough
     case "freebsd":
+        fallthrough
     case "netbsd":
+        fallthrough
     case "openbsd":
         var bsdDet = BsdNetworkDetector4(ui.ft)
         info = bsdDet.detectNetConn4()
-        break
     }
 
     ui.displayLocalNet(&info)
