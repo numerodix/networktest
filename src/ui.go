@@ -51,7 +51,7 @@ func displayLocalNet(ui *NetDetectUi, info *IP4NetworkInfo) {
     fmt.Printf("%s\n", ui.ft.formatHeader("Scanning for networks"))
     for _, net := range info.Nets {
         var ifaceFmt = ui.ft.formatIfaceField(net.Iface.Name)
-        var netwFmt = ui.ft.formatIpField(net.Ip.IP.String())
+        var netwFmt = ui.ft.formatIpField(net.ipAsString())
         var maskFmt = ui.ft.formatSubnetField(net.maskAsString())
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
@@ -63,8 +63,8 @@ func displayLocalNet(ui *NetDetectUi, info *IP4NetworkInfo) {
     for _, ip := range info.Ips {
 //        var pingExec = netPings[ifaceBlock.IPv4]
         var ifaceFmt = ui.ft.formatIfaceField(ip.Iface.Name)
-        var ipFmt = ui.ft.formatIpField(ip.Ip.String())
-        var maskFmt = ui.ft.formatSubnetField(ip.Mask.String())
+        var ipFmt = ui.ft.formatIpField(ip.ipAsString())
+        var maskFmt = ui.ft.formatSubnetField(ip.maskAsString())
 //        var pingFmt = ui.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s %s   \n", ifaceFmt, ipFmt, maskFmt)
     }
@@ -76,7 +76,7 @@ func displayLocalNet(ui *NetDetectUi, info *IP4NetworkInfo) {
     for _, gw := range info.Gws {
 //        var pingExec = netPings[gw.Gateway]
         var ifaceFmt = ui.ft.formatIfaceField(gw.Iface.Name)
-        var ipFmt = ui.ft.formatIpField(gw.Ip.String())
+        var ipFmt = ui.ft.formatIpField(gw.ipAsString())
 //        var pingFmt = ui.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s   \n", ifaceFmt, ipFmt)
     }

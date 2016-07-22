@@ -20,6 +20,10 @@ type Network struct {
     // BcastAsString
 }
 
+func (net *Network) ipAsString() string {
+    return net.Ip.IP.String()
+}
+
 func (net *Network) maskAsString() string {
     var mask = ipnetToMask4(&net.Ip)
     return mask.String()
@@ -38,6 +42,14 @@ type IpAddr struct {
     // MaskAsString
 }
 
+func (ipa *IpAddr) ipAsString() string {
+    return ipa.Ip.String()
+}
+
+func (ipa *IpAddr) maskAsString() string {
+    return ipa.Mask.String()
+}
+
 
 type Gateway struct {
     Iface Interface
@@ -48,6 +60,10 @@ type Gateway struct {
     // Is6
 
     // IpAsString
+}
+
+func (gw *Gateway) ipAsString() string {
+    return gw.Ip.String()
 }
 
 
