@@ -37,7 +37,7 @@ func (ui *NetDetectUi) run() {
 
     var detector = LinuxNetworkDetector4(ui.ft)
 
-    var info = detector.linuxDetectNetConn4()
+    var info = detector.detectNetConn4()
     ui.displayLocalNet(&info)
 }
 

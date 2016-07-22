@@ -17,7 +17,7 @@ func UnixNetworkDetector4(ft Formatter) UnixNetDetect4 {
 }
 
 
-func (und *UnixNetDetect4) unixDetectNsHosts4(info *IP4NetworkInfo) {
+func (und *UnixNetDetect4) detectNsHosts4(info *IP4NetworkInfo) {
     var filepath = "/etc/resolv.conf"
 
     // Read the file
@@ -28,14 +28,14 @@ func (und *UnixNetDetect4) unixDetectNsHosts4(info *IP4NetworkInfo) {
     }
 
     var content = string(bytes)
-    und.unixParseResolvConf4(content, info)
+    und.parseResolvConf4(content, info)
 }
 
 
-func (und *UnixNetDetect4) unixParseResolvConf4(content string,
+func (und *UnixNetDetect4) parseResolvConf4(content string,
                                                 info *IP4NetworkInfo) {
 
-    var nameservers = und.unixParseResolvConf(content)
+    var nameservers = und.parseResolvConf(content)
 
     for _, nameserver := range nameservers {
         var ip = net.ParseIP(nameserver)
@@ -46,7 +46,7 @@ func (und *UnixNetDetect4) unixParseResolvConf4(content string,
     }
 }
 
-func (und *UnixNetDetect4) unixParseResolvConf(content string) []string {
+func (und *UnixNetDetect4) parseResolvConf(content string) []string {
     // Parse the nameservers
     var nameservers []string
     var lines = strings.Split(content, "\n")
