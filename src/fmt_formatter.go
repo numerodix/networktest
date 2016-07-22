@@ -77,3 +77,14 @@ func (ft *Formatter) formatSubnetField(ip string) string {
     var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %-15s", ip))
     return subnetFmt
 }
+
+
+func (ft *Formatter) printError(msg string, err... error) {
+    var prefix = fmt.Sprintf("Error: %s", msg)
+
+    if err != nil {
+        prefix = fmt.Sprintf("%s: %s", prefix, err)
+    }
+
+    fmt.Printf("%s\n", prefix)
+}

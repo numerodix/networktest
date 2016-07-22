@@ -6,47 +6,61 @@ import "regexp"
 import "strings"
 
 
-func linuxDetectNetConn4() IP4NetworkInfo {
+type LinuxNetDetect4 struct {
+    col ColorBrush
+    ft Formatter
+}
+
+
+func LinuxNetworkDetector4(col ColorBrush, ft Formatter) LinuxNetDetect4 {
+    return LinuxNetDetect4{
+        col: col,
+        ft: ft,
+    }
+}
+
+
+func (lnd *LinuxNetDetect4) linuxDetectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
-    linuxDetectIpAddr4(&info)
-    linuxDetectIpRoute4(&info)
+    lnd.linuxDetectIpAddr4(&info)
+    lnd.linuxDetectIpRoute4(&info)
     unixDetectNsHosts4(&info)
 
     return info
 }
 
 
-func linuxDetectIpAddr4(info *IP4NetworkInfo) {
+func (lnd *LinuxNetDetect4) linuxDetectIpAddr4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("/sbin/ip", "-4", "addr", "show")
     var res = mgr.run()
 
     // The command failed :(
     if res.err != nil {
-        // XXX print some kind of useful error
+        lnd.ft.printError("Failed to detect ipv4 network", res.err)
         return
     }
 
     // Extract the output
-    linuxParseIpAddr4(res.stdout, info)
+    lnd.linuxParseIpAddr4(res.stdout, info)
 }
 
-func linuxDetectIpRoute4(info *IP4NetworkInfo) {
+func (lnd *LinuxNetDetect4) linuxDetectIpRoute4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("/sbin/ip", "-4", "route", "show")
     var res = mgr.run()
 
     // The command failed :(
     if res.err != nil {
-        // XXX print some kind of useful error
+        lnd.ft.printError("Failed to detect ipv4 routes", res.err)
         return
     }
 
     // Extract the output
-    linuxParseIpRoute4(res.stdout, info)
+    lnd.linuxParseIpRoute4(res.stdout, info)
 }
 
 
-func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
+func (lnd *LinuxNetDetect4) linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ip -4 addr show
       1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
@@ -105,7 +119,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
 }
 
 
-func linuxParseIpRoute4(stdout string, info *IP4NetworkInfo) {
+func (lnd *LinuxNetDetect4) linuxParseIpRoute4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ip -4 route show
       default via 192.168.1.1 dev eth0  proto static 
