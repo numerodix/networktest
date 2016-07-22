@@ -69,9 +69,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
     var ip = ""
     var maskBits = ""
 
-    for i := range lines {
-        var line = lines[i]
-
+    for _, line := range lines {
         if rxIface.MatchString(line) {
             iface = rxIface.FindStringSubmatch(line)[1]
         }
@@ -130,9 +128,7 @@ func linuxParseIpRoute4(stdout string, info *IP4NetworkInfo) {
     var iface = ""
     var ip = ""
 
-    for i := range lines {
-        var line = lines[i]
-
+    for _, line := range lines {
         if rxIface.MatchString(line) {
             ip = rxIface.FindStringSubmatch(line)[1]
             iface = rxIface.FindStringSubmatch(line)[2]

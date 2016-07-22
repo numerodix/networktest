@@ -24,8 +24,7 @@ func unixDetectNsHosts4(info *IP4NetworkInfo) {
 func unixParseResolvConf4(content string, info *IP4NetworkInfo) {
     var nameservers = unixParseResolvConf(content)
 
-    for i := range nameservers {
-        var nameserver = nameservers[i]
+    for _, nameserver := range nameservers {
         var ip = net.ParseIP(nameserver)
 
         info.NsHosts = append(info.NsHosts, NsServer{
@@ -40,9 +39,7 @@ func unixParseResolvConf(content string) []string {
     var lines = strings.Split(content, "\n")
     rx := regexp.MustCompile("nameserver ([^ ]*)")
 
-    for i := range lines {
-        var line = lines[i]
-
+    for _, line := range lines {
         if rx.MatchString(line) {
             var ns = rx.FindStringSubmatch(line)[1]
             nameservers = append(nameservers, ns)
