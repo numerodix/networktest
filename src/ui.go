@@ -15,7 +15,7 @@ type NetDetectUi struct {
 
 func NetworkDetector(ipver int) NetDetectUi {
     var col = ColorBrush{
-        enabled: !TerminalIsDumb(),
+        enabled: !terminalIsDumb(),
     }
     var ft = Formatter{
         colorBrush: col,
