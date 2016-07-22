@@ -44,6 +44,12 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
 
     // Extract the output
     bnd.parseIfconfig4(res.stdout, info)
+
+    // Parsing failed :(
+    for _, err := range info.Errs {
+        bnd.ft.printError("Failed to parse ipv4 network info", err)
+        return
+    }
 }
 
 
