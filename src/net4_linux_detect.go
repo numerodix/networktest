@@ -87,7 +87,7 @@ func linuxParseIpAddr4(stdout string, info *IP4NetworkInfo) {
                 continue
             }
 
-            var netMasked = ipMaskToNet4(ipnet.IP, ipnet.Mask)
+            var netMasked = ipMaskToNet4(&ipnet.IP, &ipnet.Mask)
             var mask = ipnetToMask4(ipnet)
 
             // Populate info
