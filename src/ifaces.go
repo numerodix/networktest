@@ -1,5 +1,6 @@
 package main
 
+//import "fmt"
 import "net"
 
 
@@ -40,6 +41,11 @@ type IpAddr struct {
 
     // IpAsString
     // MaskAsString
+}
+
+func (ipa *IpAddr) getAsIpnet() net.IPNet {
+    var ipnet = ipIPMaskToNet4(&ipa.Ip, &ipa.Mask)
+    return ipnet
 }
 
 func (ipa *IpAddr) ipAsString() string {
@@ -85,8 +91,22 @@ type IP4NetworkInfo struct {
     Errs []error
 
     // GetAllIfaces()
+    // GetIpsForGw(gw)
     // GetNetsForIface(iface)
     // 
+}
+
+func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
+    var ips = []IpAddr{}
+
+    for _, ip := range info.Ips {
+        var ipnet = ip.getAsIpnet()
+        if ipnet.Contains(gw.Ip) {
+            ips = append(ips, ip)
+        }
+    }
+
+    return ips
 }
 
 

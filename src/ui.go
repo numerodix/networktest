@@ -79,11 +79,13 @@ func (ui *NetDetectUi) displayLocalNet(info *IP4NetworkInfo) {
         var ipFmt = ui.ft.formatIpField(gw.ipAsString())
 //        var pingFmt = ui.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s   \n", ifaceFmt, ipFmt)
+
+        var ips = info.getIpsForGw(&gw)
+        for _, ip := range ips {
+            var ipFmt = ui.ft.formatLanIpField(ip.ipAsString())
+            fmt.Printf("     ip:        %s\n", ipFmt)
+        }
     }
-/*    for _, lanIp := range lanIps {
-        var ipFmt = ui.ft.formatLanIpField(lanIp)
-        fmt.Printf("     ip:        %s\n", ipFmt)
-    } */
     if len(info.Gws) == 0 {
         fmt.Printf("    %s\n", ui.ft.formatError("none found"))
     }
