@@ -35,9 +35,26 @@ func NetworkDetector(ipver int) NetDetectUi {
 func (ui *NetDetectUi) run() {
     ui.displayPlatform()
 
-    var detector = LinuxNetworkDetector4(ui.ft)
+    var info IP4NetworkInfo
 
-    var info = detector.detectNetConn4()
+    switch ui.osName {
+    // Linux userland
+    case "linux":
+        var linuxDet = LinuxNetworkDetector4(ui.ft)
+        info = linuxDet.detectNetConn4()
+        break
+
+    // BSD userland
+    case "darwin":
+    case "dragonfly":
+    case "freebsd":
+    case "netbsd":
+    case "openbsd":
+        var bsdDet = BsdNetworkDetector4(ui.ft)
+        info = bsdDet.detectNetConn4()
+        break
+    }
+
     ui.displayLocalNet(&info)
 }
 

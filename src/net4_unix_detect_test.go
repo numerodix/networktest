@@ -14,7 +14,9 @@ nameserver 8.8.4.4
 func Test_unixParseResolvConf4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    unixParseResolvConf4(resolvConfContent, &info)
+    var ft = Formatter{}
+    var detector = UnixNetworkDetector4(ft)
+    detector.parseResolvConf4(resolvConfContent, &info)
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")

@@ -28,7 +28,9 @@ default via 192.168.1.1 dev eth0  proto static
 func Test_linuxParseIpAddr4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    linuxParseIpAddr4(ip4AddrOutput, &info)
+    var ft = Formatter{}
+    var detector = LinuxNetworkDetector4(ft)
+    detector.parseIpAddr4(ip4AddrOutput, &info)
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
@@ -68,7 +70,9 @@ func Test_linuxParseIpAddr4(t *testing.T) {
 func Test_linuxParseIpRoute4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    linuxParseIpRoute4(ip4RouteOutput, &info)
+    var ft = Formatter{}
+    var detector = LinuxNetworkDetector4(ft)
+    detector.parseIpRoute4(ip4RouteOutput, &info)
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
