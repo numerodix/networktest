@@ -27,12 +27,12 @@ const netstat4Output = `
 `
 
 
-func Test_bsdParseIpAddr4(t *testing.T) {
+func Test_bsdParseIfconfig4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
     var ft = Formatter{}
     var detector = BsdNetworkDetector4(ft)
-    detector.parseIpAddr4(ifconfig4Output, &info)
+    detector.parseIfconfig4(ifconfig4Output, &info)
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")

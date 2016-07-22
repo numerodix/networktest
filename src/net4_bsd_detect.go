@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
 import "encoding/hex"
+import "fmt"
 import "net"
 import "regexp"
 import "strings"
@@ -22,17 +22,17 @@ func BsdNetworkDetector4(ft Formatter) BsdNetDetect4 {
 func (bnd *BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
-    bnd.detectIpAddr4(&info)
+    bnd.detectIfconfig4(&info)
 //    fnd.detectIpRoute4(&info)
 
-//    var und = UnixNetworkDetector4(fnd.ft)
-//    und.detectNsHosts4(&info)
+    var und = UnixNetworkDetector4(bnd.ft)
+    und.detectNsHosts4(&info)
 
     return info
 }
 
 
-func (bnd *BsdNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
+func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("/sbin/ifconfig")
     var res = mgr.run()
 
@@ -43,11 +43,11 @@ func (bnd *BsdNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
     }
 
     // Extract the output
-    bnd.parseIpAddr4(res.stdout, info)
+    bnd.parseIfconfig4(res.stdout, info)
 }
 
 
-func (bnd *BsdNetDetect4) parseIpAddr4(stdout string, info *IP4NetworkInfo) {
+func (bnd *BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ifconfig
       em0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
