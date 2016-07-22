@@ -32,21 +32,21 @@ func NetworkDetector(ipver int) NetDetectUi {
 }
 
 
-func run(ui *NetDetectUi) {
-    displayPlatform(ui)
+func (ui *NetDetectUi) run() {
+    ui.displayPlatform()
 
     var info = linuxDetectNetConn4()
-    displayLocalNet(ui, &info)
+    ui.displayLocalNet(&info)
 }
 
 
-func displayPlatform(ui *NetDetectUi) {
+func (ui *NetDetectUi) displayPlatform() {
     var plat = strings.Title(ui.osName)
     fmt.Printf("Platform: %s\n", ui.col.cyan(plat))
 }
 
 
-func displayLocalNet(ui *NetDetectUi, info *IP4NetworkInfo) {
+func (ui *NetDetectUi) displayLocalNet(info *IP4NetworkInfo) {
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Scanning for networks"))
     for _, net := range info.Nets {

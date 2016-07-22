@@ -15,5 +15,5 @@ func main() {
     }
 
     var ui = NetworkDetector(ipver)
-    run(&ui)
+    ui.run()
 }
