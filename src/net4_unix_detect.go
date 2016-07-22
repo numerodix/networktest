@@ -6,23 +6,36 @@ import "regexp"
 import "strings"
 
 
-func unixDetectNsHosts4(info *IP4NetworkInfo) {
+type UnixNetDetect4 struct {
+    ft Formatter
+}
+
+func UnixNetworkDetector4(ft Formatter) UnixNetDetect4 {
+    return UnixNetDetect4{
+        ft: ft,
+    }
+}
+
+
+func (und *UnixNetDetect4) unixDetectNsHosts4(info *IP4NetworkInfo) {
     var filepath = "/etc/resolv.conf"
 
     // Read the file
     var bytes, err = ioutil.ReadFile(filepath)
     if err != nil {
-        // XXX print some kind of useful error
+        und.ft.printError("Failed to detect ns servers", err)
         return
     }
 
     var content = string(bytes)
-    unixParseResolvConf4(content, info)
+    und.unixParseResolvConf4(content, info)
 }
 
 
-func unixParseResolvConf4(content string, info *IP4NetworkInfo) {
-    var nameservers = unixParseResolvConf(content)
+func (und *UnixNetDetect4) unixParseResolvConf4(content string,
+                                                info *IP4NetworkInfo) {
+
+    var nameservers = und.unixParseResolvConf(content)
 
     for _, nameserver := range nameservers {
         var ip = net.ParseIP(nameserver)
@@ -33,7 +46,7 @@ func unixParseResolvConf4(content string, info *IP4NetworkInfo) {
     }
 }
 
-func unixParseResolvConf(content string) []string {
+func (und *UnixNetDetect4) unixParseResolvConf(content string) []string {
     // Parse the nameservers
     var nameservers []string
     var lines = strings.Split(content, "\n")

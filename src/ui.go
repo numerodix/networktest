@@ -35,7 +35,7 @@ func NetworkDetector(ipver int) NetDetectUi {
 func (ui *NetDetectUi) run() {
     ui.displayPlatform()
 
-    var detector = LinuxNetworkDetector4(ui.col, ui.ft)
+    var detector = LinuxNetworkDetector4(ui.ft)
 
     var info = detector.linuxDetectNetConn4()
     ui.displayLocalNet(&info)

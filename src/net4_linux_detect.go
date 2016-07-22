@@ -7,14 +7,12 @@ import "strings"
 
 
 type LinuxNetDetect4 struct {
-    col ColorBrush
     ft Formatter
 }
 
 
-func LinuxNetworkDetector4(col ColorBrush, ft Formatter) LinuxNetDetect4 {
+func LinuxNetworkDetector4(ft Formatter) LinuxNetDetect4 {
     return LinuxNetDetect4{
-        col: col,
         ft: ft,
     }
 }
@@ -25,7 +23,9 @@ func (lnd *LinuxNetDetect4) linuxDetectNetConn4() IP4NetworkInfo {
 
     lnd.linuxDetectIpAddr4(&info)
     lnd.linuxDetectIpRoute4(&info)
-    unixDetectNsHosts4(&info)
+
+    var und = UnixNetworkDetector4(lnd.ft)
+    und.unixDetectNsHosts4(&info)
 
     return info
 }
