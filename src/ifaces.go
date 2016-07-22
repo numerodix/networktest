@@ -20,6 +20,11 @@ type Network struct {
     // BcastAsString
 }
 
+func (net *Network) maskAsString() string {
+    var mask = ipnetToMask4(&net.Ip)
+    return mask.String()
+}
+
 
 type IpAddr struct {
     Iface Interface

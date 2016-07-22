@@ -52,7 +52,7 @@ func displayLocalNet(ui *NetDetectUi, info *IP4NetworkInfo) {
     for _, net := range info.Nets {
         var ifaceFmt = ui.ft.formatIfaceField(net.Iface.Name)
         var netwFmt = ui.ft.formatIpField(net.Ip.IP.String())
-        var maskFmt = ui.ft.formatSubnetField(net.Ip.Mask.String())
+        var maskFmt = ui.ft.formatSubnetField(net.maskAsString())
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
     if len(info.Nets) == 0 {
