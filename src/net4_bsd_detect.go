@@ -53,7 +53,7 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
 
 
 func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
-    var mgr = ProcMgr("/sbin/netstat", "-n", "-r")
+    var mgr = ProcMgr("/usr/bin/netstat", "-n", "-r")
     var res = mgr.run()
 
     // The command failed :(
