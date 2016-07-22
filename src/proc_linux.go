@@ -4,7 +4,6 @@ import "bytes"
 //import "fmt"
 import "os"
 import "os/exec"
-import "syscall"
 
 
 type ProcessManager struct {
@@ -38,11 +37,9 @@ func (mgr *ProcessManager) run() ProcessResult {
     // Capture stdout, stderr
     var stderr = errBuffer.String()
     var stdout = outBuffer.String()
-    var waitStatus = cmd.ProcessState.Sys().(syscall.WaitStatus)
 
     // Construct a result
     var res = ProcessResult{
-        exitCode: waitStatus.ExitStatus(),
         stderr: stderr,
         stdout: stdout,
         err: err,

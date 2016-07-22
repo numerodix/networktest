@@ -9,7 +9,6 @@ func Test_ProcMgr_false(t *testing.T) {
     var mgr = ProcMgr("false")
     var res = mgr.run()
 
-    assertIntEq(t, 1, res.exitCode, "exitCode does not match")
     assertStrEq(t, "", res.stderr, "stderr does not match")
     assertStrEq(t, "", res.stdout, "stdout does not match")
 
@@ -21,7 +20,6 @@ func Test_ProcMgr_ls(t *testing.T) {
     var mgr = ProcMgr("ls", "/dyhfi8345rh")
     var res = mgr.run()
 
-    assertIntEq(t, 2, res.exitCode, "exitCode does not match")
     // See that we don't get localized output
     assertStrEq(t, "ls: cannot access /dyhfi8345rh: No such file or directory",
                     strings.TrimSpace(res.stderr), "stderr does not match")
@@ -35,7 +33,6 @@ func Test_ProcMgr_true(t *testing.T) {
     var mgr = ProcMgr("true")
     var res = mgr.run()
 
-    assertIntEq(t, 0, res.exitCode, "exitCode does not match")
     assertStrEq(t, "", res.stderr, "stderr does not match")
     assertStrEq(t, "", res.stdout, "stdout does not match")
 
@@ -46,7 +43,6 @@ func Test_ProcMgr_uname(t *testing.T) {
     var mgr = ProcMgr("uname")
     var res = mgr.run()
 
-    assertIntEq(t, 0, res.exitCode, "exitCode does not match")
     assertStrEq(t, "", res.stderr, "stderr does not match")
     assertStrEq(t, "Linux", strings.TrimSpace(res.stdout), "stdout does not match")
 
