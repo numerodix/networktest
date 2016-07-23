@@ -1,2 +1,2 @@
 set -x
-go build -o bin/havenet src/*.go
+go build -o bin/havenet.exe src/*.go
