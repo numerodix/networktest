@@ -57,6 +57,7 @@ func Test_bsdParseIfconfig4(t *testing.T) {
     var ft = Formatter{}
     var detector = BsdNetworkDetector4(ft)
     detector.parseIfconfig4(ifconfig4Output, &info)
+    info.normalize()
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")

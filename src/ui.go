@@ -65,7 +65,9 @@ func (ui *NetDetectUi) run() {
         info = winDet.detectNetConn4()
     }
 
+    info.normalize()
     ui.info4 = &info
+
     ui.displayLocalNet()
     ui.displayInetConnectivity()
 }

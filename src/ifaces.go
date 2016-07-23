@@ -187,6 +187,38 @@ func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
     return ips
 }
 
+func (info *IP4NetworkInfo) normalize() {
+    var gwIps = make(map[string]int)
+    var nsIps = make(map[string]int)
+    var gws = []Gateway{}
+    var nss = []NsServer{}
+
+    // Remove duplicate gateways
+    for _, gw := range info.Gws {
+        var key = gw.Ip.String()
+        gwIps[key] += 1
+
+        // If this gateway already exists once, skip it
+        if gwIps[key] <= 1 {
+            gws = append(gws, gw)
+        }
+    }
+
+    // Remove duplicate nshosts
+    for _, nshost := range info.NsHosts {
+        var key = nshost.Ip.String()
+        nsIps[key] += 1
+
+        // If this nshost already exists once, skip it
+        if nsIps[key] <= 1 {
+            nss = append(nss, nshost)
+        }
+    }
+
+    info.Gws = gws
+    info.NsHosts = nss
+}
+
 
 type IP6NetworkInfo struct {
     Nets []Network

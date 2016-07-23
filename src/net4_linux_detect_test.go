@@ -31,6 +31,7 @@ func Test_linuxParseIpAddr4(t *testing.T) {
     var ft = Formatter{}
     var detector = LinuxNetworkDetector4(ft)
     detector.parseIpAddr4(ip4AddrOutput, &info)
+    info.normalize()
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")

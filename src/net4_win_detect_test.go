@@ -23,6 +23,8 @@ Ethernet adapter Ethernet:
    Default Gateway . . . . . . . . . : 192.168.1.1
    DHCP Enabled. . . . . . . . . . . : Yes
    Autoconfiguration Enabled . . . . : Yes
+   DNS Servers . . . . . . . . . . . : 192.168.1.1
+                                       192.168.1.2
  
 Wireless LAN adapter Local Area Connection* 2:
  
@@ -70,6 +72,7 @@ func Test_winParseIpconfig4(t *testing.T) {
     var ft = Formatter{}
     var detector = WindowsNetworkDetector4(ft)
     detector.parseIpconfig4(ipconfigOutput, &info)
+    info.normalize()
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
@@ -97,13 +100,10 @@ func Test_winParseIpconfig4(t *testing.T) {
     assertStrEq(t, "255.255.255.0", info.Ips[1].Mask.String(), "Mask does not match")
 
     // Gws
-    assertIntEq(t, 2, len(info.Gws), "wrong number of gateways")
+    assertIntEq(t, 1, len(info.Gws), "wrong number of gateways")
 
     assertStrEq(t, "eth1", info.Gws[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "192.168.1.1", info.Gws[0].Ip.String(), "Ip does not match")
-
-    assertStrEq(t, "wlan1", info.Gws[1].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.1", info.Gws[1].Ip.String(), "Ip does not match")
 
     // Ns hosts
     assertIntEq(t, 2, len(info.NsHosts), "wrong number of dns servers")
