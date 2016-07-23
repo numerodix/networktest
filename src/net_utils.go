@@ -17,10 +17,14 @@ func ipIsLesser(x, y net.IP) bool {
         if x[i] < y[i] {
             return true
         }
-        // if the current (high order) byte is greater the whole ip cannot be lesser
+
+        // if the current (high order) byte is greater the whole ip cannot be
+        // lesser
         if x[i] > y[i] {
             break
         }
+
+        // otherwise we have a tie and we keep looping
     }
 
     return false
