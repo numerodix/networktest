@@ -119,11 +119,13 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
     rxDnsServern := regexp.MustCompile("[ ]{39}([0-9.]+)")
 
     // Loop variables
+    var section = ""
     var ip = ""
     var subnet = ""
     var gw = ""
     var dnss []string
 
+    var namer = InterfaceNamer()
     var sectionId = 0
     var inSection = false
     var inDns = false
@@ -133,7 +135,8 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
             // Terminate the previous section
             if inSection {
                 if ip != "" {
-                    var iface = fmt.Sprintf("if%d", sectionId)
+                    var iface = namer.allocateName(section)
+//                    var iface = fmt.Sprintf("if%d", sectionId)
 
                     var ipobj = net.ParseIP(ip)
                     var maskobj = net.ParseIP(subnet)
@@ -168,9 +171,10 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
                 }
 
                 // Reset loop variables
-                ip, subnet, gw, inDns = "", "", "", false
+                section, ip, subnet, gw, inDns = "", "", "", "", false
             }
 
+            section = rxSection.FindStringSubmatch(line)[1]
             inSection = true
             sectionId += 1
         }
@@ -201,4 +205,41 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
             }
         }
     }
+}
+
+
+type IfaceNamer struct {
+    dict map[string]int
+}
+
+func InterfaceNamer() IfaceNamer {
+    return IfaceNamer{
+        dict: make(map[string]int),
+    }
+}
+
+func (in *IfaceNamer) getPrefix(section string) string {
+    var rxEth = regexp.MustCompile("(?i)ethernet")
+    var rxWifi = regexp.MustCompile("(?i)wireless")
+
+    if rxWifi.MatchString(section) {
+        return "wlan"
+    }
+    if rxEth.MatchString(section) {
+        return "eth"
+    }
+
+    return "if"
+}
+
+func (in *IfaceNamer) allocateName(section string) string {
+    var prefix = in.getPrefix(section)
+
+    var cnt = in.dict[prefix]
+    cnt += 1
+    in.dict[prefix] = cnt
+
+    var name = fmt.Sprintf("%s%d", prefix, cnt)
+
+    return name
 }
