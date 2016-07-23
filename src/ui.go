@@ -55,6 +55,11 @@ func (ui *NetDetectUi) run() {
     case "openbsd":
         var bsdDet = BsdNetworkDetector4(ui.ft)
         info = bsdDet.detectNetConn4()
+
+    // Windows userland
+    case "windows":
+        var winDet = WindowsNetworkDetector4(ui.ft)
+        info = winDet.detectNetConn4()
     }
 
     ui.displayLocalNet(&info)
