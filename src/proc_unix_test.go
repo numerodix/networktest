@@ -52,7 +52,7 @@ func Test_ProcMgr_run_uname(t *testing.T) {
 
 func Test_ProcMgr_runWithTimeout_uname(t *testing.T) {
     var mgr = ProcMgr("uname")
-    var res = mgr.runWithTimeout()
+    var res = mgr.runWithTimeout(0)
 
     assertStrEq(t, "", res.stderr, "stderr does not match")
     assertStrEq(t, "Linux\n", res.stdout, "stdout does not match")
@@ -62,8 +62,8 @@ func Test_ProcMgr_runWithTimeout_uname(t *testing.T) {
 
 func Test_ProcMgr_runWithTimeout_sleep(t *testing.T) {
     var mgr = ProcMgr("sleep", "2")
-    mgr.timeoutMs = 100  // only allow it to run for 100ms
-    var res = mgr.runWithTimeout()
+    // only allow it to run for 100ms
+    var res = mgr.runWithTimeout(100)
 
     assertStrEq(t, "", res.stderr, "stderr does not match")
     assertStrEq(t, "", res.stdout, "stdout does not match")

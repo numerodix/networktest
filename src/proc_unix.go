@@ -24,6 +24,19 @@ func ProcMgr(exe string, args... string) ProcessManager {
 
 
 func (mgr *ProcessManager) run() ProcessResult {
+    var res ProcessResult
+
+    if mgr.timeoutMs > 0 {
+        res = mgr.runWithTimeout(mgr.timeoutMs)
+    } else {
+        res = mgr.runStandard()
+    }
+
+    return res
+}
+
+
+func (mgr *ProcessManager) runStandard() ProcessResult {
     // Construct the cmd
     var cmd = exec.Command(mgr.exe, mgr.args...)
 
@@ -52,7 +65,7 @@ func (mgr *ProcessManager) run() ProcessResult {
 }
 
 
-func (mgr *ProcessManager) runWithTimeout() ProcessResult {
+func (mgr *ProcessManager) runWithTimeout(timeoutMs int) ProcessResult {
     // Construct the cmd
     var cmd = exec.Command(mgr.exe, mgr.args...)
 
@@ -69,7 +82,7 @@ func (mgr *ProcessManager) runWithTimeout() ProcessResult {
     var elapsedMs = 0
     for {
         // We reached the timeout, so kill the process and return an error
-        if mgr.timeoutMs > 0 && elapsedMs >= mgr.timeoutMs {
+        if timeoutMs > 0 && elapsedMs >= timeoutMs {
             err = cmd.Process.Kill()
             break
         }
