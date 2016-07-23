@@ -28,7 +28,7 @@ func (wnd *WinNetDetect4) detectNetConn4() IP4NetworkInfo {
 
 
 func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
-    var mgr = ProcMgr("ipconfig")
+    var mgr = ProcMgr("ipconfig", "/all")
     var res = mgr.run()
 
     // The command failed :(
