@@ -67,6 +67,7 @@ func (ui *NetDetectUi) run() {
 
     ui.info4 = &info
     ui.displayLocalNet()
+    ui.displayInetConnectivity()
 }
 
 
@@ -117,6 +118,21 @@ func (ui *NetDetectUi) displayLocalNet() {
         }
     }
     if len(ui.info4.Gws) == 0 {
+        fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+    }
+
+}
+
+func (ui *NetDetectUi) displayInetConnectivity() {
+
+    fmt.Printf("%s\n", ui.ft.formatHeader("Detecting dns servers"))
+    for _, ip := range ui.info4.getSortedNsHosts() {
+//        var pingExec = netPings[ifaceBlock.IPv4]
+        var ipFmt = ui.ft.formatIpField(ip.ipAsString())
+//        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s\n", ipFmt)
+    }
+    if len(ui.info4.NsHosts) == 0 {
         fmt.Printf("    %s\n", ui.ft.formatError("none found"))
     }
 

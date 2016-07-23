@@ -119,6 +119,10 @@ type NsServer struct {
     // IpAsString
 }
 
+func (nshost *NsServer) ipAsString() string {
+    return nshost.Ip.String()
+}
+
 // Sorting for NsServer
 type ByNsServer []NsServer
 func (nss ByNsServer) Len() int {
