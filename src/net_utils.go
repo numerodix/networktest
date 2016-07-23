@@ -34,8 +34,9 @@ func ipIsLesser(x, y net.IP) bool {
 func ipMaskToNet4(ip *net.IP, mask *net.IPMask) net.IPNet {
     var bytes = make([]byte, len(*ip))
 
-    for i := range *ip {
-        bytes[i] = (*ip)[i] & (*mask)[i]
+    var ip4 = ip.To4()
+    for i := range ip4 {
+        bytes[i] = ip4[i] & (*mask)[i]
     }
 
     var ipobj = net.IPv4(bytes[0], bytes[1], bytes[2], bytes[3])

@@ -133,11 +133,18 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
                     var ipobj = net.ParseIP(ip)
                     var maskobj = net.ParseIP(subnet)
 
+                    var ipnet = ipIPMaskToNet4(&ipobj, &maskobj)
+                    var netMasked = ipMaskToNet4(&ipnet.IP, &ipnet.Mask)
+
                     var gwobj = net.ParseIP(gw)
 
                     var ns1obj = net.ParseIP(dns1)
 
                     // Populate info
+                    info.Nets = append(info.Nets, Network{
+                        Iface: Interface{Name: iface},
+                        Ip: netMasked,
+                    })
                     info.Ips = append(info.Ips, IpAddr{
                         Iface: Interface{Name: iface},
                         Ip: ipobj,

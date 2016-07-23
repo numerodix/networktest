@@ -48,7 +48,6 @@ func _getFuncFileLine() string {
     var fun = runtime.FuncForPC(ptrVal)
     var file, line = fun.FileLine(ptrVal)
 
-    line = line - 1  // line seems to be one too many
     var fileLine = fmt.Sprintf("%s:%d", file, line)
 
     return fileLine
