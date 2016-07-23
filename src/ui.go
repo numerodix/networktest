@@ -38,6 +38,15 @@ func NetworkDetector(ipver int) NetDetectUi {
 func (ui *NetDetectUi) run() {
     ui.displayPlatform()
 
+    var info = ui.detectLocalNet()
+    ui.info4 = &info
+
+    ui.displayLocalNet()
+    ui.displayInetConnectivity()
+}
+
+
+func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
     var info IP4NetworkInfo
 
     switch ui.osName {
@@ -66,10 +75,8 @@ func (ui *NetDetectUi) run() {
     }
 
     info.normalize()
-    ui.info4 = &info
 
-    ui.displayLocalNet()
-    ui.displayInetConnectivity()
+    return info
 }
 
 
