@@ -26,6 +26,9 @@ Wireless LAN adapter Local Area Connection* 2:
    Media State . . . . . . . . . . . : Media disconnected
    Connection-specific DNS Suffix  . :
    Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter
+   IPv4 Address. . . . . . . . . . . : 192.168.1.11
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
    Physical Address. . . . . . . . . : FF-56-61-37-6C-31
    DHCP Enabled. . . . . . . . . . . : Yes
    Autoconfiguration Enabled . . . . : Yes
@@ -72,24 +75,35 @@ func Test_winParseIpconfig4(t *testing.T) {
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
 
     // Nets
-    assertIntEq(t, 1, len(info.Nets), "wrong number of gateways")
+    assertIntEq(t, 2, len(info.Nets), "wrong number of gateways")
 
-    assertStrEq(t, "if3", info.Nets[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "if2", info.Nets[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "192.168.1.0", info.Nets[0].Ip.IP.String(), "Ip does not match")
     assertStrEq(t, "ffffff00", info.Nets[0].Ip.Mask.String(), "Mask does not match")
 
-    // Ips
-    assertIntEq(t, 1, len(info.Ips), "wrong number of ips")
+    assertStrEq(t, "if3", info.Nets[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.0", info.Nets[1].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ffffff00", info.Nets[1].Ip.Mask.String(), "Mask does not match")
 
-    assertStrEq(t, "if3", info.Ips[0].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.7", info.Ips[0].Ip.String(), "Ip does not match")
+    // Ips
+    assertIntEq(t, 2, len(info.Ips), "wrong number of ips")
+
+    assertStrEq(t, "if2", info.Ips[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.11", info.Ips[0].Ip.String(), "Ip does not match")
     assertStrEq(t, "255.255.255.0", info.Ips[0].Mask.String(), "Mask does not match")
 
-    // Gws
-    assertIntEq(t, 1, len(info.Gws), "wrong number of gateways")
+    assertStrEq(t, "if3", info.Ips[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.7", info.Ips[1].Ip.String(), "Ip does not match")
+    assertStrEq(t, "255.255.255.0", info.Ips[1].Mask.String(), "Mask does not match")
 
-    assertStrEq(t, "if3", info.Gws[0].Iface.Name, "Iface does not match")
+    // Gws
+    assertIntEq(t, 2, len(info.Gws), "wrong number of gateways")
+
+    assertStrEq(t, "if2", info.Gws[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "192.168.1.1", info.Gws[0].Ip.String(), "Ip does not match")
+
+    assertStrEq(t, "if3", info.Gws[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "192.168.1.1", info.Gws[1].Ip.String(), "Ip does not match")
 
     // Ns hosts
     assertIntEq(t, 2, len(info.NsHosts), "wrong number of dns servers")

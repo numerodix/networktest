@@ -62,6 +62,9 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
          Connection-specific DNS Suffix  . :
          Description . . . . . . . . . . . : Intel(R) 82579LM Gigabit Network Connection
          Physical Address. . . . . . . . . : FF-56-61-37-6C-31
+         IPv4 Address. . . . . . . . . . . : 192.168.1.11
+         Subnet Mask . . . . . . . . . . . : 255.255.255.0
+         Default Gateway . . . . . . . . . : 192.168.1.1
          DHCP Enabled. . . . . . . . . . . : Yes
          Autoconfiguration Enabled . . . . : Yes
        
