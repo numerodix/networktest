@@ -70,11 +70,12 @@ func ipnetToMask4(ipnet *net.IPNet) net.IP {
 }
 
 
-func maskBytesToMask(bytes []byte) net.IPMask {
+func maskBytesToMask4(bytes []byte) net.IPMask {
     var mask = net.IPv4Mask(
         bytes[0],
         bytes[1],
         bytes[2],
         bytes[3])
+
     return mask
 }
