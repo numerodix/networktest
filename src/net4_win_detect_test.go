@@ -92,8 +92,9 @@ func Test_winParseIpconfig4(t *testing.T) {
     assertStrEq(t, "192.168.1.1", info.Gws[0].Ip.String(), "Ip does not match")
 
     // Ns hosts
-    assertIntEq(t, 1, len(info.NsHosts), "wrong number of dns servers")
+    assertIntEq(t, 2, len(info.NsHosts), "wrong number of dns servers")
 
     assertStrEq(t, "192.168.1.1", info.NsHosts[0].Ip.String(), "Ip does not match")
+    assertStrEq(t, "192.168.1.2", info.NsHosts[1].Ip.String(), "Ip does not match")
 }
 

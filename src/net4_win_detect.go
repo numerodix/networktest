@@ -113,15 +113,17 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
     rxSubnet := regexp.MustCompile("[ ]{3}Subnet Mask.*: ([0-9.]+)")
     rxGw := regexp.MustCompile("[ ]{3}Default Gateway.*: ([0-9.]+)")
     rxDnsServer1 := regexp.MustCompile("[ ]{3}DNS Servers.*: ([0-9.]+)")
+    rxDnsServern := regexp.MustCompile("[ ]{39}([0-9.]+)")
 
     // Loop variables
     var ip = ""
     var subnet = ""
     var gw = ""
-    var dns1 = ""
+    var dnss []string
 
     var sectionId = 0
     var inSection = false
+    var inDns = false
 
     for _, line := range lines {
         if rxSection.MatchString(line) {
@@ -138,8 +140,6 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
 
                     var gwobj = net.ParseIP(gw)
 
-                    var ns1obj = net.ParseIP(dns1)
-
                     // Populate info
                     info.Nets = append(info.Nets, Network{
                         Iface: Interface{Name: iface},
@@ -154,13 +154,18 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
                         Iface: Interface{Name: iface},
                         Ip: gwobj,
                     })
-                    info.NsHosts = append(info.NsHosts, NsServer{
-                        Ip: ns1obj,
-                    })
+
+                    for _, dns := range dnss {
+                        var nsobj = net.ParseIP(dns)
+
+                        info.NsHosts = append(info.NsHosts, NsServer{
+                            Ip: nsobj,
+                        })
+                    }
                 }
 
                 // Reset loop variables
-                ip, subnet, gw, dns1 = "", "", "", ""
+                ip, subnet, gw, inDns = "", "", "", false
             }
 
             inSection = true
@@ -170,15 +175,26 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
         if inSection {
             if rxIP4Addr.MatchString(line) {
                 ip = rxIP4Addr.FindStringSubmatch(line)[1]
+                inDns = false
             }
             if rxSubnet.MatchString(line) {
                 subnet = rxSubnet.FindStringSubmatch(line)[1]
+                inDns = false
             }
             if rxGw.MatchString(line) {
                 gw = rxGw.FindStringSubmatch(line)[1]
+                inDns = false
             }
+
             if rxDnsServer1.MatchString(line) {
-                dns1 = rxDnsServer1.FindStringSubmatch(line)[1]
+                var dns = rxDnsServer1.FindStringSubmatch(line)[1]
+                dnss = append(dnss, dns)
+                inDns = true
+            }
+
+            if inDns && rxDnsServern.MatchString(line) {
+                var dns = rxDnsServern.FindStringSubmatch(line)[1]
+                dnss = append(dnss, dns)
             }
         }
     }
