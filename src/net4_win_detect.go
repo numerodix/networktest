@@ -136,7 +136,6 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
             if inSection {
                 if ip != "" {
                     var iface = namer.allocateName(section)
-//                    var iface = fmt.Sprintf("if%d", sectionId)
 
                     var ipobj = net.ParseIP(ip)
                     var maskobj = net.ParseIP(subnet)
@@ -208,6 +207,7 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
 }
 
 
+// Assign names like eth0, wlan0 based on the section name
 type IfaceNamer struct {
     dict map[string]int
 }
