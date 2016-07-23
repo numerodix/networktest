@@ -1,9 +1,9 @@
 package main
 
-//import "fmt"
-//import "net"
-//import "regexp"
-//import "strings"
+import "fmt"
+import "net"
+import "regexp"
+import "strings"
 
 
 type WinNetDetect4 struct {
@@ -46,4 +46,124 @@ func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
 
 
 func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
+    /* Output:
+      C:\> ipconfig /all
+      Windows IP Configuration
+       
+         Host Name . . . . . . . . . . . . : DESKTOP-AB123XX
+         Primary Dns Suffix  . . . . . . . :
+         Node Type . . . . . . . . . . . . : Hybrid
+         IP Routing Enabled. . . . . . . . : No
+         WINS Proxy Enabled. . . . . . . . : No
+       
+      Ethernet adapter Ethernet:
+       
+         Media State . . . . . . . . . . . : Media disconnected
+         Connection-specific DNS Suffix  . :
+         Description . . . . . . . . . . . : Intel(R) 82579LM Gigabit Network Connection
+         Physical Address. . . . . . . . . : FF-56-61-37-6C-31
+         DHCP Enabled. . . . . . . . . . . : Yes
+         Autoconfiguration Enabled . . . . : Yes
+       
+      Wireless LAN adapter Local Area Connection* 2:
+       
+         Media State . . . . . . . . . . . : Media disconnected
+         Connection-specific DNS Suffix  . :
+         Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter
+         Physical Address. . . . . . . . . : FF-56-61-37-6C-31
+         DHCP Enabled. . . . . . . . . . . : Yes
+         Autoconfiguration Enabled . . . . : Yes
+       
+      Wireless LAN adapter Wi-Fi:
+       
+         Connection-specific DNS Suffix  . :
+         Description . . . . . . . . . . . : Intel(R) Centrino(R) Advanced-N 6205
+         Physical Address. . . . . . . . . : FF-56-61-37-6C-31
+         DHCP Enabled. . . . . . . . . . . : Yes
+         Autoconfiguration Enabled . . . . : Yes
+         Link-local IPv6 Address . . . . . : fe80::bd72:d119:c03d:6033%11(Preferred)
+         IPv4 Address. . . . . . . . . . . : 192.168.1.7(Preferred)
+         Subnet Mask . . . . . . . . . . . : 255.255.255.0
+         Lease Obtained. . . . . . . . . . : Saturday, September 06, 2009 12:28:03 AM
+         Lease Expires . . . . . . . . . . : Saturday, September 06, 2009 12:28:03 AM
+         Default Gateway . . . . . . . . . : 192.168.1.1
+         DHCP Server . . . . . . . . . . . : 192.168.1.1
+         DHCPv6 IAID . . . . . . . . . . . : 98606385
+         DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-12-31-BB-90-00-03-FF-16-46-11
+         DNS Servers . . . . . . . . . . . : 192.168.1.1
+                                             192.168.1.2
+         NetBIOS over Tcpip. . . . . . . . : Enabled
+       
+      Ethernet adapter Bluetooth Network Connection:
+       
+         Media State . . . . . . . . . . . : Media disconnected
+         Connection-specific DNS Suffix  . :
+         Description . . . . . . . . . . . : Bluetooth Device (Personal Area Network)
+         Physical Address. . . . . . . . . : FF-56-61-37-6C-31
+         DHCP Enabled. . . . . . . . . . . : Yes
+         Autoconfiguration Enabled . . . . : Yes
+    */
+
+    // We will read line by line
+    var lines = strings.Split(stdout, "\n")
+
+    // Prepare regex objects
+    rxSection := regexp.MustCompile("^([^ ].+):")
+    rxIP4Addr := regexp.MustCompile("[ ]{3}IPv4 Address.*: ([0-9.]+)")
+    rxSubnet := regexp.MustCompile("[ ]{3}Subnet Mask.*: ([0-9.]+)")
+    rxGw := regexp.MustCompile("[ ]{3}Default Gateway.*: ([0-9.]+)")
+    rxDnsServer1 := regexp.MustCompile("[ ]{3}DNS Servers.*: ([0-9.]+)")
+
+    // Loop variables
+    var ip = ""
+    var subnet = ""
+    var gw = ""
+    var dns1 = ""
+
+    var sectionId = 0
+    var inSection = false
+
+    for _, line := range lines {
+        if rxSection.MatchString(line) {
+            // Terminate the previous section
+            if inSection {
+                if ip != "" {
+                    var iface = fmt.Sprintf("if%d", sectionId)
+                    println(ip)
+                    println(subnet)
+                    println(gw)
+                    println(dns1)
+
+                    var gwobj = net.ParseIP(gw)
+
+                    // Populate info
+                    info.Gws = append(info.Gws, Gateway{
+                        Iface: Interface{Name: iface},
+                        Ip: gwobj,
+                    })
+                }
+
+                // Reset loop variables
+                ip, subnet, gw, dns1 = "", "", "", ""
+            }
+
+            inSection = true
+            sectionId += 1
+        }
+
+        if inSection {
+            if rxIP4Addr.MatchString(line) {
+                ip = rxIP4Addr.FindStringSubmatch(line)[1]
+            }
+            if rxSubnet.MatchString(line) {
+                subnet = rxSubnet.FindStringSubmatch(line)[1]
+            }
+            if rxGw.MatchString(line) {
+                gw = rxGw.FindStringSubmatch(line)[1]
+            }
+            if rxDnsServer1.MatchString(line) {
+                dns1 = rxDnsServer1.FindStringSubmatch(line)[1]
+            }
+        }
+    }
 }
