@@ -129,17 +129,26 @@ func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
             if inSection {
                 if ip != "" {
                     var iface = fmt.Sprintf("if%d", sectionId)
-                    println(ip)
-                    println(subnet)
-                    println(gw)
-                    println(dns1)
+
+                    var ipobj = net.ParseIP(ip)
+                    var maskobj = net.ParseIP(subnet)
 
                     var gwobj = net.ParseIP(gw)
 
+                    var ns1obj = net.ParseIP(dns1)
+
                     // Populate info
+                    info.Ips = append(info.Ips, IpAddr{
+                        Iface: Interface{Name: iface},
+                        Ip: ipobj,
+                        Mask: maskobj,
+                    })
                     info.Gws = append(info.Gws, Gateway{
                         Iface: Interface{Name: iface},
                         Ip: gwobj,
+                    })
+                    info.NsHosts = append(info.NsHosts, NsServer{
+                        Ip: ns1obj,
                     })
                 }
 
