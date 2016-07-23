@@ -46,9 +46,7 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
     bnd.parseIfconfig4(res.stdout, info)
 
     // Parsing failed :(
-    for _, err := range info.Errs {
-        bnd.ft.printError("Failed to parse ipv4 network info", err)
-    }
+    bnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 
@@ -66,9 +64,7 @@ func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
     bnd.parseNetstat4(res.stdout, info)
 
     // Parsing failed :(
-    for _, err := range info.Errs {
-        bnd.ft.printError("Failed to parse ipv4 routes info", err)
-    }
+    bnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 

@@ -88,3 +88,9 @@ func (ft *Formatter) printError(msg string, err... error) {
 
     fmt.Printf("%s\n", prefix)
 }
+
+func (ft *Formatter) printErrors(msg string, errs []error) {
+    for _, err := range errs {
+        ft.printError(msg, err)
+    }
+}
