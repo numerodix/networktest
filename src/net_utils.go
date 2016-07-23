@@ -1,5 +1,6 @@
 package main
 
+//import "fmt"
 import "net"
 
 
@@ -12,8 +13,13 @@ func ipIsLesser(x, y net.IP) bool {
     // i actually ranges 0 -> 15
     // the last 4 bytes are the ipv4 address
     for i := range x {
+        // if the current (high order) byte is lesser the whole ip is lesser
         if x[i] < y[i] {
             return true
+        }
+        // if the current (high order) byte is greater the whole ip cannot be lesser
+        if x[i] > y[i] {
+            break
         }
     }
 

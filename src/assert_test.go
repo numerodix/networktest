@@ -56,6 +56,20 @@ func _getFuncFileLine() string {
 
 
 
+func assertFalse(t *testing.T, b bool, msg string) {
+    if b {
+        t.Errorf("%s: Was not false: %s != false [%s] at %s",
+                 _getFuncName(), b, msg, _getFuncFileLine())
+    }
+}
+
+func assertTrue(t *testing.T, b bool, msg string) {
+    if !b {
+        t.Errorf("%s: Was not true: %s != true [%s] at %s",
+                 _getFuncName(), b, msg, _getFuncFileLine())
+    }
+}
+
 func assertIntEq(t *testing.T, a, b int, msg string) {
     if a != b {
         t.Errorf("%s: Integers do not match: %d != %d [%s] at %s",
