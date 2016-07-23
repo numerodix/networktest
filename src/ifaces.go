@@ -187,6 +187,19 @@ func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
     return ips
 }
 
+func (info *IP4NetworkInfo) haveLocalNet() bool {
+    // If we have a gateway and an ip on that network we have a local network
+    // connection
+    for _, gw := range info.getSortedGws() {
+        var ips = info.getIpsForGw(&gw)
+        if len(ips) != 0 {
+            return true
+        }
+    }
+
+    return false
+}
+
 func (info *IP4NetworkInfo) normalize() {
     var gwIps = make(map[string]int)
     var nsIps = make(map[string]int)

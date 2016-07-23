@@ -38,10 +38,19 @@ func NetworkDetector(ipver int) NetDetectUi {
 func (ui *NetDetectUi) run() {
     ui.displayPlatform()
 
+    // Detect local network
     var info = ui.detectLocalNet()
     ui.info4 = &info
 
+    // Display local network
     ui.displayLocalNet()
+
+    // If we don't have a local network connection we stop here
+    if !ui.info4.haveLocalNet() {
+        return
+    }
+
+    // Display inet connectivity
     ui.displayInetConnectivity()
 }
 
