@@ -9,16 +9,18 @@ type NetDetectUi struct {
     col ColorBrush
     ft Formatter
 
-    ipver int
-    osName string
+    ipver int  // ipv4 / ipv6
+    osName string  // linux | freesd | ...
 
+    // Well known nameservers on the internet (known by ip)
     inetNsHosts map[string]string
+    // Well known hosts on the internet (known by hostname)
     inetHosts []string
 
     info4 *IP4NetworkInfo
 
-    localPings Pings
-    inetPings Pings
+    localPings Pings  // result of pinging local net
+    inetPings Pings  // result of pinging inet
 }
 
 
