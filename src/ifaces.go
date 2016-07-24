@@ -250,3 +250,6 @@ type PingExecution struct {
     Time float64
     Err error
 }
+
+// host -> PingExecution
+type Pings map[string]PingExecution

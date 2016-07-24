@@ -13,6 +13,7 @@ type NetDetectUi struct {
     osName string
 
     info4 *IP4NetworkInfo
+    localPings Pings
 }
 
 
@@ -41,6 +42,9 @@ func (ui *NetDetectUi) run() {
     // Detect local network
     var info = ui.detectLocalNet()
     ui.info4 = &info
+
+    // Ping local network
+    ui.pingLocalNet()
 
     // Display local network
     ui.displayLocalNet()
@@ -89,6 +93,27 @@ func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
 }
 
 
+func (ui *NetDetectUi) pingLocalNet() {
+    var hosts = []string{}
+
+    // Ping local ips to see if reachable
+    for _, ip := range ui.info4.Ips {
+        hosts = append(hosts, ip.Ip.String())
+    }
+
+    // Ping gateways to see if reachable
+    for _, gw := range ui.info4.Gws {
+        hosts = append(hosts, gw.Ip.String())
+    }
+
+    // Run the pings
+    var pinger = NewLinuxPinger4(ui.ft)
+    var pings = runPings(pinger, hosts, 1, 2000)
+
+    ui.localPings = pings
+}
+
+
 func (ui *NetDetectUi) displayPlatform() {
     var plat = strings.Title(ui.osName)
     fmt.Printf("Platform: %s\n", ui.col.cyan(plat))
@@ -110,12 +135,12 @@ func (ui *NetDetectUi) displayLocalNet() {
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Detecting ips"))
     for _, ip := range ui.info4.getSortedIps() {
-//        var pingExec = netPings[ifaceBlock.IPv4]
+        var pingExec = ui.localPings[ip.ipAsString()]
         var ifaceFmt = ui.ft.formatIfaceField(ip.Iface.Name)
         var ipFmt = ui.ft.formatIpField(ip.ipAsString())
         var maskFmt = ui.ft.formatSubnetField(ip.maskAsString())
-//        var pingFmt = ui.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s  %s %s   \n", ifaceFmt, ipFmt, maskFmt)
+        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
     if len(ui.info4.Ips) == 0 {
         fmt.Printf("    %s\n", ui.ft.formatError("none found"))
@@ -123,11 +148,11 @@ func (ui *NetDetectUi) displayLocalNet() {
 
     fmt.Printf("%s\n", ui.ft.formatHeader("Detecting gateways"))
     for _, gw := range ui.info4.getSortedGws() {
-//        var pingExec = netPings[gw.Gateway]
+        var pingExec = ui.localPings[gw.ipAsString()]
         var ifaceFmt = ui.ft.formatIfaceField(gw.Iface.Name)
         var ipFmt = ui.ft.formatIpField(gw.ipAsString())
-//        var pingFmt = ui.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s  %s   \n", ifaceFmt, ipFmt)
+        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
 
         var ips = ui.info4.getIpsForGw(&gw)
         for _, ip := range ips {

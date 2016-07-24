@@ -8,9 +8,9 @@ type Formatter struct {
     colorBrush ColorBrush
 }
 
-/*
-func (ft *Formatter) FormatPingTime(pingExec PingExecution) string {
-    if pingExec.Error != nil {
+
+func (ft *Formatter) formatPingTime(pingExec PingExecution) string {
+    if pingExec.Err != nil {
         return ft.colorBrush.red("failed")
     }
 
@@ -19,7 +19,7 @@ func (ft *Formatter) FormatPingTime(pingExec PingExecution) string {
     time = time + " ms"
     return ft.colorBrush.green(time)
 }
-*/
+
 
 func (ft *Formatter) formatHeader(msg string) string {
     var msgFmt = ft.colorBrush.yellow(fmt.Sprintf(" + %s...", msg))
