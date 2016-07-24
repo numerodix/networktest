@@ -9,7 +9,7 @@ type NetDetectUi struct {
     col ColorBrush
     ft Formatter
 
-    ipver int  // ipv4 / ipv6
+    ipver int  // 4 | 6
     osName string  // linux | freesd | ...
 
     // Well known nameservers on the internet (known by ip)
