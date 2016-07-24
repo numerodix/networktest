@@ -1,5 +1,6 @@
 package main
 
+import "errors"
 import "fmt"
 import "regexp"
 import "strings"
@@ -25,6 +26,11 @@ func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution 
                         fmt.Sprintf("-W%d", timeoutMs))
     mgr.timeoutMs = timeoutMs
     var res = mgr.run()
+
+    // Use stderr as signal since err may not be reliable
+    if res.stderr != "" {
+        res.err = errors.New(strings.TrimSpace(res.stderr))
+    }
 
     // The command failed :(
     if res.err != nil {

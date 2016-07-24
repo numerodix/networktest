@@ -79,6 +79,15 @@ func (mgr *ProcessManager) runWithTimeout(timeoutMs int) ProcessResult {
     os.Setenv("LC_ALL", "C")  // Make sure we don't get localized output
     var err = cmd.Start()
 
+    // It we couldn't even launch the program fail fast
+    if err != nil {
+        return ProcessResult{
+            err: err,
+            stderr: errBuffer.String(),
+            stdout: outBuffer.String(),
+        }
+    }
+
     var elapsedMs = 0
     for {
         // We reached the timeout, so kill the process and return an error
@@ -108,9 +117,9 @@ func (mgr *ProcessManager) runWithTimeout(timeoutMs int) ProcessResult {
 
     // Construct a result
     var res = ProcessResult{
+        err: err,
         stderr: stderr,
         stdout: stdout,
-        err: err,
     }
 
     return res
