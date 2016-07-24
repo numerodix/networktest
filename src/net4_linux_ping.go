@@ -21,9 +21,9 @@ func NewLinuxPinger4(ft Formatter) LinuxPinger4 {
 
 func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
     var mgr = ProcMgr("ping",
-                        host,
                         fmt.Sprintf("-c%d", cnt),
-                        fmt.Sprintf("-W%d", timeoutMs))
+                        fmt.Sprintf("-W%d", timeoutMs),
+                        host)
     mgr.timeoutMs = timeoutMs
     var res = mgr.run()
 
