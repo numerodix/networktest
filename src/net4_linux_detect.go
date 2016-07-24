@@ -32,7 +32,7 @@ func (lnd *LinuxNetDetect4) detectNetConn4() IP4NetworkInfo {
 
 
 func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
-    var mgr = ProcMgr("/sbin/ip", "-4", "addr", "show")
+    var mgr = ProcMgr("ip", "-4", "addr", "show")
     var res = mgr.run()
 
     // The command failed :(
@@ -49,7 +49,7 @@ func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
 }
 
 func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
-    var mgr = ProcMgr("/sbin/ip", "-4", "route", "show")
+    var mgr = ProcMgr("ip", "-4", "route", "show")
     var res = mgr.run()
 
     // The command failed :(
