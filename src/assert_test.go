@@ -96,3 +96,10 @@ func assertStrEq(t *testing.T, a, b string, msg string) {
                  _getFuncName(), a, b, msg, _getFuncFileLine())
     }
 }
+
+func assertPtrEq(t *testing.T, a, b interface{}, msg string) {
+    if a != b {
+        t.Errorf("%s: Interfaces do not match: %s != %s [%s] at %s",
+                 _getFuncName(), a, b, msg, _getFuncFileLine())
+    }
+}

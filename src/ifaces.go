@@ -243,3 +243,10 @@ type IP6NetworkInfo struct {
     // GetNetsForIface(iface)
     // 
 }
+
+
+type PingExecution struct {
+    Host string
+    Time float64
+    Err error
+}
