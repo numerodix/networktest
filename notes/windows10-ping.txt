@@ -1,3 +1,4 @@
+C:\> ping -n 1 -w 2 yahoo.com
 
 Pinging yahoo.com [206.190.36.45] with 32 bytes of data:
 Reply from 206.190.36.45: bytes=32 time=193ms TTL=51
