@@ -12,8 +12,13 @@ type NetDetectUi struct {
     ipver int
     osName string
 
+    inetNsHosts map[string]string
+    inetHosts []string
+
     info4 *IP4NetworkInfo
+
     localPings Pings
+    inetPings Pings
 }
 
 
@@ -25,11 +30,25 @@ func NetworkDetector(ipver int) NetDetectUi {
         colorBrush: col,
     }
 
+    var inetNsHosts = make(map[string]string)
+    inetNsHosts["b.root-servers.net."] = "192.228.79.201"
+
+    var inetHosts = []string{
+        "facebook.com",
+        "gmail.com",
+        "google.com",
+        "twitter.com",
+        "yahoo.com",
+    }
+
     var ui = NetDetectUi{
         col: col,
         ft: ft,
         ipver: ipver,
         osName: runtime.GOOS,
+
+        inetNsHosts: inetNsHosts,
+        inetHosts: inetHosts,
     }
 
     return ui
@@ -53,6 +72,9 @@ func (ui *NetDetectUi) run() {
     if !ui.info4.haveLocalNet() {
         return
     }
+
+    // Ping inet
+    ui.pingInet()
 
     // Display inet connectivity
     ui.displayInetConnectivity()
@@ -108,9 +130,35 @@ func (ui *NetDetectUi) pingLocalNet() {
 
     // Run the pings
     var pinger = NewLinuxPinger4(ui.ft)
-    var pings = runPings(pinger, hosts, 1, 2000)
+    var pings = runPings(pinger, hosts, 1, 1000)
 
     ui.localPings = pings
+}
+
+
+func (ui *NetDetectUi) pingInet() {
+    var hosts = []string{}
+
+    // Ping nameservers on inet to see if we can route packets there
+    for _, ip := range ui.inetNsHosts {
+        hosts = append(hosts, ip)
+    }
+
+    // Ping nameservers to see if we can resolve dns
+    for _, nshost := range ui.info4.NsHosts {
+        hosts = append(hosts, nshost.Ip.String())
+    }
+
+    // Ping hosts on inet to see if we can resolve dns and ping them
+    for _, host := range ui.inetHosts {
+        hosts = append(hosts, host)
+    }
+
+    // Run the pings
+    var pinger = NewLinuxPinger4(ui.ft)
+    var pings = runPings(pinger, hosts, 1, 2000)
+
+    ui.inetPings = pings
 }
 
 
@@ -168,15 +216,32 @@ func (ui *NetDetectUi) displayLocalNet() {
 
 func (ui *NetDetectUi) displayInetConnectivity() {
 
+    fmt.Printf("%s\n", ui.ft.formatHeader("Testing internet connection"))
+    for host, ip := range ui.inetNsHosts {
+        var pingExec = ui.inetPings[ip]
+        var nameFmt = ui.ft.formatHostField(host)
+        var ipFmt = ui.ft.formatIpField(ip)
+        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s  %s  ping: %s\n", nameFmt, ipFmt, pingFmt)
+    }
+
     fmt.Printf("%s\n", ui.ft.formatHeader("Detecting dns servers"))
     for _, ip := range ui.info4.getSortedNsHosts() {
-//        var pingExec = netPings[ifaceBlock.IPv4]
+        var pingExec = ui.inetPings[ip.ipAsString()]
         var ipFmt = ui.ft.formatIpField(ip.ipAsString())
-//        var pingFmt = ui.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s\n", ipFmt)
+        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
     if len(ui.info4.NsHosts) == 0 {
         fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+    }
+
+    fmt.Printf("%s\n", ui.ft.formatHeader("Testing internet dns"))
+    for _, host := range ui.inetHosts {
+        var pingExec = ui.inetPings[host]
+        var ipFmt = ui.ft.formatIpField(host)
+        var pingFmt = ui.ft.formatPingTime(pingExec)
+        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 
 }
