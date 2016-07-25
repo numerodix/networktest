@@ -30,11 +30,6 @@ func (wi WinPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
 
     var res = mgr.run()
 
-    // Use stderr as signal since err may not be reliable
-    if res.stderr != "" {
-        res.err = errors.New(strings.TrimSpace(res.stderr))
-    }
-
     // The command failed :(
     if res.err != nil {
         wi.ctx.ft.printError("Failed to invoke ping", res.err)
