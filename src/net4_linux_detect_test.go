@@ -28,8 +28,8 @@ default via 192.168.1.1 dev eth0  proto static
 func Test_linuxParseIpAddr4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    var ft = Formatter{}
-    var detector = LinuxNetworkDetector4(ft)
+    var ctx = TestAppContext()
+    var detector = NewLinuxNetDetect4(ctx)
     detector.parseIpAddr4(ip4AddrOutput, &info)
     info.normalize()
 

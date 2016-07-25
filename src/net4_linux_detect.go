@@ -7,13 +7,13 @@ import "strings"
 
 
 type LinuxNetDetect4 struct {
-    ft Formatter
+    ctx AppContext
 }
 
 
-func LinuxNetworkDetector4(ft Formatter) LinuxNetDetect4 {
+func NewLinuxNetDetect4(ctx AppContext) LinuxNetDetect4 {
     return LinuxNetDetect4{
-        ft: ft,
+        ctx: ctx,
     }
 }
 
@@ -24,7 +24,7 @@ func (lnd *LinuxNetDetect4) detectNetConn4() IP4NetworkInfo {
     lnd.detectIpAddr4(&info)
     lnd.detectIpRoute4(&info)
 
-    var und = UnixNetworkDetector4(lnd.ft)
+    var und = NewUnixNetDetect4(lnd.ctx)
     und.detectNsHosts4(&info)
 
     return info
@@ -37,7 +37,7 @@ func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
 
     // The command failed :(
     if res.err != nil {
-        lnd.ft.printError("Failed to detect ipv4 network", res.err)
+        lnd.ctx.ft.printError("Failed to detect ipv4 network", res.err)
         return
     }
 
@@ -45,7 +45,7 @@ func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
     lnd.parseIpAddr4(res.stdout, info)
 
     // Parsing failed :(
-    lnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    lnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
@@ -54,7 +54,7 @@ func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
 
     // The command failed :(
     if res.err != nil {
-        lnd.ft.printError("Failed to detect ipv4 routes", res.err)
+        lnd.ctx.ft.printError("Failed to detect ipv4 routes", res.err)
         return
     }
 
@@ -62,7 +62,7 @@ func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
     lnd.parseIpRoute4(res.stdout, info)
 
     // Parsing failed :(
-    lnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    lnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 

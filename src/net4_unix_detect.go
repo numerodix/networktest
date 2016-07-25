@@ -7,12 +7,12 @@ import "strings"
 
 
 type UnixNetDetect4 struct {
-    ft Formatter
+    ctx AppContext
 }
 
-func UnixNetworkDetector4(ft Formatter) UnixNetDetect4 {
+func NewUnixNetDetect4(ctx AppContext) UnixNetDetect4 {
     return UnixNetDetect4{
-        ft: ft,
+        ctx: ctx,
     }
 }
 
@@ -23,7 +23,7 @@ func (und *UnixNetDetect4) detectNsHosts4(info *IP4NetworkInfo) {
     // Read the file
     var bytes, err = ioutil.ReadFile(filepath)
     if err != nil {
-        und.ft.printError("Failed to detect ns servers", err)
+        und.ctx.ft.printError("Failed to detect ns servers", err)
         return
     }
 

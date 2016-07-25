@@ -14,8 +14,8 @@ nameserver 8.8.4.4
 func Test_unixParseResolvConf4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    var ft = Formatter{}
-    var detector = UnixNetworkDetector4(ft)
+    var ctx = TestAppContext()
+    var detector = NewUnixNetDetect4(ctx)
     detector.parseResolvConf4(resolvConfContent, &info)
     info.normalize()
 
