@@ -81,7 +81,7 @@ func (wi WinPinger4) parsePing4(stdout string) PingExecution {
         }
 
         if rxStats.MatchString(line) {
-            var timeA = rxStats.FindStringSubmatch(line)[2]
+            var timeA = rxStats.FindStringSubmatch(line)[1]
             timeAvg, err = strconv.ParseFloat(timeA, 64)
         }
     }

@@ -23,6 +23,6 @@ func Test_winParsePing4(t *testing.T) {
     var pingExec = pinger.parsePing4(winPing4Output)
 
     assertStrEq(t, "yahoo.com", pingExec.Host, "wrong host")
-    assertStrEq(t, "193", strconv.FormatFloat(pingExec.Time, 'f', 3, 64), "wrong time")
+    assertStrEq(t, "193", strconv.FormatFloat(pingExec.Time, 'f', 0, 64), "wrong time")
     assertPtrEq(t, nil, pingExec.Err, "wrong err")
 }
