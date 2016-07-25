@@ -21,8 +21,8 @@ func NewLinuxPinger4(ctx AppContext) LinuxPinger4 {
 
 func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
     var mgr = ProcMgr("ping",
-                        fmt.Sprintf("-c%d", cnt),
-                        fmt.Sprintf("-W%d", timeoutMs),
+                        "-c", fmt.Sprintf("%d", cnt),
+                        "-W", fmt.Sprintf("%d", timeoutMs / 1000),
                         host)
     mgr.timeoutMs = timeoutMs
     var res = mgr.run()
