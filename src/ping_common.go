@@ -14,6 +14,7 @@ func getPinger(ctx AppContext) Pinger {
     case "windows":
         pinger = NewWinPinger4(ctx)
 
+    // The Linux pinger works on all Unix systems
     default:
         pinger = NewLinuxPinger4(ctx)
     }
