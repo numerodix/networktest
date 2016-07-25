@@ -12,9 +12,9 @@ go:
     - 1.6
 
 script:
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make unittest; fi
     - make test
-    - make all-archs
-    - make unittest
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make all-archs; fi
 
 notifications:
     email: false
