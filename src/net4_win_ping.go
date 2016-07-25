@@ -24,7 +24,10 @@ func (wi WinPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
                         "-n", fmt.Sprintf("%d", cnt),
                         "-w", fmt.Sprintf("%d", timeoutMs / 1000),
                         host)
-    mgr.timeoutMs = timeoutMs
+
+    // DISABLE: Seems to kill the process prematurely on Windows
+    //mgr.timeoutMs = timeoutMs
+
     var res = mgr.run()
 
     // Use stderr as signal since err may not be reliable
