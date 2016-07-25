@@ -19,7 +19,7 @@ func NewBsdNetDetect4(ctx AppContext) BsdNetDetect4 {
 }
 
 
-func (bnd *BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
+func (bnd BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
     bnd.detectIfconfig4(&info)
@@ -32,7 +32,7 @@ func (bnd *BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
 }
 
 
-func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
+func (bnd BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("ifconfig")
     var res = mgr.run()
 
@@ -50,7 +50,7 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
 }
 
 
-func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
+func (bnd BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("netstat", "-n", "-r")
     var res = mgr.run()
 
@@ -68,7 +68,7 @@ func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
 }
 
 
-func (bnd *BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
+func (bnd BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ifconfig
       em0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
@@ -146,7 +146,7 @@ func (bnd *BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
 }
 
 
-func (bnd *BsdNetDetect4) parseNetstat4(stdout string, info *IP4NetworkInfo) {
+func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/netstat -n -r
       Routing tables

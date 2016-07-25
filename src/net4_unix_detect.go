@@ -17,7 +17,7 @@ func NewUnixNetDetect4(ctx AppContext) UnixNetDetect4 {
 }
 
 
-func (und *UnixNetDetect4) detectNsHosts4(info *IP4NetworkInfo) {
+func (und UnixNetDetect4) detectNsHosts4(info *IP4NetworkInfo) {
     var filepath = "/etc/resolv.conf"
 
     // Read the file
@@ -32,7 +32,7 @@ func (und *UnixNetDetect4) detectNsHosts4(info *IP4NetworkInfo) {
 }
 
 
-func (und *UnixNetDetect4) parseResolvConf4(content string,
+func (und UnixNetDetect4) parseResolvConf4(content string,
                                             info *IP4NetworkInfo) {
 
     var nameservers = und.parseResolvConf(content)
@@ -46,7 +46,7 @@ func (und *UnixNetDetect4) parseResolvConf4(content string,
     }
 }
 
-func (und *UnixNetDetect4) parseResolvConf(content string) []string {
+func (und UnixNetDetect4) parseResolvConf(content string) []string {
     // Parse the nameservers
     var nameservers []string
     var lines = strings.Split(content, "\n")

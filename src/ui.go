@@ -88,31 +88,9 @@ func (ui *NetDetectUi) run() {
 func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
     var info IP4NetworkInfo
 
-    switch ui.ctx.osName {
-    // Linux userland
-    case "linux":
-        var linuxDet = NewLinuxNetDetect4(ui.ctx)
-        info = linuxDet.detectNetConn4()
+    var detector = getDetector4(ui.ctx)
 
-    // BSD userland
-    case "darwin":
-        fallthrough
-    case "dragonfly":
-        fallthrough
-    case "freebsd":
-        fallthrough
-    case "netbsd":
-        fallthrough
-    case "openbsd":
-        var bsdDet = NewBsdNetDetect4(ui.ctx)
-        info = bsdDet.detectNetConn4()
-
-    // Windows userland
-    case "windows":
-        var winDet = NewWinNetDetect4(ui.ctx)
-        info = winDet.detectNetConn4()
-    }
-
+    info = detector.detectNetConn4()
     info.normalize()
 
     return info

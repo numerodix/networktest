@@ -1,6 +1,5 @@
 package main
 
-import "errors"
 import "fmt"
 import "regexp"
 import "strings"

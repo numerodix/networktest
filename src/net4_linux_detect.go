@@ -18,7 +18,7 @@ func NewLinuxNetDetect4(ctx AppContext) LinuxNetDetect4 {
 }
 
 
-func (lnd *LinuxNetDetect4) detectNetConn4() IP4NetworkInfo {
+func (lnd LinuxNetDetect4) detectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
     lnd.detectIpAddr4(&info)
@@ -31,7 +31,7 @@ func (lnd *LinuxNetDetect4) detectNetConn4() IP4NetworkInfo {
 }
 
 
-func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
+func (lnd LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("ip", "-4", "addr", "show")
     var res = mgr.run()
 
@@ -48,7 +48,7 @@ func (lnd *LinuxNetDetect4) detectIpAddr4(info *IP4NetworkInfo) {
     lnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
-func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
+func (lnd LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("ip", "-4", "route", "show")
     var res = mgr.run()
 
@@ -66,7 +66,7 @@ func (lnd *LinuxNetDetect4) detectIpRoute4(info *IP4NetworkInfo) {
 }
 
 
-func (lnd *LinuxNetDetect4) parseIpAddr4(stdout string, info *IP4NetworkInfo) {
+func (lnd LinuxNetDetect4) parseIpAddr4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ip -4 addr show
       1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
@@ -125,7 +125,7 @@ func (lnd *LinuxNetDetect4) parseIpAddr4(stdout string, info *IP4NetworkInfo) {
 }
 
 
-func (lnd *LinuxNetDetect4) parseIpRoute4(stdout string, info *IP4NetworkInfo) {
+func (lnd LinuxNetDetect4) parseIpRoute4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       $ /sbin/ip -4 route show
       default via 192.168.1.1 dev eth0  proto static 

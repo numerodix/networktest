@@ -18,7 +18,7 @@ func NewWinNetDetect4(ctx AppContext) WinNetDetect4 {
 }
 
 
-func (wnd *WinNetDetect4) detectNetConn4() IP4NetworkInfo {
+func (wnd WinNetDetect4) detectNetConn4() IP4NetworkInfo {
     var info = IP4NetworkInfo{}
 
     wnd.detectIpconfig4(&info)
@@ -27,7 +27,7 @@ func (wnd *WinNetDetect4) detectNetConn4() IP4NetworkInfo {
 }
 
 
-func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
+func (wnd WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
     var mgr = ProcMgr("ipconfig", "/all")
     var res = mgr.run()
 
@@ -45,7 +45,7 @@ func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
 }
 
 
-func (wnd *WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
+func (wnd WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
     /* Output:
       C:\> ipconfig /all
       Windows IP Configuration
