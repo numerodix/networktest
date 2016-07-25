@@ -265,6 +265,7 @@ type AppContext struct {
 }
 
 
+// A blank AppContext for unit testing
 func TestAppContext() AppContext {
     return AppContext{
     }
