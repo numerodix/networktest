@@ -12,9 +12,9 @@ go:
     - 1.6
 
 script:
-    - make unittest
-    - make all-archs
     - make test
+    - make all-archs
+    - make unittest
 
 notifications:
     email: false
