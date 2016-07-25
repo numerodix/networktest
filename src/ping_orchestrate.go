@@ -1,7 +1,7 @@
 package main
 
 
-func pingJob(pinger LinuxPinger4, ch chan PingExecution,
+func pingJob(pinger Pinger, ch chan PingExecution,
              host string, cnt int, timeoutMs int) {
 
     var pingExec = pinger.ping(host, cnt, timeoutMs)
@@ -9,7 +9,7 @@ func pingJob(pinger LinuxPinger4, ch chan PingExecution,
 }
 
 
-func runPings(pinger LinuxPinger4,
+func runPings(pinger Pinger,
               hosts []string, cnt int, timeoutMs int) Pings {
 
     var pings = make(map[string]PingExecution)

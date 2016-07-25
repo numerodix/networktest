@@ -19,7 +19,7 @@ func NewLinuxPinger4(ctx AppContext) LinuxPinger4 {
 }
 
 
-func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
+func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
     var mgr = ProcMgr("ping",
                         fmt.Sprintf("-c%d", cnt),
                         fmt.Sprintf("-W%d", timeoutMs),
@@ -50,7 +50,7 @@ func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution 
 }
 
 
-func (pi *LinuxPinger4) parsePing4(stdout string) PingExecution {
+func (pi LinuxPinger4) parsePing4(stdout string) PingExecution {
     /* Output:
       $ ping -c1 -W2 yahoo.com
       PING yahoo.com (98.138.253.109) 56(84) bytes of data.
