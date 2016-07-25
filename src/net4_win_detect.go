@@ -7,13 +7,13 @@ import "strings"
 
 
 type WinNetDetect4 struct {
-    ft Formatter
+    ctx AppContext
 }
 
 
-func WindowsNetworkDetector4(ft Formatter) WinNetDetect4 {
+func NewWinNetDetect4(ctx AppContext) WinNetDetect4 {
     return WinNetDetect4{
-        ft: ft,
+        ctx: ctx,
     }
 }
 
@@ -33,7 +33,7 @@ func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
 
     // The command failed :(
     if res.err != nil {
-        wnd.ft.printError("Failed to detect ipv4 network", res.err)
+        wnd.ctx.ft.printError("Failed to detect ipv4 network", res.err)
         return
     }
 
@@ -41,7 +41,7 @@ func (wnd *WinNetDetect4) detectIpconfig4(info *IP4NetworkInfo) {
     wnd.parseIpconfig4(res.stdout, info)
 
     // Parsing failed :(
-    wnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    wnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 

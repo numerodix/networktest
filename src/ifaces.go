@@ -253,3 +253,19 @@ type PingExecution struct {
 
 // host -> PingExecution
 type Pings map[string]PingExecution
+
+
+
+type AppContext struct {
+    col ColorBrush
+    ft Formatter
+
+    ipver int  // 4 | 6
+    osName string  // linux | freesd | ...
+}
+
+
+func TestAppContext() AppContext {
+    return AppContext{
+    }
+}

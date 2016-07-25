@@ -6,6 +6,8 @@ import "strings"
 
 
 type NetDetectUi struct {
+    ctx AppContext
+
     col ColorBrush
     ft Formatter
 
@@ -32,6 +34,14 @@ func NetworkDetector(ipver int) NetDetectUi {
         colorBrush: col,
     }
 
+    var ctx = AppContext{
+        col: col,
+        ft: ft,
+        ipver: ipver,
+        osName: runtime.GOOS,
+    }
+
+
     var inetNsHosts = make(map[string]string)
     inetNsHosts["b.root-servers.net."] = "192.228.79.201"
 
@@ -44,6 +54,7 @@ func NetworkDetector(ipver int) NetDetectUi {
     }
 
     var ui = NetDetectUi{
+        ctx: ctx,
         col: col,
         ft: ft,
         ipver: ipver,
@@ -107,7 +118,7 @@ func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
 
     // Windows userland
     case "windows":
-        var winDet = WindowsNetworkDetector4(ui.ft)
+        var winDet = NewWinNetDetect4(ui.ctx)
         info = winDet.detectNetConn4()
     }
 
