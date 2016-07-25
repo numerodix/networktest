@@ -133,7 +133,7 @@ func (ui *NetDetectUi) pingLocalNet() {
     }
 
     // Run the pings
-    var pinger = NewLinuxPinger4(ui.ctx)
+    var pinger = getPinger(ui.ctx)
     var pings = runPings(pinger, hosts, 1, 1000)
 
     ui.localPings = pings
@@ -159,7 +159,7 @@ func (ui *NetDetectUi) pingInet() {
     }
 
     // Run the pings
-    var pinger = NewLinuxPinger4(ui.ctx)
+    var pinger = getPinger(ui.ctx)
     var pings = runPings(pinger, hosts, 1, 2000)
 
     ui.inetPings = pings
