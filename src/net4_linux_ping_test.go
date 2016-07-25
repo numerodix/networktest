@@ -17,8 +17,8 @@ rtt min/avg/max/mdev = 154.327/154.327/154.327/0.000 ms
 
 
 func Test_linuxParsePing4(t *testing.T) {
-    var ft = Formatter{}
-    var pinger = NewLinuxPinger4(ft)
+    var ctx = TestAppContext()
+    var pinger = NewLinuxPinger4(ctx)
     var pingExec = pinger.parsePing4(ping4Output)
 
     assertStrEq(t, "yahoo.com", pingExec.Host, "wrong host")

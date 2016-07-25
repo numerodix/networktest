@@ -71,8 +71,8 @@ func Test_linuxParseIpAddr4(t *testing.T) {
 func Test_linuxParseIpRoute4(t *testing.T) {
     var info = IP4NetworkInfo{}
 
-    var ft = Formatter{}
-    var detector = LinuxNetworkDetector4(ft)
+    var ctx = TestAppContext()
+    var detector = NewLinuxNetDetect4(ctx)
     detector.parseIpRoute4(ip4RouteOutput, &info)
 
     // Errors

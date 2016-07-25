@@ -8,13 +8,13 @@ import "strings"
 
 
 type BsdNetDetect4 struct {
-    ft Formatter
+    ctx AppContext
 }
 
 
-func BsdNetworkDetector4(ft Formatter) BsdNetDetect4 {
+func NewBsdNetDetect4(ctx AppContext) BsdNetDetect4 {
     return BsdNetDetect4{
-        ft: ft,
+        ctx: ctx,
     }
 }
 
@@ -25,7 +25,7 @@ func (bnd *BsdNetDetect4) detectNetConn4() IP4NetworkInfo {
     bnd.detectIfconfig4(&info)
     bnd.detectNetstat4(&info)
 
-    var und = UnixNetworkDetector4(bnd.ft)
+    var und = NewUnixNetDetect4(bnd.ctx)
     und.detectNsHosts4(&info)
 
     return info
@@ -38,7 +38,7 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
 
     // The command failed :(
     if res.err != nil {
-        bnd.ft.printError("Failed to detect ipv4 network", res.err)
+        bnd.ctx.ft.printError("Failed to detect ipv4 network", res.err)
         return
     }
 
@@ -46,7 +46,7 @@ func (bnd *BsdNetDetect4) detectIfconfig4(info *IP4NetworkInfo) {
     bnd.parseIfconfig4(res.stdout, info)
 
     // Parsing failed :(
-    bnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    bnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 
@@ -56,7 +56,7 @@ func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
 
     // The command failed :(
     if res.err != nil {
-        bnd.ft.printError("Failed to detect ipv4 routes", res.err)
+        bnd.ctx.ft.printError("Failed to detect ipv4 routes", res.err)
         return
     }
 
@@ -64,7 +64,7 @@ func (bnd *BsdNetDetect4) detectNetstat4(info *IP4NetworkInfo) {
     bnd.parseNetstat4(res.stdout, info)
 
     // Parsing failed :(
-    bnd.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    bnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
 }
 
 

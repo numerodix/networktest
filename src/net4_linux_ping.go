@@ -8,13 +8,13 @@ import "strconv"
 
 
 type LinuxPinger4 struct {
-    ft Formatter
+    ctx AppContext
 }
 
 
-func NewLinuxPinger4(ft Formatter) LinuxPinger4 {
+func NewLinuxPinger4(ctx AppContext) LinuxPinger4 {
     return LinuxPinger4{
-        ft: ft,
+        ctx: ctx,
     }
 }
 
@@ -34,7 +34,7 @@ func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution 
 
     // The command failed :(
     if res.err != nil {
-        pi.ft.printError("Failed to invoke ping", res.err)
+        pi.ctx.ft.printError("Failed to invoke ping", res.err)
         return PingExecution{Err: res.err}
     }
 
@@ -43,7 +43,7 @@ func (pi *LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution 
 
     // Parsing failed :(
     if pingExec.Err != nil {
-        pi.ft.printError("Failed to parse ipv4 network info", pingExec.Err)
+        pi.ctx.ft.printError("Failed to parse ipv4 network info", pingExec.Err)
     }
 
     return pingExec

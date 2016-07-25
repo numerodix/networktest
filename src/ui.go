@@ -8,12 +8,6 @@ import "strings"
 type NetDetectUi struct {
     ctx AppContext
 
-    col ColorBrush
-    ft Formatter
-
-    ipver int  // 4 | 6
-    osName string  // linux | freesd | ...
-
     // Well known nameservers on the internet (known by ip)
     inetNsHosts map[string]string
     // Well known hosts on the internet (known by hostname)
@@ -53,12 +47,9 @@ func NetworkDetector(ipver int) NetDetectUi {
         "yahoo.com",
     }
 
+
     var ui = NetDetectUi{
         ctx: ctx,
-        col: col,
-        ft: ft,
-        ipver: ipver,
-        osName: runtime.GOOS,
 
         inetNsHosts: inetNsHosts,
         inetHosts: inetHosts,
@@ -97,10 +88,10 @@ func (ui *NetDetectUi) run() {
 func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
     var info IP4NetworkInfo
 
-    switch ui.osName {
+    switch ui.ctx.osName {
     // Linux userland
     case "linux":
-        var linuxDet = LinuxNetworkDetector4(ui.ft)
+        var linuxDet = NewLinuxNetDetect4(ui.ctx)
         info = linuxDet.detectNetConn4()
 
     // BSD userland
@@ -113,7 +104,7 @@ func (ui *NetDetectUi) detectLocalNet() IP4NetworkInfo {
     case "netbsd":
         fallthrough
     case "openbsd":
-        var bsdDet = BsdNetworkDetector4(ui.ft)
+        var bsdDet = NewBsdNetDetect4(ui.ctx)
         info = bsdDet.detectNetConn4()
 
     // Windows userland
@@ -142,7 +133,7 @@ func (ui *NetDetectUi) pingLocalNet() {
     }
 
     // Run the pings
-    var pinger = NewLinuxPinger4(ui.ft)
+    var pinger = NewLinuxPinger4(ui.ctx)
     var pings = runPings(pinger, hosts, 1, 1000)
 
     ui.localPings = pings
@@ -168,7 +159,7 @@ func (ui *NetDetectUi) pingInet() {
     }
 
     // Run the pings
-    var pinger = NewLinuxPinger4(ui.ft)
+    var pinger = NewLinuxPinger4(ui.ctx)
     var pings = runPings(pinger, hosts, 1, 2000)
 
     ui.inetPings = pings
@@ -176,84 +167,84 @@ func (ui *NetDetectUi) pingInet() {
 
 
 func (ui *NetDetectUi) displayPlatform() {
-    var plat = strings.Title(ui.osName)
-    fmt.Printf("Platform: %s\n", ui.col.cyan(plat))
+    var plat = strings.Title(ui.ctx.osName)
+    fmt.Printf("Platform: %s\n", ui.ctx.col.cyan(plat))
 }
 
 
 func (ui *NetDetectUi) displayLocalNet() {
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Scanning for networks"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Scanning for networks"))
     for _, net := range ui.info4.getSortedNets() {
-        var ifaceFmt = ui.ft.formatIfaceField(net.Iface.Name)
-        var netwFmt = ui.ft.formatIpField(net.ipAsString())
-        var maskFmt = ui.ft.formatSubnetField(net.maskAsString())
+        var ifaceFmt = ui.ctx.ft.formatIfaceField(net.Iface.Name)
+        var netwFmt = ui.ctx.ft.formatIpField(net.ipAsString())
+        var maskFmt = ui.ctx.ft.formatSubnetField(net.maskAsString())
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
     if len(ui.info4.Nets) == 0 {
-        fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+        fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
     }
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Detecting ips"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Detecting ips"))
     for _, ip := range ui.info4.getSortedIps() {
         var pingExec = ui.localPings[ip.ipAsString()]
-        var ifaceFmt = ui.ft.formatIfaceField(ip.Iface.Name)
-        var ipFmt = ui.ft.formatIpField(ip.ipAsString())
-        var maskFmt = ui.ft.formatSubnetField(ip.maskAsString())
-        var pingFmt = ui.ft.formatPingTime(pingExec)
+        var ifaceFmt = ui.ctx.ft.formatIfaceField(ip.Iface.Name)
+        var ipFmt = ui.ctx.ft.formatIpField(ip.ipAsString())
+        var maskFmt = ui.ctx.ft.formatSubnetField(ip.maskAsString())
+        var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
     if len(ui.info4.Ips) == 0 {
-        fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+        fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
     }
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Detecting gateways"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Detecting gateways"))
     for _, gw := range ui.info4.getSortedGws() {
         var pingExec = ui.localPings[gw.ipAsString()]
-        var ifaceFmt = ui.ft.formatIfaceField(gw.Iface.Name)
-        var ipFmt = ui.ft.formatIpField(gw.ipAsString())
-        var pingFmt = ui.ft.formatPingTime(pingExec)
+        var ifaceFmt = ui.ctx.ft.formatIfaceField(gw.Iface.Name)
+        var ipFmt = ui.ctx.ft.formatIpField(gw.ipAsString())
+        var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
 
         var ips = ui.info4.getIpsForGw(&gw)
         for _, ip := range ips {
-            var ipFmt = ui.ft.formatLanIpField(ip.ipAsString())
+            var ipFmt = ui.ctx.ft.formatLanIpField(ip.ipAsString())
             fmt.Printf("     ip:        %s\n", ipFmt)
         }
     }
     if len(ui.info4.Gws) == 0 {
-        fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+        fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
     }
 
 }
 
 func (ui *NetDetectUi) displayInetConnectivity() {
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Testing internet connection"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Testing internet connection"))
     for host, ip := range ui.inetNsHosts {
         var pingExec = ui.inetPings[ip]
-        var nameFmt = ui.ft.formatHostField(host)
-        var ipFmt = ui.ft.formatIpField(ip)
-        var pingFmt = ui.ft.formatPingTime(pingExec)
+        var nameFmt = ui.ctx.ft.formatHostField(host)
+        var ipFmt = ui.ctx.ft.formatIpField(ip)
+        var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s  ping: %s\n", nameFmt, ipFmt, pingFmt)
     }
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Detecting dns servers"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Detecting dns servers"))
     for _, ip := range ui.info4.getSortedNsHosts() {
         var pingExec = ui.inetPings[ip.ipAsString()]
-        var ipFmt = ui.ft.formatIpField(ip.ipAsString())
-        var pingFmt = ui.ft.formatPingTime(pingExec)
+        var ipFmt = ui.ctx.ft.formatIpField(ip.ipAsString())
+        var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
     if len(ui.info4.NsHosts) == 0 {
-        fmt.Printf("    %s\n", ui.ft.formatError("none found"))
+        fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
     }
 
-    fmt.Printf("%s\n", ui.ft.formatHeader("Testing internet dns"))
+    fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Testing internet dns"))
     for _, host := range ui.inetHosts {
         var pingExec = ui.inetPings[host]
-        var ipFmt = ui.ft.formatIpField(host)
-        var pingFmt = ui.ft.formatPingTime(pingExec)
+        var ipFmt = ui.ctx.ft.formatIpField(host)
+        var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
 
