@@ -4,6 +4,36 @@ package main
 import "net"
 
 
+func ipIs4(ip net.IP) bool {
+    // Guard against bad input
+    if ip == nil {
+        panic("Input cannot be nil")
+    }
+
+    if ip.To4() == nil {
+        return false
+    }
+
+    return true
+}
+
+
+func ipIs6(ip net.IP) bool {
+    // Guard against bad input
+    if ip == nil {
+        panic("Input cannot be nil")
+    }
+
+    // To16 will not return nil the way that To4 will. So we need to negate the
+    // test for ipv4 instead.
+    if ipIs4(ip) {
+        return false
+    }
+
+    return true
+}
+
+
 func ipIsLesser(x, y net.IP) bool {
     // catch bad input
     if x == nil || y == nil {

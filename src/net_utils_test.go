@@ -1,7 +1,26 @@
 package main
 
+//import "fmt"
 import "net"
 import "testing"
+
+
+func Test_ipIs4(t *testing.T) {
+    var ip4 = net.ParseIP("1.1.1.1")
+    var ip6 = net.ParseIP("::1")
+
+    assertTrue(t, ipIs4(ip4), "ip is not ipv4")
+    assertFalse(t, ipIs4(ip6), "ip is ipv4")
+}
+
+
+func Test_ipIs6(t *testing.T) {
+    var ip4 = net.ParseIP("1.1.1.1")
+    var ip6 = net.ParseIP("2001:4860:0:2001::68")
+
+    assertTrue(t, ipIs6(ip6), "ip is ipv6")
+    assertFalse(t, ipIs6(ip4), "ip is not ipv6")
+}
 
 
 func Test_ipIsLesser(t *testing.T) {
