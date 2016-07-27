@@ -133,7 +133,7 @@ func maskAsIpToIPMask(mask *net.IP) net.IPMask {
 }
 
 
-func ipIPMaskToNet4(ip *net.IP, mask *net.IP) net.IPNet {
+func ipAndMaskToIPNet(ip *net.IP, mask *net.IP) net.IPNet {
     // catch bad input
     if ip == nil || mask == nil {
         panic("Inputs cannot be nil")

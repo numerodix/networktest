@@ -140,7 +140,7 @@ func (wnd WinNetDetect4) parseIpconfig4(stdout string, info *IP4NetworkInfo) {
                     var ipobj = net.ParseIP(ip)
                     var maskobj = net.ParseIP(subnet)
 
-                    var ipnet = ipIPMaskToNet4(&ipobj, &maskobj)
+                    var ipnet = ipAndMaskToIPNet(&ipobj, &maskobj)
                     var netMasked = applyMask(&ipnet.IP, &ipnet.Mask)
 
                     var gwobj = net.ParseIP(gw)

@@ -57,7 +57,7 @@ type IpAddr struct {
 }
 
 func (ipa *IpAddr) getAsIpnet() net.IPNet {
-    var ipnet = ipIPMaskToNet4(&ipa.Ip, &ipa.Mask)
+    var ipnet = ipAndMaskToIPNet(&ipa.Ip, &ipa.Mask)
     return ipnet
 }
 
