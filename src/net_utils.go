@@ -103,6 +103,7 @@ func applyMask(ip *net.IP, mask *net.IPMask) net.IPNet {
 
     var ipobj = ip.Mask(*mask)
     var ipnet = net.IPNet{IP: ipobj, Mask: *mask}
+
     return ipnet
 }
 
