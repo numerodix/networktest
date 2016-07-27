@@ -87,7 +87,7 @@ func ipIsLesser(x, y net.IP) bool {
 }
 
 
-func ipMaskToNet4(ip *net.IP, mask *net.IPMask) net.IPNet {
+func applyMask(ip *net.IP, mask *net.IPMask) net.IPNet {
     // catch bad input
     if ip == nil || mask == nil {
         panic("Inputs cannot be nil")

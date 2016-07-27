@@ -128,7 +128,7 @@ func (bnd BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
                 continue
             }
 
-            var netMasked = ipMaskToNet4(&ipnet.IP, &ipnet.Mask)
+            var netMasked = applyMask(&ipnet.IP, &ipnet.Mask)
             var maskIp = ipnetToMask4(ipnet)
 
             // Populate info
