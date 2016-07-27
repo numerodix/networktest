@@ -17,7 +17,6 @@ func ipIs4(ip net.IP) bool {
     return true
 }
 
-
 func ipIs6(ip net.IP) bool {
     // Guard against bad input
     if ip == nil {
@@ -34,10 +33,37 @@ func ipIs6(ip net.IP) bool {
 }
 
 
+func maskIs4(mask net.IPMask) bool {
+    // Guard against bad input
+    if mask == nil {
+        panic("Input cannot be nil")
+    }
+
+    if len(mask) == 4 {
+        return true
+    }
+
+    return false
+}
+
+func maskIs6(mask net.IPMask) bool {
+    // Guard against bad input
+    if mask == nil {
+        panic("Input cannot be nil")
+    }
+
+    if len(mask) == 16 {
+        return true
+    }
+
+    return false
+}
+
+
 func ipIsLesser(x, y net.IP) bool {
     // catch bad input
     if x == nil || y == nil {
-        panic("Input cannot be nil")
+        panic("Inputs cannot be nil")
     }
 
     // i actually ranges 0 -> 15
@@ -62,16 +88,21 @@ func ipIsLesser(x, y net.IP) bool {
 
 
 func ipMaskToNet4(ip *net.IP, mask *net.IPMask) net.IPNet {
-    var bytes = make([]byte, len(*ip))
-
-    var ip4 = ip.To4()
-    for i := range ip4 {
-        bytes[i] = ip4[i] & (*mask)[i]
+    // catch bad input
+    if ip == nil || mask == nil {
+        panic("Inputs cannot be nil")
     }
 
-    var ipobj = net.IPv4(bytes[0], bytes[1], bytes[2], bytes[3])
-    var ipnet = net.IPNet{IP: ipobj, Mask: *mask}
+    // Make sure the inputs are the same ip version
+    if ipIs4(*ip) && maskIs6(*mask) {
+        panic("Inputs do not match")
+    }
+    if ipIs6(*ip) && maskIs4(*mask) {
+        panic("Inputs do not match")
+    }
 
+    var ipobj = ip.Mask(*mask)
+    var ipnet = net.IPNet{IP: ipobj, Mask: *mask}
     return ipnet
 }
 

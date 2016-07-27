@@ -13,13 +13,29 @@ func Test_ipIs4(t *testing.T) {
     assertFalse(t, ipIs4(ip6), "ip is ipv4")
 }
 
-
 func Test_ipIs6(t *testing.T) {
     var ip4 = net.ParseIP("1.1.1.1")
     var ip6 = net.ParseIP("2001:4860:0:2001::68")
 
     assertTrue(t, ipIs6(ip6), "ip is ipv6")
     assertFalse(t, ipIs6(ip4), "ip is not ipv6")
+}
+
+
+func Test_maskIs4(t *testing.T) {
+    var mask4 = net.CIDRMask(8, 32)
+    var mask6 = net.CIDRMask(8, 128)
+
+    assertTrue(t, maskIs4(mask4), "mask is ipv4")
+    assertFalse(t, maskIs4(mask6), "mask is not ipv4")
+}
+
+func Test_maskIs6(t *testing.T) {
+    var mask4 = net.CIDRMask(8, 32)
+    var mask6 = net.CIDRMask(8, 128)
+
+    assertTrue(t, maskIs6(mask6), "mask is ipv6")
+    assertFalse(t, maskIs6(mask4), "mask is not ipv6")
 }
 
 
@@ -75,4 +91,53 @@ func Test_ipIsLesser6(t *testing.T) {
 
     assertTrue(t, ipIsLesser(a, d), "a < d")
     assertFalse(t, ipIsLesser(d, a), "d !< a")
+}
+
+
+func Test_ipMaskToNet4(t *testing.T) {
+    var ip4 = net.ParseIP("122.204.201.241")
+    var mask4zero = net.IPv4Mask(255, 255, 255, 255)
+    var mask4one = net.IPv4Mask(255, 255, 255, 0)
+    var mask4two = net.IPv4Mask(255, 255, 0, 0)
+    var mask4onehalf = net.IPv4Mask(255, 128, 0, 0)
+
+    assertStrEq(t, ipMaskToNet4(&ip4, &mask4zero).IP.String(),
+                    "122.204.201.241", "ip4 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip4, &mask4one).IP.String(),
+                    "122.204.201.0", "ip4 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip4, &mask4two).IP.String(),
+                    "122.204.0.0", "ip4 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip4, &mask4onehalf).IP.String(),
+                    "122.128.0.0", "ip4 masking failed")
+}
+
+func Test_ipMaskToNet6(t *testing.T) {
+    var ip6 = net.ParseIP("2001:4860:0:2002::fe:248")
+    var mask6zero = net.CIDRMask(128, 128)
+    var mask6one = net.CIDRMask(120, 128)
+    var mask6two = net.CIDRMask(112, 128)
+    var mask6three = net.CIDRMask(106, 128)
+    var mask6four = net.CIDRMask(98, 128)
+
+    var mask6twentynine = net.CIDRMask(24, 128)
+    var mask6thirty = net.CIDRMask(16, 128)
+    var mask6thirtyone = net.CIDRMask(8, 128)
+
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6zero).IP.String(),
+                    "2001:4860:0:2002::fe:248", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6one).IP.String(),
+                    "2001:4860:0:2002::fe:200", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6two).IP.String(),
+                    "2001:4860:0:2002::fe:0", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6three).IP.String(),
+                    "2001:4860:0:2002::c0:0", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6four).IP.String(),
+                    "2001:4860:0:2002::", "ip6 masking failed")
+
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6twentynine).IP.String(),
+                    "2001:4800::", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6thirty).IP.String(),
+                    "2001::", "ip6 masking failed")
+    assertStrEq(t, ipMaskToNet4(&ip6, &mask6thirtyone).IP.String(),
+                    "2000::", "ip6 masking failed")
 }
