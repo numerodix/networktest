@@ -23,7 +23,7 @@ func Test_ipIs6(t *testing.T) {
 }
 
 
-func Test_ipIsLesser(t *testing.T) {
+func Test_ipIsLesser4(t *testing.T) {
     var a = net.ParseIP("10.0.2.15")
     var d = net.ParseIP("10.0.2.16")
 
@@ -57,4 +57,22 @@ func Test_ipIsLesser(t *testing.T) {
     assertTrue(t, ipIsLesser(a, w), "a < w")
     assertFalse(t, ipIsLesser(v, a), "v !< a")
     assertFalse(t, ipIsLesser(w, a), "w !< a")
+}
+
+func Test_ipIsLesser6(t *testing.T) {
+    var a = net.ParseIP("2001:4860:0:2001::68")
+    var b = net.ParseIP("2001:4860:0:2001::69")
+    var c = net.ParseIP("2001:4860:0:2002::68")
+    var d = net.ParseIP("2001:4860:0:2002::67")
+
+    assertFalse(t, ipIsLesser(a, a), "a == a")
+
+    assertTrue(t, ipIsLesser(a, b), "a < b")
+    assertFalse(t, ipIsLesser(b, a), "b !< a")
+
+    assertTrue(t, ipIsLesser(a, c), "a < c")
+    assertFalse(t, ipIsLesser(c, a), "c !< a")
+
+    assertTrue(t, ipIsLesser(a, d), "a < d")
+    assertFalse(t, ipIsLesser(d, a), "d !< a")
 }

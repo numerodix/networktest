@@ -37,7 +37,7 @@ func ipIs6(ip net.IP) bool {
 func ipIsLesser(x, y net.IP) bool {
     // catch bad input
     if x == nil || y == nil {
-        return false
+        panic("Input cannot be nil")
     }
 
     // i actually ranges 0 -> 15
