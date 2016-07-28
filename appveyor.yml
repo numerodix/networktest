@@ -1,0 +1,18 @@
+version: 1.0.{build}
+
+configuration:
+  - Release
+
+platform:
+  - x64
+  - x86
+
+build_script:
+- cmd: >-
+    python -V
+    python winbuild.py
+
+test_script:
+- cmd: >-
+    bin\havenet.exe
+    bin\havenet.exe -6
