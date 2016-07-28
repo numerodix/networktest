@@ -1,6 +1,6 @@
 package main
 
-//import "fmt"
+import "fmt"
 import "net"
 
 
@@ -159,13 +159,37 @@ func ipAndMaskToIPNet(ip *net.IP, mask *net.IP) net.IPNet {
 
 
 func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
-    var mask = net.IPv4(
-        ipnet.Mask[0],
-        ipnet.Mask[1],
-        ipnet.Mask[2],
-        ipnet.Mask[3])
+    var ipobj net.IP
 
-    return mask
+    if maskIs4(ipnet.Mask) {
+        ipobj = net.IPv4(
+                    ipnet.Mask[0],
+                    ipnet.Mask[1],
+                    ipnet.Mask[2],
+                    ipnet.Mask[3])
+
+    } else {
+        var ipStr = fmt.Sprintf("%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x",
+                            ipnet.Mask[0],
+                            ipnet.Mask[1],
+                            ipnet.Mask[2],
+                            ipnet.Mask[3],
+                            ipnet.Mask[4],
+                            ipnet.Mask[5],
+                            ipnet.Mask[6],
+                            ipnet.Mask[7],
+                            ipnet.Mask[8],
+                            ipnet.Mask[9],
+                            ipnet.Mask[10],
+                            ipnet.Mask[11],
+                            ipnet.Mask[12],
+                            ipnet.Mask[13],
+                            ipnet.Mask[14],
+                            ipnet.Mask[15])
+        ipobj = net.ParseIP(ipStr)
+    }
+
+    return ipobj
 }
 
 
