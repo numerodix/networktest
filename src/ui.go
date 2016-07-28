@@ -10,7 +10,8 @@ type NetDetectUi struct {
     ctx AppContext
 
     // Well known nameservers on the internet (known by ip)
-    inetNsHosts map[string]net.IP
+    inet4NsHosts map[string]net.IP
+    inet6NsHosts map[string]net.IP
     // Well known hosts on the internet (known by hostname)
     inetHosts []string
 
@@ -37,8 +38,11 @@ func NetworkDetector(ipver int) NetDetectUi {
     }
 
 
-    var inetNsHosts = make(map[string]net.IP)
-    inetNsHosts["b.root-servers.net."] = net.ParseIP("192.228.79.201")
+    var inet4NsHosts = make(map[string]net.IP)
+    inet4NsHosts["b.root-servers.net."] = net.ParseIP("192.228.79.201")
+
+    var inet6NsHosts = make(map[string]net.IP)
+    inet6NsHosts["b.root-servers.net."] = net.ParseIP("2001:500:84::b")
 
     var inetHosts = []string{
         "facebook.com",
@@ -52,11 +56,21 @@ func NetworkDetector(ipver int) NetDetectUi {
     var ui = NetDetectUi{
         ctx: ctx,
 
-        inetNsHosts: inetNsHosts,
+        inet4NsHosts: inet4NsHosts,
+        inet6NsHosts: inet6NsHosts,
         inetHosts: inetHosts,
     }
 
     return ui
+}
+
+
+func (ui *NetDetectUi) getInetNsHosts() map[string]net.IP {
+    if ui.ctx.ipver == 4 {
+        return ui.inet4NsHosts
+    } else {
+        return ui.inet6NsHosts
+    }
 }
 
 
@@ -130,7 +144,7 @@ func (ui *NetDetectUi) pingInet() {
     var hosts = []string{}
 
     // Ping nameservers on inet to see if we can route packets there
-    for _, ip := range ui.inetNsHosts {
+    for _, ip := range ui.getInetNsHosts() {
         hosts = append(hosts, ip.String())
     }
 
@@ -214,7 +228,7 @@ func (ui *NetDetectUi) displayLocalNet() {
 func (ui *NetDetectUi) displayInetConnectivity() {
 
     fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Testing internet connection"))
-    for host, ip := range ui.inetNsHosts {
+    for host, ip := range ui.getInetNsHosts() {
         var pingExec = ui.inetPings[ip.String()]
         var nameFmt = ui.ctx.ft.formatHostField(host)
         var ipFmt = ui.ctx.ft.formatIpField(ip)
