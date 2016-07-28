@@ -106,11 +106,13 @@ func (ui *NetDetectUi) detectLocalNet() IPNetworkInfo {
     switch ui.ctx.ipver {
     case 4:
         var detector = getDetector4(ui.ctx)
-        info = detector.detectNetConn4()
+        if detector != nil {  // in case platform unsupported
+            info = detector.detectNetConn4()
+        }
 
     case 6:
         var detector = getDetector6(ui.ctx)
-        if detector != nil {
+        if detector != nil {  // in case platform unsupported
             info = detector.detectNetConn6()
         }
     }
