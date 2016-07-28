@@ -187,7 +187,7 @@ func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IPNetworkInfo) {
 
     // Loop variables
     var netifOffset = -1
-    var netifLength = 4
+    var netifLength = 5
     var scope4 = false
     var iface = ""
     var ip = ""
