@@ -13,13 +13,6 @@ type Interface struct {
 type Network struct {
     Iface Interface
     Ip net.IPNet
-
-    // Is4
-    // Is6
-
-    // IpAsString
-    // MaskAsString
-    // BcastAsString
 }
 
 func (net *Network) ipAsString() string {
@@ -48,12 +41,6 @@ type IpAddr struct {
     Iface Interface
     Ip net.IP
     Mask net.IP
-
-    // Is4
-    // Is6
-
-    // IpAsString
-    // MaskAsString
 }
 
 func (ipa *IpAddr) getAsIpnet() net.IPNet {
@@ -85,12 +72,6 @@ func (ipas ByIpAddr) Less(i, j int) bool {
 type Gateway struct {
     Iface Interface
     Ip net.IP
-    // Mask?
-
-    // Is4
-    // Is6
-
-    // IpAsString
 }
 
 func (gw *Gateway) ipAsString() string {
@@ -112,11 +93,6 @@ func (gws ByGateway) Less(i, j int) bool {
 
 type NsServer struct {
     Ip net.IP
-
-    // Is4
-    // Is6
-
-    // IpAsString
 }
 
 func (nshost *NsServer) ipAsString() string {
@@ -142,11 +118,6 @@ type IPNetworkInfo struct {
     Gws []Gateway
     NsHosts []NsServer
     Errs []error
-
-    // GetAllIfaces()
-    // GetIpsForGw(gw)
-    // GetNetsForIface(iface)
-    // 
 }
 
 func (info *IPNetworkInfo) getSortedNets() []Network {
