@@ -21,7 +21,7 @@ func NewUnixPinger(ctx AppContext) UnixPinger {
 
 
 func (ui UnixPinger) getPingArgs(host string, cnt int,
-                                  timeoutMs int) (bool, string, []string) {
+                                  timeoutMs int) (bool, bool, string, []string) {
 
     var ip = net.ParseIP(host)
     var exe = "ping"  // default to ipv4 ping
@@ -56,13 +56,23 @@ func (ui UnixPinger) getPingArgs(host string, cnt int,
         }
     }
 
-    return pingable, exe, args
+    // now that we know which one we'll use, check if it's there
+    var havetool = ui.ctx.toolbox.haveTool(exe)
+
+    return havetool, pingable, exe, args
 }
 
 
 func (ui UnixPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
     // Build the argument string
-    var pingable, exe, args = ui.getPingArgs(host, cnt, timeoutMs)
+    var havetool, pingable, exe, args = ui.getPingArgs(host, cnt, timeoutMs)
+
+    // If the ping tool isn't available there is no point trying
+    if !havetool{
+        return PingExecution{
+            Host: host,
+        }
+    }
 
     // If the host is not pingable there is no point in trying
     if !pingable {
