@@ -24,8 +24,8 @@ func (lnd LinuxNetDetect6) detectNetConn6() IPNetworkInfo {
     lnd.detectIpAddr6(&info)
     lnd.detectIpRoute6(&info)
 
-//    var und = NewUnixNetDetect4(lnd.ctx)
-//    und.detectNsHosts4(&info)
+    var und = NewUnixNetDetect4(lnd.ctx)
+    und.detectNsHosts4(&info)
 
     return info
 }
