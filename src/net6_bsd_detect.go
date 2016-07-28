@@ -218,11 +218,14 @@ func (bnd BsdNetDetect6) parseNetstat6(stdout string, info *IPNetworkInfo) {
             if rxGw.MatchString(flags) {
                 var ipobj = net.ParseIP(ip)
 
-                // Populate info
-                info.Gws = append(info.Gws, Gateway{
-                    Iface: Interface{Name: iface},
-                    Ip: ipobj,
-                })
+                // A link-local ip is not a gateway
+                if !ipobj.IsLinkLocalUnicast() {
+                    // Populate info
+                    info.Gws = append(info.Gws, Gateway{
+                        Iface: Interface{Name: iface},
+                        Ip: ipobj,
+                    })
+                }
             }
         }
     }
