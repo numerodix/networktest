@@ -20,7 +20,7 @@ network configurations have a number of parameters that may vary between one
 case of *"it's not working"* and the next.
 
 ``networktest`` aims to be a tool that makes it easy to establish the key
-network configuration characteristics to get a quick idea of what might be
+network configuration characteristics and get a quick idea of what might be
 wrong. It is a smoke test of your network setup.
 
 The questions we ask are:
@@ -37,8 +37,8 @@ The questions we ask are:
 
 4. **Can I reach Internet hosts by ip?** If so, my gateway is working.
 
-5. **Do I have nameservers (DNS servers)?** If so, I should be able to resolve
-   Internet hostnames to Internet ip addresses.
+5. **What DNS servers (nameservers) do I have?** DNS servers allow me to
+   resolve Internet hostnames to ip addresses.
 
 6. **Can I reach Internet hosts by hostname?** If so, I have "Internet
    connectivity" in the common sense.
