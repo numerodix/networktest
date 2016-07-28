@@ -108,7 +108,7 @@ func (lnd LinuxNetDetect4) parseIpAddr4(stdout string, info *IP4NetworkInfo) {
             }
 
             var netMasked = applyMask(&ipnet.IP, &ipnet.Mask)
-            var mask = ipnetToMask4(ipnet)
+            var mask = ipnetMaskAsIP(ipnet)
 
             // Populate info
             info.Nets = append(info.Nets, Network{

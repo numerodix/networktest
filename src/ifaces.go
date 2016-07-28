@@ -27,7 +27,7 @@ func (net *Network) ipAsString() string {
 }
 
 func (net *Network) maskAsString() string {
-    var mask = ipnetToMask4(&net.Ip)
+    var mask = ipnetMaskAsIP(&net.Ip)
     return mask.String()
 }
 
