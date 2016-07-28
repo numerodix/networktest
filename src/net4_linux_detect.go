@@ -62,7 +62,7 @@ func (lnd LinuxNetDetect4) detectIpRoute4(info *IPNetworkInfo) {
     lnd.parseIpRoute4(res.stdout, info)
 
     // Parsing failed :(
-    lnd.ctx.ft.printErrors("Failed to parse ipv4 network info", info.Errs)
+    lnd.ctx.ft.printErrors("Failed to parse ipv4 route info", info.Errs)
 }
 
 
