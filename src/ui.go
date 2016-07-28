@@ -165,7 +165,14 @@ func (ui *NetDetectUi) displayLocalNet() {
         var ifaceFmt = ui.ctx.ft.formatIfaceField(net.Iface.Name)
         var netwFmt = ui.ctx.ft.formatIpField(net.Ip.IP)
         var maskFmt = ui.ctx.ft.formatSubnetField(net.Ip.Mask)
-        fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
+
+        var scopeFmt = ""
+        if ipIs6(net.Ip.IP) {
+            var scope = ip6AsScope(net.Ip.IP)
+            scopeFmt = ui.ctx.ft.formatScope6Field(scope)
+        }
+
+        fmt.Printf("    %s  %s %s  %s\n", ifaceFmt, netwFmt, maskFmt, scopeFmt)
     }
     if len(ui.info.Nets) == 0 {
         fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))

@@ -76,6 +76,23 @@ func ipmaskAsString4(mask net.IPMask) string {
 }
 
 
+func ip6AsScope(ip net.IP) string {
+    var scope = ""
+
+    if ipIs6(ip) {
+        if ip.IsLoopback() {
+            scope = "host"
+        } else if ip.IsLinkLocalUnicast() {
+            scope = "link"
+        } else if ip.IsGlobalUnicast() {
+            scope = "global"
+        }
+    }
+
+    return scope
+}
+
+
 func ipIsLesser(x, y net.IP) bool {
     // catch bad input
     if x == nil || y == nil {
