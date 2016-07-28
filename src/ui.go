@@ -194,7 +194,7 @@ func (ui *NetDetectUi) displayLocalNet() {
 
         var ips = ui.info.getIpsForGw(&gw)
         for _, ip := range ips {
-            var ipFmt = ui.ctx.ft.formatLanIpField(ip.ipAsString())
+            var ipFmt = ui.ctx.ft.formatLanIpField(ip.Ip)
             fmt.Printf("     ip:        %s\n", ipFmt)
         }
     }
