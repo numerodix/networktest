@@ -8,19 +8,19 @@ import "strings"
 import "strconv"
 
 
-type LinuxPinger4 struct {
+type LinuxPinger struct {
     ctx AppContext
 }
 
 
-func NewLinuxPinger4(ctx AppContext) LinuxPinger4 {
-    return LinuxPinger4{
+func NewLinuxPinger(ctx AppContext) LinuxPinger {
+    return LinuxPinger{
         ctx: ctx,
     }
 }
 
 
-func (pi LinuxPinger4) getPingExecutable(host string) string {
+func (pi LinuxPinger) getPingExecutable(host string) string {
     var ip = net.ParseIP(host)
     var exe = "ping"  // default to ipv4 ping
 
@@ -36,7 +36,7 @@ func (pi LinuxPinger4) getPingExecutable(host string) string {
 }
 
 
-func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
+func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
     // Decide whether to use ping or ping6
     var exe = pi.getPingExecutable(host)
 
@@ -59,7 +59,7 @@ func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
     }
 
     // Extract the output
-    var pingExec = pi.parsePing4(res.stdout)
+    var pingExec = pi.parsePing(res.stdout)
 
     // Parsing failed :(
     if pingExec.Err != nil {
@@ -70,7 +70,7 @@ func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
 }
 
 
-func (pi LinuxPinger4) parsePing4(stdout string) PingExecution {
+func (pi LinuxPinger) parsePing(stdout string) PingExecution {
     /* Output:
       $ ping -c1 -W2 yahoo.com
       PING yahoo.com (98.138.253.109) 56(84) bytes of data.
