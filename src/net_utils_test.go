@@ -39,6 +39,13 @@ func Test_maskIs6(t *testing.T) {
 }
 
 
+func Test_ipmaskAsString4(t *testing.T) {
+    var mask = net.CIDRMask(24, 32)
+
+    assertStrEq(t, "255.255.255.0", ipmaskAsString4(mask), "failed to format mask")
+}
+
+
 func Test_ipIsLesser4(t *testing.T) {
     var a = net.ParseIP("10.0.2.15")
     var d = net.ParseIP("10.0.2.16")

@@ -60,6 +60,22 @@ func maskIs6(mask net.IPMask) bool {
 }
 
 
+func ipmaskAsString4(mask net.IPMask) string {
+    // Guard against bad input
+    if mask == nil || !maskIs4(mask) {
+        panic("Input cannot be nil or non-ipv4 mask")
+    }
+
+    var maskFmt = fmt.Sprintf("%d.%d.%d.%d",
+                    mask[0],
+                    mask[1],
+                    mask[2],
+                    mask[3])
+
+    return maskFmt
+}
+
+
 func ipIsLesser(x, y net.IP) bool {
     // catch bad input
     if x == nil || y == nil {

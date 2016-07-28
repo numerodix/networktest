@@ -86,8 +86,18 @@ func (ft *Formatter) formatScope6Field(scope string) string {
     return ipFmt
 }
 
-func (ft *Formatter) formatSubnetField(ip string) string {
-    var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %-15s", ip))
+func (ft *Formatter) formatSubnetField(mask net.IPMask) string {
+    var subnetFmt string
+    var ones int
+
+    if maskIs4(mask) {
+        var maskStr = ipmaskAsString4(mask)
+        subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %-15s", maskStr))
+    } else {
+        ones, _ = mask.Size()
+        subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %3d", ones))
+    }
+
     return subnetFmt
 }
 

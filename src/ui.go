@@ -164,7 +164,7 @@ func (ui *NetDetectUi) displayLocalNet() {
     for _, net := range ui.info.getSortedNets() {
         var ifaceFmt = ui.ctx.ft.formatIfaceField(net.Iface.Name)
         var netwFmt = ui.ctx.ft.formatIpField(net.Ip.IP)
-        var maskFmt = ui.ctx.ft.formatSubnetField(net.maskAsString())
+        var maskFmt = ui.ctx.ft.formatSubnetField(net.Ip.Mask)
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
     if len(ui.info.Nets) == 0 {
@@ -176,7 +176,7 @@ func (ui *NetDetectUi) displayLocalNet() {
         var pingExec = ui.localPings[ip.ipAsString()]
         var ifaceFmt = ui.ctx.ft.formatIfaceField(ip.Iface.Name)
         var ipFmt = ui.ctx.ft.formatIpField(ip.Ip)
-        var maskFmt = ui.ctx.ft.formatSubnetField(ip.maskAsString())
+        var maskFmt = ui.ctx.ft.formatSubnetField(ip.maskAsIPMask())
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }

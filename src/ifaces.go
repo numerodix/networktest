@@ -56,6 +56,11 @@ func (ipa *IpAddr) maskAsString() string {
     return ipa.Mask.String()
 }
 
+func (ipa *IpAddr) maskAsIPMask() net.IPMask {
+    var ipnet = ipa.getAsIpnet()
+    return ipnet.Mask
+}
+
 // Sorting for IpAddr
 type ByIpAddr []IpAddr
 func (ipas ByIpAddr) Len() int {
