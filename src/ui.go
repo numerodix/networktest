@@ -93,13 +93,13 @@ func (ui *NetDetectUi) detectLocalNet() IPNetworkInfo {
     case 4:
         var detector = getDetector4(ui.ctx)
         info = detector.detectNetConn4()
+        info.normalize()
 
     case 6:
         var detector = getDetector6(ui.ctx)
         info = detector.detectNetConn6()
+        info.normalize()
     }
-
-    info.normalize()
 
     return info
 }
