@@ -46,6 +46,14 @@ The questions we ask are:
 
 
 
+Supported platforms
+===================
+
+``networktest`` is written in Go and targets Linux, FreeBSD, OS X, and Windows.
+
+
+
+
 Usage
 =====
 
