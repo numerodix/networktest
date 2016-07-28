@@ -35,8 +35,8 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int, timeoutMs int) (string, 
 
     var args []string
 
-    // ping with -c and -W seems to be supported everywhere
-    // ...but ping6 only on linux
+    // ping (-c -W) seems to be supported everywhere
+    // ...but ping6 (-c -W) only on linux
     if exe == "ping" || (exe == "ping6" && pi.ctx.isLinuxUserland()) {
         args = []string{
             "-c", fmt.Sprintf("%d", cnt),
@@ -96,14 +96,6 @@ func (pi LinuxPinger) parsePing(stdout string) PingExecution {
       --- yahoo.com ping statistics ---
       1 packets transmitted, 1 received, 0% packet loss, time 0ms
       rtt min/avg/max/mdev = 154.327/154.327/154.327/0.000 ms
-
-      $ ping6 -c1 -W2 ::1
-      PING ::1(::1) 56 data bytes
-      64 bytes from ::1: icmp_seq=1 ttl=64 time=0.049 ms
-      
-      --- ::1 ping statistics ---
-      1 packets transmitted, 1 received, 0% packet loss, time 0ms
-      rtt min/avg/max/mdev = 0.049/0.049/0.049/0.000 ms
     */
 
     // We will read line by line
