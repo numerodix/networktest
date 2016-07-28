@@ -1,3 +1,7 @@
+'''This needs to be a script as passing *.go to "go build" in the terminal on
+Windows does not work.'''
+
+
 import os
 import subprocess
 
