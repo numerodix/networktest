@@ -88,9 +88,16 @@ func (ui *NetDetectUi) run() {
 func (ui *NetDetectUi) detectLocalNet() IPNetworkInfo {
     var info IPNetworkInfo
 
-    var detector = getDetector4(ui.ctx)
+    switch ui.ctx.ipver {
+    case 4:
+        var detector = getDetector4(ui.ctx)
+        info = detector.detectNetConn4()
 
-    info = detector.detectNetConn4()
+    case 6:
+        var detector = getDetector6(ui.ctx)
+        info = detector.detectNetConn6()
+    }
+
     info.normalize()
 
     return info

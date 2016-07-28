@@ -21,7 +21,7 @@ func NewLinuxNetDetect6(ctx AppContext) LinuxNetDetect6 {
 func (lnd LinuxNetDetect6) detectNetConn6() IPNetworkInfo {
     var info = IPNetworkInfo{}
 
-//    lnd.detectIpAddr6(&info)
+    lnd.detectIpAddr6(&info)
     lnd.detectIpRoute6(&info)
 
 //    var und = NewUnixNetDetect4(lnd.ctx)
