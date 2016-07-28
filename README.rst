@@ -32,7 +32,7 @@ The questions we ask are:
    Loopback interface? Link-local? Or is it a network that allows me to route
    packets to the Internet (the kind we want)?
 
-2. **What ip addresses do I have on the networks I'm connected too?** These
+2. **What ip addresses do I have on the networks I'm connected to?** These
    are addresses that should be reachable (ie. pingable) from myself.
 
 3. **What gateways do I have?** A gateway (or router) is a host on my network
