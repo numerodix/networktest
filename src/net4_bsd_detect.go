@@ -187,7 +187,7 @@ func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IPNetworkInfo) {
 
     // Loop variables
     var netifOffset = -1
-    var netifLength = 5
+    var netifLength = len("Netif")
     var scope4 = false
     var iface = ""
     var ip = ""
@@ -212,7 +212,16 @@ func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IPNetworkInfo) {
         if scope4 && rxFlags.MatchString(line) {
             ip = rxFlags.FindStringSubmatch(line)[1]
             flags = rxFlags.FindStringSubmatch(line)[2]
-            var ifaceField = line[netifOffset:netifOffset + netifLength]
+
+            // Find the end offset for the Netif field
+            var ifaceField string
+            var endOffset = netifOffset + netifLength
+            if endOffset > (len(line) - 1) {
+                ifaceField = line[netifOffset:]
+            } else {
+                ifaceField = line[netifOffset:endOffset]
+            }
+
             iface = strings.TrimSpace(ifaceField)
 
             if rxGw.MatchString(flags) {

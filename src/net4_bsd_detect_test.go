@@ -28,10 +28,10 @@ Routing tables
 
 Internet:
 Destination        Gateway            Flags      Netif Expire
-default            10.0.2.2           UGS         em0        
-10.0.2.0/24        link#1             U           em0        
-10.0.2.15          link#1             UHS         lo0        
-127.0.0.1          link#2             UH          lo0        
+default            10.0.2.2           UGS         em0 
+10.0.2.0/24        link#1             U           em0 
+10.0.2.15          link#1             UHS         lo0 
+127.0.0.1          link#2             UH          lo0 
 
 Internet6:
 Destination                       Gateway                       Flags      Netif Expire
