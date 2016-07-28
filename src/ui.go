@@ -50,10 +50,10 @@ func NetworkDetector(ipver int) NetDetectUi {
     inet6NsHosts["b.root-servers.net."] = net.ParseIP("2001:500:84::b")
 
     var inetHosts = []string{
+        "debian.org",
         "facebook.com",
         "gmail.com",
         "google.com",
-        "twitter.com",
         "yahoo.com",
     }
 
