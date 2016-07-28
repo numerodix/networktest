@@ -2,6 +2,7 @@ package main
 
 import "errors"
 import "fmt"
+import "net"
 import "regexp"
 import "strings"
 import "strconv"
@@ -19,8 +20,27 @@ func NewLinuxPinger4(ctx AppContext) LinuxPinger4 {
 }
 
 
+func (pi LinuxPinger4) getPingExecutable(host string) string {
+    var ip = net.ParseIP(host)
+    var exe = "ping"  // default to ipv4 ping
+
+    // If the ip is ipv6 use ipv6 ping
+    if ip != nil && ipIs6(ip) {
+        exe = "ping6"
+    // Otherwise it's a hostname, so use the ipver mode we are in
+    } else if pi.ctx.ipver == 6 {
+        exe = "ping6"
+    }
+
+    return exe
+}
+
+
 func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
-    var mgr = ProcMgr("ping",
+    // Decide whether to use ping or ping6
+    var exe = pi.getPingExecutable(host)
+
+    var mgr = ProcMgr(exe,
                         "-c", fmt.Sprintf("%d", cnt),
                         "-W", fmt.Sprintf("%d", timeoutMs / 1000),
                         host)
@@ -34,7 +54,7 @@ func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
 
     // The command failed :(
     if res.err != nil {
-        pi.ctx.ft.printError("Failed to invoke ping", res.err)
+        pi.ctx.ft.printError(fmt.Sprintf("Failed to invoke %s", exe), res.err)
         return PingExecution{Err: res.err}
     }
 
@@ -43,7 +63,7 @@ func (pi LinuxPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
 
     // Parsing failed :(
     if pingExec.Err != nil {
-        pi.ctx.ft.printError("Failed to parse ipv4 network info", pingExec.Err)
+        pi.ctx.ft.printError(fmt.Sprintf("Failed to parse %s info", exe), pingExec.Err)
     }
 
     return pingExec
@@ -59,13 +79,21 @@ func (pi LinuxPinger4) parsePing4(stdout string) PingExecution {
       --- yahoo.com ping statistics ---
       1 packets transmitted, 1 received, 0% packet loss, time 0ms
       rtt min/avg/max/mdev = 154.327/154.327/154.327/0.000 ms
+
+      $ ping6 -c1 -W2 ::1
+      PING ::1(::1) 56 data bytes
+      64 bytes from ::1: icmp_seq=1 ttl=64 time=0.049 ms
+      
+      --- ::1 ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 0.049/0.049/0.049/0.000 ms
     */
 
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
     // Prepare regex objects
-    rxHost := regexp.MustCompile("^PING ([^ ]+)")
+    rxHost := regexp.MustCompile("^PING ([^)( ]+)")
     rxStats := regexp.MustCompile("= ([0-9.]+)/([0-9.]+)/([0-9.]+)/([0-9.]+) ms")
 
     // Loop variables
