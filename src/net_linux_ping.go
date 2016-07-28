@@ -66,7 +66,10 @@ func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
 
     // If the host is not pingable there is no point in trying
     if !pingable {
-        return PingExecution{Unpingable: true}
+        return PingExecution{
+            Host: host,
+            Unpingable: true,
+        }
     }
 
     var mgr = ProcMgr(exe, args...)
