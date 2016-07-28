@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+import "net"
 import "runtime"
 import "strings"
 
@@ -9,7 +10,7 @@ type NetDetectUi struct {
     ctx AppContext
 
     // Well known nameservers on the internet (known by ip)
-    inetNsHosts map[string]string
+    inetNsHosts map[string]net.IP
     // Well known hosts on the internet (known by hostname)
     inetHosts []string
 
@@ -36,8 +37,8 @@ func NetworkDetector(ipver int) NetDetectUi {
     }
 
 
-    var inetNsHosts = make(map[string]string)
-    inetNsHosts["b.root-servers.net."] = "192.228.79.201"
+    var inetNsHosts = make(map[string]net.IP)
+    inetNsHosts["b.root-servers.net."] = net.ParseIP("192.228.79.201")
 
     var inetHosts = []string{
         "facebook.com",
@@ -130,7 +131,7 @@ func (ui *NetDetectUi) pingInet() {
 
     // Ping nameservers on inet to see if we can route packets there
     for _, ip := range ui.inetNsHosts {
-        hosts = append(hosts, ip)
+        hosts = append(hosts, ip.String())
     }
 
     // Ping nameservers to see if we can resolve dns
@@ -162,7 +163,7 @@ func (ui *NetDetectUi) displayLocalNet() {
     fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Scanning for networks"))
     for _, net := range ui.info.getSortedNets() {
         var ifaceFmt = ui.ctx.ft.formatIfaceField(net.Iface.Name)
-        var netwFmt = ui.ctx.ft.formatIpField(net.ipAsString())
+        var netwFmt = ui.ctx.ft.formatIpField(net.Ip.IP)
         var maskFmt = ui.ctx.ft.formatSubnetField(net.maskAsString())
         fmt.Printf("    %s  %s %s\n", ifaceFmt, netwFmt, maskFmt)
     }
@@ -174,7 +175,7 @@ func (ui *NetDetectUi) displayLocalNet() {
     for _, ip := range ui.info.getSortedIps() {
         var pingExec = ui.localPings[ip.ipAsString()]
         var ifaceFmt = ui.ctx.ft.formatIfaceField(ip.Iface.Name)
-        var ipFmt = ui.ctx.ft.formatIpField(ip.ipAsString())
+        var ipFmt = ui.ctx.ft.formatIpField(ip.Ip)
         var maskFmt = ui.ctx.ft.formatSubnetField(ip.maskAsString())
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
@@ -187,7 +188,7 @@ func (ui *NetDetectUi) displayLocalNet() {
     for _, gw := range ui.info.getSortedGws() {
         var pingExec = ui.localPings[gw.ipAsString()]
         var ifaceFmt = ui.ctx.ft.formatIfaceField(gw.Iface.Name)
-        var ipFmt = ui.ctx.ft.formatIpField(gw.ipAsString())
+        var ipFmt = ui.ctx.ft.formatIpField(gw.Ip)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
 
@@ -207,7 +208,7 @@ func (ui *NetDetectUi) displayInetConnectivity() {
 
     fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Testing internet connection"))
     for host, ip := range ui.inetNsHosts {
-        var pingExec = ui.inetPings[ip]
+        var pingExec = ui.inetPings[ip.String()]
         var nameFmt = ui.ctx.ft.formatHostField(host)
         var ipFmt = ui.ctx.ft.formatIpField(ip)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
@@ -217,7 +218,7 @@ func (ui *NetDetectUi) displayInetConnectivity() {
     fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Detecting dns servers"))
     for _, ip := range ui.info.getSortedNsHosts() {
         var pingExec = ui.inetPings[ip.ipAsString()]
-        var ipFmt = ui.ctx.ft.formatIpField(ip.ipAsString())
+        var ipFmt = ui.ctx.ft.formatIpField(ip.Ip)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }
@@ -228,7 +229,7 @@ func (ui *NetDetectUi) displayInetConnectivity() {
     fmt.Printf("%s\n", ui.ctx.ft.formatHeader("Testing internet dns"))
     for _, host := range ui.inetHosts {
         var pingExec = ui.inetPings[host]
-        var ipFmt = ui.ctx.ft.formatIpField(host)
+        var ipFmt = ui.ctx.ft.formatInetHostField(host)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
         fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
     }

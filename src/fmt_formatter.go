@@ -43,6 +43,11 @@ func (ft *Formatter) formatHostField(host string) string {
     return hostFmt
 }
 
+func (ft *Formatter) formatInetHostField(host string) string {
+    var hostFmt = ft.colorBrush.green(fmt.Sprintf("%15s", host))
+    return hostFmt
+}
+
 func (ft *Formatter) formatLanIpField(ip string) string {
     var ipFmt = ft.colorBrush.bgreen(fmt.Sprintf("%15s", ip))
     return ipFmt
@@ -53,8 +58,15 @@ func (ft *Formatter) formatLanIp6Field(ip net.IP) string {
     return ipFmt
 }
 
-func (ft *Formatter) formatIpField(ip string) string {
-    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%15s", ip))
+func (ft *Formatter) formatIpField(ip net.IP) string {
+    var ipFmt string
+
+    if ipIs4(ip) {
+        ipFmt = ft.colorBrush.green(fmt.Sprintf("%15s", ip.String()))
+    } else {
+        ipFmt = ft.colorBrush.green(fmt.Sprintf("%39s", ip.String()))
+    }
+
     return ipFmt
 }
 
