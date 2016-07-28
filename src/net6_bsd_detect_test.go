@@ -35,6 +35,7 @@ default            10.0.2.2           UGS         em0
 
 Internet6:
 Destination                       Gateway                       Flags      Netif Expire
+default                           2a00::1%em0                   UGRS        em0
 ::/96                             ::1                           UGRS        lo0
 ::1                               link#2                        UH          lo0
 ::ffff:0.0.0.0/96                 ::1                           UGRS        lo0
@@ -109,9 +110,9 @@ func Test_bsdParseNetstat6(t *testing.T) {
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
 
     // Gateways
-    assertIntEq(t, 0, len(info.Gws), "wrong number of gws")
+    assertIntEq(t, 1, len(info.Gws), "wrong number of gws")
 
-//    assertStrEq(t, "em0", info.Gws[0].Iface.Name, "Iface does not match")
-//    assertStrEq(t, "10.0.2.2", info.Gws[0].Ip.String(), "Ip does not match")
+    assertStrEq(t, "em0", info.Gws[0].Iface.Name, "Iface does not match")
+    assertStrEq(t, "2a00::1", info.Gws[0].Ip.String(), "Ip does not match")
 }
 

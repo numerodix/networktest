@@ -177,7 +177,7 @@ func (bnd BsdNetDetect6) parseNetstat6(stdout string, info *IPNetworkInfo) {
 
     // Prepare regex objects
     rxLabel6 := regexp.MustCompile("^Internet6:")
-    rxFlags := regexp.MustCompile("^default[ \t]+([0-9.]+)[ \t]+([^ ]+)")
+    rxFlags := regexp.MustCompile("^default[ \t]+([A-Fa-f0-9:]+)[^ ]*[ \t]+([^ ]+)")
     rxNetif := regexp.MustCompile("Netif")
     rxGw := regexp.MustCompile("G")
 
