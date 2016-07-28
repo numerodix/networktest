@@ -1,8 +1,6 @@
 package main
 
-import (
-    "strconv"
-)
+import "strconv"
 
 
 type ColorBrush struct {

@@ -1,26 +1,19 @@
 package main
 
-import (
-    "flag"
-)
+import "flag"
 
 
 func main() {
     // Parse command line args
-    flagIpv4Ptr := flag.Bool("4", true, "Test IPv4 network connectivity")
-    flagIpv6Ptr := flag.Bool("6", false, "Test IPv6 network connectivity")
+    var _ = flag.Bool("4", true, "Test IPv4 network connectivity")
+    var flagIpv6Ptr = flag.Bool("6", false, "Test IPv6 network connectivity")
     flag.Parse()
 
-    // Decide on execution params
-    var ipv4 = *flagIpv4Ptr
+    var ipver = 4
     if *flagIpv6Ptr {
-        ipv4 = !*flagIpv6Ptr
+        ipver = 6
     }
 
-    // Run the program
-    if ipv4 {
-        HaveNet4()
-    } else {
-        HaveNet6()
-    }
+    var ui = NetworkDetector(ipver)
+    ui.run()
 }

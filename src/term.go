@@ -1,15 +1,13 @@
 package main
 
-import (
-    "os"
-)
+import "os"
 
 
 /*
     Detect whether we are connected to a terminal (TERM set) and whether the
     terminal is dumb (does not support ansi control codes).
 */
-func TerminalIsDumb() bool {
+func terminalIsDumb() bool {
     var term = os.Getenv("TERM")
 
     if term == "" || term == "dumb" {

@@ -1,18 +1,46 @@
-all: bin/havenet
+all: build
+
+build: bin/havenet
 
 
-test:
-	make clean
-	make run
+bin/havenet: src/*.go
+	# CGO_ENABLED=0 to enable a static build
+	CGO_ENABLED=0 go build -o bin/havenet `ls src/*.go | grep -v '_test.go'`
+
+clean:
+	-@rm -f bin/*
 
 run: bin/havenet
 	bin/havenet
 	bin/havenet -6
 
-bin/havenet: src/*.go
-	# CGO_ENABLED=0 to enable a static build
-	CGO_ENABLED=0 go build -o bin/havenet src/*.go
+test:
+	make clean
+	make run
+
+unittest:
+	(cd src && go test -v -cover)
 
 
-clean:
-	-@rm bin/*
+all-archs:
+	-@rm -f dist/*
+	# Darwin
+	GOOS=darwin GOARCH=386 make clean build
+	@mv bin/havenet dist/havenet-darwin32
+	GOOS=darwin GOARCH=amd64 make clean build
+	@mv bin/havenet dist/havenet-darwin64
+	# Freebsd
+	GOOS=freebsd GOARCH=386 make clean build
+	@mv bin/havenet dist/havenet-freebsd32
+	GOOS=freebsd GOARCH=amd64 make clean build
+	@mv bin/havenet dist/havenet-freebsd64
+	# Linux
+	GOOS=linux GOARCH=386 make clean build
+	@mv bin/havenet dist/havenet-linux32
+	GOOS=linux GOARCH=amd64 make clean build
+	@mv bin/havenet dist/havenet-linux64
+	# Windows
+	GOOS=windows GOARCH=386 make clean build
+	@mv bin/havenet dist/havenet-win32.exe
+	GOOS=windows GOARCH=amd64 make clean build
+	@mv bin/havenet dist/havenet-win64.exe
