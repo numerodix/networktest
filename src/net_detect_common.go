@@ -46,7 +46,7 @@ func getDetector6(ctx AppContext) NetDetector6 {
     // Linux userland
     case "linux":
         det = NewLinuxNetDetect6(ctx)
-/*
+
     // BSD userland
     case "darwin":
         fallthrough
@@ -57,8 +57,8 @@ func getDetector6(ctx AppContext) NetDetector6 {
     case "netbsd":
         fallthrough
     case "openbsd":
-        det = NewBsdNetDetect4(ctx)
-
+        det = NewBsdNetDetect6(ctx)
+/*
     // Windows userland
     case "windows":
         det = NewWinNetDetect4(ctx)
