@@ -193,7 +193,7 @@ func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
 }
 
 
-func maskBytesToIPMask(bytes []byte) net.IPMask {
+func maskBytesToIPMask4(bytes []byte) net.IPMask {
     var mask = net.IPv4Mask(
         bytes[0],
         bytes[1],

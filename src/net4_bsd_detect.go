@@ -116,7 +116,7 @@ func (bnd BsdNetDetect4) parseIfconfig4(stdout string, info *IP4NetworkInfo) {
                 continue
             }
 
-            var mask = maskBytesToIPMask(maskBytes)
+            var mask = maskBytesToIPMask4(maskBytes)
             var maskBits, _ = mask.Size()
 
             var ipNet = fmt.Sprintf("%s/%d", ip, maskBits)
