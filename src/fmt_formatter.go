@@ -10,6 +10,10 @@ type Formatter struct {
 
 
 func (ft *Formatter) formatPingTime(pingExec PingExecution) string {
+    if pingExec.Unpingable {
+        return ft.colorBrush.red("N/A")
+    }
+
     // XXX: why is Err always nil?
     if pingExec.Err != nil || pingExec.Time <= 0.0 {
         return ft.colorBrush.red("failed")

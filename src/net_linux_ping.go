@@ -20,10 +20,14 @@ func NewLinuxPinger(ctx AppContext) LinuxPinger {
 }
 
 
-func (pi LinuxPinger) getPingArgs(host string, cnt int, timeoutMs int) (string, []string) {
+func (pi LinuxPinger) getPingArgs(host string, cnt int,
+                                  timeoutMs int) (bool, string, []string) {
 
     var ip = net.ParseIP(host)
     var exe = "ping"  // default to ipv4 ping
+
+    // If the ip is link local then it's not a valid ping target
+    var pingable = !ip.IsLinkLocalUnicast()
 
     // If the ip is ipv6 use ipv6 ping
     if ip != nil && ipIs6(ip) {
@@ -52,13 +56,18 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int, timeoutMs int) (string, 
         }
     }
 
-    return exe, args
+    return pingable, exe, args
 }
 
 
 func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
     // Build the argument string
-    var exe, args = pi.getPingArgs(host, cnt, timeoutMs)
+    var pingable, exe, args = pi.getPingArgs(host, cnt, timeoutMs)
+
+    // If the host is not pingable there is no point in trying
+    if !pingable {
+        return PingExecution{Unpingable: true}
+    }
 
     var mgr = ProcMgr(exe, args...)
     mgr.timeoutMs = timeoutMs

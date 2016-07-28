@@ -212,6 +212,7 @@ func (info *IPNetworkInfo) normalize() {
 type PingExecution struct {
     Host string
     Time float64
+    Unpingable bool
     Err error
 }
 
