@@ -224,6 +224,7 @@ type Pings map[string]PingExecution
 type AppContext struct {
     col ColorBrush
     ft Formatter
+    toolbox Toolbox
 
     ipver int  // 4 | 6
     osName string  // linux | freesd | ...

@@ -1,0 +1,24 @@
+C:\> ipconfig /all
+
+Ethernet adapter Local Area Connection:
+
+   Connection-specific DNS Suffix  . : ecoast.example.com
+   IPv6 Address. . . . . . . . . . . : 2001:db8:21da:7:713e:a426:d167:37ab
+   Temporary IPv6 Address. . . . . . : 2001:db8:21da:7:5099:ba54:9881:2e54
+   Link-local IPv6 Address . . . . . : fe80::713e:a426:d167:37ab%6
+   IPv4 Address. . . . . . . . . . . : 157.60.14.11
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::20a:42ff:feb0:5400%6
+                                       157.60.14.1
+
+Tunnel adapter Local Area Connection* 6:
+
+   Connection-specific DNS Suffix  . : ecoast.example.com
+   IPv6 Address. . . . . . . . . . . : 2001:db8:908c:f70f:200:5efe:157.60.14.11
+   Link-local IPv6 Address . . . . . : fe80::200:5efe:157.60.14.11%9
+   Default Gateway . . . . . . . . . : fe80::200:5efe:131.107.25.1%9
+
+Tunnel adapter Local Area Connection* 7:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :

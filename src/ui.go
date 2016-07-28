@@ -29,10 +29,15 @@ func NetworkDetector(ipver int) NetDetectUi {
     var ft = Formatter{
         colorBrush: col,
     }
+    var toolbox = Toolbox{
+        osName: runtime.GOOS,
+    }
 
     var ctx = AppContext{
         col: col,
         ft: ft,
+        toolbox: toolbox,
+
         ipver: ipver,
         osName: runtime.GOOS,
     }
@@ -76,6 +81,8 @@ func (ui *NetDetectUi) getInetNsHosts() map[string]net.IP {
 
 func (ui *NetDetectUi) run() {
     ui.displayPlatform()
+
+    ui.displayToolSupport()
 
     // Detect local network
     var info = ui.detectLocalNet()
@@ -172,6 +179,26 @@ func (ui *NetDetectUi) pingInet() {
 func (ui *NetDetectUi) displayPlatform() {
     var plat = strings.Title(ui.ctx.osName)
     fmt.Printf("Platform: %s\n", ui.ctx.col.cyan(plat))
+}
+
+
+func (ui *NetDetectUi) displayToolSupport() {
+    var missing = []string{}
+    var toCheck = []string{
+        "ping",
+        "ping6",
+    }
+
+    for _, name := range toCheck {
+        if !ui.ctx.toolbox.haveTool(name) {
+            missing = append(missing, name)
+        }
+    }
+
+    if len(missing) > 0 {
+        var missingFmt = strings.Join(missing, " ")
+        fmt.Printf("Missing tools: %s\n", ui.ctx.col.cyan(missingFmt))
+    }
 }
 
 
