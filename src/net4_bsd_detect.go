@@ -181,10 +181,13 @@ func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IPNetworkInfo) {
     // Prepare regex objects
     rxLabel4 := regexp.MustCompile("^Internet:")
     rxLabel6 := regexp.MustCompile("^Internet6:")
-    rxFlags := regexp.MustCompile("^default[ \t]+([0-9.]+)[ \t]+([^ ]+)[ \t]+([^ ]+)")
+    rxFlags := regexp.MustCompile("^default[ \t]+([0-9.]+)[ \t]+([^ ]+)")
+    rxNetif := regexp.MustCompile("Netif")
     rxGw := regexp.MustCompile("G")
 
     // Loop variables
+    var netifOffset = -1
+    var netifLength = 4
     var scope4 = false
     var iface = ""
     var ip = ""
@@ -201,10 +204,16 @@ func (bnd BsdNetDetect4) parseNetstat4(stdout string, info *IPNetworkInfo) {
             break
         }
 
+        if scope4 && rxNetif.MatchString(line) {
+            var beginEnd = rxNetif.FindStringIndex(line)
+            netifOffset = beginEnd[0]
+        }
+
         if scope4 && rxFlags.MatchString(line) {
             ip = rxFlags.FindStringSubmatch(line)[1]
             flags = rxFlags.FindStringSubmatch(line)[2]
-            iface = rxFlags.FindStringSubmatch(line)[3]
+            var ifaceField = line[netifOffset:netifOffset + netifLength]
+            iface = strings.TrimSpace(ifaceField)
 
             if rxGw.MatchString(flags) {
                 var ipobj = net.ParseIP(ip)
