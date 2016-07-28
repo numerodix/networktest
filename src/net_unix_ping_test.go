@@ -38,7 +38,7 @@ round-trip min/avg/max/std-dev = 0.433/0.433/0.433/0.000 ms
 
 func Test_linuxParsePing4(t *testing.T) {
     var ctx = TestAppContext()
-    var pinger = NewLinuxPinger(ctx)
+    var pinger = NewUnixPinger(ctx)
     var pingExec = pinger.parsePing(linuxPing4Output)
 
     assertStrEq(t, "yahoo.com", pingExec.Host, "wrong host")
@@ -49,7 +49,7 @@ func Test_linuxParsePing4(t *testing.T) {
 
 func Test_linuxParsePing6(t *testing.T) {
     var ctx = TestAppContext()
-    var pinger = NewLinuxPinger(ctx)
+    var pinger = NewUnixPinger(ctx)
     var pingExec = pinger.parsePing(linuxPing6Output)
 
     assertStrEq(t, "::1", pingExec.Host, "wrong host")
@@ -60,7 +60,7 @@ func Test_linuxParsePing6(t *testing.T) {
 
 func Test_bsdParsePing6(t *testing.T) {
     var ctx = TestAppContext()
-    var pinger = NewLinuxPinger(ctx)
+    var pinger = NewUnixPinger(ctx)
     var pingExec = pinger.parsePing(bsdPing6Output)
 
     assertStrEq(t, "::1", pingExec.Host, "wrong host")

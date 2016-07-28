@@ -8,19 +8,19 @@ import "strings"
 import "strconv"
 
 
-type LinuxPinger struct {
+type UnixPinger struct {
     ctx AppContext
 }
 
 
-func NewLinuxPinger(ctx AppContext) LinuxPinger {
-    return LinuxPinger{
+func NewUnixPinger(ctx AppContext) UnixPinger {
+    return UnixPinger{
         ctx: ctx,
     }
 }
 
 
-func (pi LinuxPinger) getPingArgs(host string, cnt int,
+func (ui UnixPinger) getPingArgs(host string, cnt int,
                                   timeoutMs int) (bool, string, []string) {
 
     var ip = net.ParseIP(host)
@@ -33,7 +33,7 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int,
     if ip != nil && ipIs6(ip) {
         exe = "ping6"
     // Otherwise it's a hostname, so use the ipver mode we are in
-    } else if ip == nil && pi.ctx.ipver == 6 {
+    } else if ip == nil && ui.ctx.ipver == 6 {
         exe = "ping6"
     }
 
@@ -41,7 +41,7 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int,
 
     // ping (-c -W) seems to be supported everywhere
     // ...but ping6 (-c -W) only on linux
-    if exe == "ping" || (exe == "ping6" && pi.ctx.isLinuxUserland()) {
+    if exe == "ping" || (exe == "ping6" && ui.ctx.isLinuxUserland()) {
         args = []string{
             "-c", fmt.Sprintf("%d", cnt),
             "-W", fmt.Sprintf("%d", timeoutMs / 1000),
@@ -49,7 +49,7 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int,
         }
 
     // ping6 on a bsd platform only supports -c
-    } else if exe == "ping6" && pi.ctx.isBsdUserland() {
+    } else if exe == "ping6" && ui.ctx.isBsdUserland() {
         args = []string{
             "-c", fmt.Sprintf("%d", cnt),
             host,
@@ -60,9 +60,9 @@ func (pi LinuxPinger) getPingArgs(host string, cnt int,
 }
 
 
-func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
+func (ui UnixPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
     // Build the argument string
-    var pingable, exe, args = pi.getPingArgs(host, cnt, timeoutMs)
+    var pingable, exe, args = ui.getPingArgs(host, cnt, timeoutMs)
 
     // If the host is not pingable there is no point in trying
     if !pingable {
@@ -83,23 +83,23 @@ func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
 
     // The command failed :(
     if res.err != nil {
-        pi.ctx.ft.printError(fmt.Sprintf("Failed to invoke %s", exe), res.err)
+        ui.ctx.ft.printError(fmt.Sprintf("Failed to invoke %s", exe), res.err)
         return PingExecution{Err: res.err}
     }
 
     // Extract the output
-    var pingExec = pi.parsePing(res.stdout)
+    var pingExec = ui.parsePing(res.stdout)
 
     // Parsing failed :(
     if pingExec.Err != nil {
-        pi.ctx.ft.printError(fmt.Sprintf("Failed to parse %s info", exe), pingExec.Err)
+        ui.ctx.ft.printError(fmt.Sprintf("Failed to parse %s info", exe), pingExec.Err)
     }
 
     return pingExec
 }
 
 
-func (pi LinuxPinger) parsePing(stdout string) PingExecution {
+func (ui UnixPinger) parsePing(stdout string) PingExecution {
     /* Output:
       $ ping -c1 -W2 yahoo.com
       PING yahoo.com (98.138.253.109) 56(84) bytes of data.
