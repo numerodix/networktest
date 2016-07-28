@@ -202,7 +202,7 @@ func (ui *NetDetectUi) displayLocalNet() {
         var ipFmt = ui.ctx.ft.formatIpField(ip.Ip)
         var maskFmt = ui.ctx.ft.formatSubnetField(ip.maskAsIPMask())
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s  %s %s   ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
+        fmt.Printf("    %s  %s %s  ping: %s\n", ifaceFmt, ipFmt, maskFmt, pingFmt)
     }
     if len(ui.info.Ips) == 0 {
         fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
@@ -214,7 +214,7 @@ func (ui *NetDetectUi) displayLocalNet() {
         var ifaceFmt = ui.ctx.ft.formatIfaceField(gw.Iface.Name)
         var ipFmt = ui.ctx.ft.formatIpField(gw.Ip)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s  %s   ping: %s\n", ifaceFmt, ipFmt, pingFmt)
+        fmt.Printf("    %s  %s  ping: %s\n", ifaceFmt, ipFmt, pingFmt)
 
         var ips = ui.info.getIpsForGw(&gw)
         for _, ip := range ips {
@@ -244,7 +244,7 @@ func (ui *NetDetectUi) displayInetConnectivity() {
         var pingExec = ui.inetPings[ip.ipAsString()]
         var ipFmt = ui.ctx.ft.formatIpField(ip.Ip)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
+        fmt.Printf("    %s  ping: %s\n", ipFmt, pingFmt)
     }
     if len(ui.info.NsHosts) == 0 {
         fmt.Printf("    %s\n", ui.ctx.ft.formatError("none found"))
@@ -255,7 +255,7 @@ func (ui *NetDetectUi) displayInetConnectivity() {
         var pingExec = ui.inetPings[host]
         var ipFmt = ui.ctx.ft.formatInetHostField(host)
         var pingFmt = ui.ctx.ft.formatPingTime(pingExec)
-        fmt.Printf("    %s   ping: %s\n", ipFmt, pingFmt)
+        fmt.Printf("    %s  ping: %s\n", ipFmt, pingFmt)
     }
 
 }
