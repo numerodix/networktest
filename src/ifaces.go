@@ -233,18 +233,6 @@ func (info *IP4NetworkInfo) normalize() {
 }
 
 
-type IP6NetworkInfo struct {
-    Nets []Network
-    Ips []IpAddr
-    Gws []Gateway
-    NsHosts []NsServer
-
-    // GetAllIfaces()
-    // GetNetsForIface(iface)
-    // 
-}
-
-
 type PingExecution struct {
     Host string
     Time float64
