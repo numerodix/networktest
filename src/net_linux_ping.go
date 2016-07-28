@@ -28,7 +28,7 @@ func (pi LinuxPinger) getPingExecutable(host string) string {
     if ip != nil && ipIs6(ip) {
         exe = "ping6"
     // Otherwise it's a hostname, so use the ipver mode we are in
-    } else if pi.ctx.ipver == 6 {
+    } else if ip == nil && pi.ctx.ipver == 6 {
         exe = "ping6"
     }
 
