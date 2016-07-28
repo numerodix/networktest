@@ -228,6 +228,36 @@ type AppContext struct {
     osName string  // linux | freesd | ...
 }
 
+func (ctx AppContext) isLinuxUserland() bool {
+    var isLinux = false
+
+    switch ctx.osName {
+    case "linux":
+        isLinux = true
+    }
+
+    return isLinux
+}
+
+func (ctx AppContext) isBsdUserland() bool {
+    var isBsd = false
+
+    switch ctx.osName {
+    case "darwin":
+        fallthrough
+    case "dragonfly":
+        fallthrough
+    case "freebsd":
+        fallthrough
+    case "netbsd":
+        fallthrough
+    case "openbsd":
+        isBsd = true
+    }
+
+    return isBsd
+}
+
 
 // A blank AppContext for unit testing
 func TestAppContext() AppContext {

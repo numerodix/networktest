@@ -20,7 +20,8 @@ func NewLinuxPinger(ctx AppContext) LinuxPinger {
 }
 
 
-func (pi LinuxPinger) getPingExecutable(host string) string {
+func (pi LinuxPinger) getPingArgs(host string, cnt int, timeoutMs int) (string, []string) {
+
     var ip = net.ParseIP(host)
     var exe = "ping"  // default to ipv4 ping
 
@@ -32,18 +33,34 @@ func (pi LinuxPinger) getPingExecutable(host string) string {
         exe = "ping6"
     }
 
-    return exe
+    var args []string
+
+    // ping with -c and -W seems to be supported everywhere
+    // ...but ping6 only on linux
+    if exe == "ping" || (exe == "ping6" && pi.ctx.isLinuxUserland()) {
+        args = []string{
+            "-c", fmt.Sprintf("%d", cnt),
+            "-W", fmt.Sprintf("%d", timeoutMs / 1000),
+            host,
+        }
+
+    // ping6 on a bsd platform only supports -c
+    } else if exe == "ping6" && pi.ctx.isBsdUserland() {
+        args = []string{
+            "-c", fmt.Sprintf("%d", cnt),
+            host,
+        }
+    }
+
+    return exe, args
 }
 
 
 func (pi LinuxPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
-    // Decide whether to use ping or ping6
-    var exe = pi.getPingExecutable(host)
+    // Build the argument string
+    var exe, args = pi.getPingArgs(host, cnt, timeoutMs)
 
-    var mgr = ProcMgr(exe,
-                        "-c", fmt.Sprintf("%d", cnt),
-                        "-W", fmt.Sprintf("%d", timeoutMs / 1000),
-                        host)
+    var mgr = ProcMgr(exe, args...)
     mgr.timeoutMs = timeoutMs
     var res = mgr.run()
 
@@ -94,6 +111,7 @@ func (pi LinuxPinger) parsePing(stdout string) PingExecution {
 
     // Prepare regex objects
     rxHost := regexp.MustCompile("^PING ([^)( ]+)")
+    rxHostBsd := regexp.MustCompile("^PING6.+ bytes[)] ([^ ]+)")
     rxStats := regexp.MustCompile("= ([0-9.]+)/([0-9.]+)/([0-9.]+)/([0-9.]+) ms")
 
     // Loop variables
@@ -104,6 +122,10 @@ func (pi LinuxPinger) parsePing(stdout string) PingExecution {
     for _, line := range lines {
         if rxHost.MatchString(line) {
             host = rxHost.FindStringSubmatch(line)[1]
+        }
+
+        if rxHostBsd.MatchString(line) {
+            host = rxHostBsd.FindStringSubmatch(line)[1]
         }
 
         if rxStats.MatchString(line) {
