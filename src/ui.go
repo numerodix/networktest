@@ -197,7 +197,7 @@ func (ui *NetDetectUi) displayToolSupport() {
 
     if len(missing) > 0 {
         var missingFmt = strings.Join(missing, " ")
-        fmt.Printf("Missing tools: %s\n", ui.ctx.col.cyan(missingFmt))
+        fmt.Printf("Missing tools: %s\n", ui.ctx.col.red(missingFmt))
     }
 }
 
