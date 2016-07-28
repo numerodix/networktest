@@ -10,6 +10,42 @@ have internet connectivity?*
 
 
 
+
+How does it work?
+=================
+
+While the question *"can this computer reach the Internet?"* is quite easily
+answered by trying to load ``http://www.google.com`` in a browser, common
+network configurations have a number of parameters that may vary between one
+case of *"it's not working"* and the next.
+
+``networktest`` aims to be a tool that makes it easy to establish the key
+network configuration characteristics to get a quick idea of what might be
+wrong. It is a smoke test of your network setup.
+
+The questions we ask are:
+
+1. **Am I connected to any networks?** If so, what kind of network are they?
+   Loopback interface? Link-local? Or is it a network that allows me to route
+   packets to the Internet (the kind we want)?
+
+2. **What ip addresses do I have on the networks I'm connected too?** These
+   are addresses that should be reachable (ie. pingable) from myself.
+
+3. **What gateways do I have?** A gateway (or router) is a host on my network
+   that allows me to route packets to other networks.
+
+4. **Can I reach Internet hosts by ip?** If so, my gateway is working.
+
+5. **Do I have nameservers (DNS servers)?** If so, I should be able to resolve
+   Internet hostnames to Internet ip addresses.
+
+6. **Can I reach Internet hosts by hostname?** If so, I have "Internet
+   connectivity" in the common sense.
+
+
+
+
 Usage
 =====
 
