@@ -67,7 +67,7 @@ Ethernet adapter Bluetooth Network Connection:
 
 
 func Test_winParseIpconfig4(t *testing.T) {
-    var info = IP4NetworkInfo{}
+    var info = IPNetworkInfo{}
 
     var ctx = TestAppContext()
     var detector = NewWinNetDetect4(ctx)

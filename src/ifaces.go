@@ -136,7 +136,7 @@ func (nss ByNsServer) Less(i, j int) bool {
 }
 
 
-type IP4NetworkInfo struct {
+type IPNetworkInfo struct {
     Nets []Network
     Ips []IpAddr
     Gws []Gateway
@@ -149,32 +149,32 @@ type IP4NetworkInfo struct {
     // 
 }
 
-func (info *IP4NetworkInfo) getSortedNets() []Network {
+func (info *IPNetworkInfo) getSortedNets() []Network {
     var nets = info.Nets
     sort.Sort(ByNetwork(nets))
     return nets
 }
 
-func (info *IP4NetworkInfo) getSortedIps() []IpAddr {
+func (info *IPNetworkInfo) getSortedIps() []IpAddr {
     var ips = info.Ips
     sort.Sort(ByIpAddr(ips))
     return ips
 }
 
-func (info *IP4NetworkInfo) getSortedGws() []Gateway {
+func (info *IPNetworkInfo) getSortedGws() []Gateway {
     var gws = info.Gws
     sort.Sort(ByGateway(gws))
     return gws
 }
 
-func (info *IP4NetworkInfo) getSortedNsHosts() []NsServer {
+func (info *IPNetworkInfo) getSortedNsHosts() []NsServer {
     var nss = info.NsHosts
     sort.Sort(ByNsServer(nss))
     return nss
 }
 
 
-func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
+func (info *IPNetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
     var ips = []IpAddr{}
 
     for _, ip := range info.Ips {
@@ -187,7 +187,7 @@ func (info *IP4NetworkInfo) getIpsForGw(gw *Gateway) []IpAddr {
     return ips
 }
 
-func (info *IP4NetworkInfo) haveLocalNet() bool {
+func (info *IPNetworkInfo) haveLocalNet() bool {
     // If we have a gateway and an ip on that network we have a local network
     // connection
     for _, gw := range info.getSortedGws() {
@@ -200,7 +200,7 @@ func (info *IP4NetworkInfo) haveLocalNet() bool {
     return false
 }
 
-func (info *IP4NetworkInfo) normalize() {
+func (info *IPNetworkInfo) normalize() {
     var gwIps = make(map[string]int)
     var nsIps = make(map[string]int)
     var gws = []Gateway{}

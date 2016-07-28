@@ -2,7 +2,7 @@ package main
 
 
 type NetDetector4 interface {
-    detectNetConn4() IP4NetworkInfo
+    detectNetConn4() IPNetworkInfo
 }
 
 

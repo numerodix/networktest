@@ -52,7 +52,7 @@ ff02::%lo0/32                     ::1                           U           lo0
 
 
 func Test_bsdParseIfconfig4(t *testing.T) {
-    var info = IP4NetworkInfo{}
+    var info = IPNetworkInfo{}
 
     var ctx = TestAppContext()
     var detector = NewBsdNetDetect4(ctx)
@@ -87,7 +87,7 @@ func Test_bsdParseIfconfig4(t *testing.T) {
 
 
 func Test_bsdParseNetstat4(t *testing.T) {
-    var info = IP4NetworkInfo{}
+    var info = IPNetworkInfo{}
 
     var ctx = TestAppContext()
     var detector = NewBsdNetDetect4(ctx)

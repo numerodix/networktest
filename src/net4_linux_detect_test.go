@@ -26,7 +26,7 @@ default via 192.168.1.1 dev eth0  proto static
 
 
 func Test_linuxParseIpAddr4(t *testing.T) {
-    var info = IP4NetworkInfo{}
+    var info = IPNetworkInfo{}
 
     var ctx = TestAppContext()
     var detector = NewLinuxNetDetect4(ctx)
@@ -69,7 +69,7 @@ func Test_linuxParseIpAddr4(t *testing.T) {
 
 
 func Test_linuxParseIpRoute4(t *testing.T) {
-    var info = IP4NetworkInfo{}
+    var info = IPNetworkInfo{}
 
     var ctx = TestAppContext()
     var detector = NewLinuxNetDetect4(ctx)
