@@ -5,6 +5,9 @@ networktest
 .. image:: https://api.travis-ci.org/numerodix/networktest.png?branch=master
     :target: https://travis-ci.org/numerodix/networktest
 
+.. image:: https://ci.appveyor.com/api/projects/status/ojcojhf1wlc837ug/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/numerodix/networktest
+
 This tool answers the question: *am I connected to a (local) network and do I
 have internet connectivity?*
 
