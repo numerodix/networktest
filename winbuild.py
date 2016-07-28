@@ -31,7 +31,7 @@ class Builder(object):
         cwd = "src"
         args = [executable] + ["build"] + ["-o", target] + files
 
-        print("Invoking [%s] %s" % (cwd, args))
+        print("Invoking [cwd: %s] %s" % (cwd, args))
         proc = subprocess.Popen(args=args, cwd=cwd)
         proc.communicate()
 
