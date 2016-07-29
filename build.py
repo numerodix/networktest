@@ -7,11 +7,10 @@ import subprocess
 import sys
 
 
-def detect_binary(binary):
+def detect_binary_once(binary_name):
     '''Windows requires a full path, so detect the full path of a binary by
     traversing $PATH.'''
 
-    binary = '%s.exe' if os_is_windows() else binary
     delim = ';' if os_is_windows() else ':'
 
     paths = os.environ["PATH"].split(delim)
@@ -20,9 +19,21 @@ def detect_binary(binary):
             continue
 
         files = os.listdir(path)
-        files = [file for file in files if file == binary]
+        files = [file for file in files if file == binary_name]
         if files:
-            return os.path.join(path, binary)
+            return os.path.join(path, binary_name)
+
+def detect_binary(binary):
+    binary_name = '%s.exe' if os_is_windows() else binary
+
+    filepath = detect_binary_once(binary_name)
+
+    # Try again without .exe extension
+    if filepath is None and os_is_windows():
+        filepath = detect_binary_once(binary)
+
+    return filepath
+
 
 def invoke(args, cwd='.'):
     print("Invoking [cwd: %s] %s" % (cwd, args))
@@ -42,6 +53,9 @@ class Builder(object):
 
     def detect_version(self):
         git_exe = detect_binary(binary='git')
+        if git_exe is None:
+            return '?'
+
         args = [git_exe, 'describe']
         version = invoke(args=args)
         return version
