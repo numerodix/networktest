@@ -63,7 +63,7 @@ class Builder(object):
 
         args = [git_exe, 'describe']
         version = invoke(args=args)
-        return version
+        return version.decode('ascii')
 
     def set_version(self, version):
         version = version or '?'
