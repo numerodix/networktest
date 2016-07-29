@@ -76,6 +76,7 @@ func (wnd WinNetDetect6) parseIpconfig6(stdout string, info *IPNetworkInfo) {
 
                     var ipobj = ip6stringToIP(ip)
                     // we don't know what the subnet is :/
+                    // we make one up
                     var maskobj = net.ParseIP("ffff:ffff:ffff:ffff::")
 
                     var ipnet = ipAndMaskToIPNet(&ipobj, &maskobj)
