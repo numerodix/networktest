@@ -63,7 +63,9 @@ class Builder(object):
     def set_version(self, version):
         version = version or '?'
         with open(self.version_module, 'wb') as f:
-            f.write('package main\n\n\nconst appVersion = "%s"\n' % version)
+            content = 'package main\n\n\nconst appVersion = "%s"\n' % version
+            content_b = content.encode(encoding='ascii')
+            f.write(content_b)
 
     def build_on_windows(self):
         src_dir = "src"
