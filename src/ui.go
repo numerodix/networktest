@@ -22,9 +22,9 @@ type NetDetectUi struct {
 }
 
 
-func NetworkDetector(ipver int) NetDetectUi {
+func NetworkDetector(ipver int, noColor bool) NetDetectUi {
     var col = ColorBrush{
-        enabled: !terminalIsDumb(),
+        enabled: !noColor && !terminalIsDumb(),
     }
     var ft = Formatter{
         colorBrush: col,
