@@ -13,10 +13,12 @@ build_script:
 
     go version
 
-    python winbuild.py
+    python build.py
 
 test_script:
 - cmd: >-
+    bin\havenet.exe -V
+
     bin\havenet.exe
 
     bin\havenet.exe -6
