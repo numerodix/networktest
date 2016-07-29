@@ -233,6 +233,7 @@ func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
 }
 
 
+// Parse ip6 string with embedded ip4 address
 // 2001:db8:908c:f70f:200:5efe:157.60.14.11 ->
 // 2001:db8:908c:f70f:200:5efe:9d3c:e0b
 func ip6stringToIP(ip string) net.IP {
