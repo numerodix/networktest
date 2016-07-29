@@ -61,7 +61,7 @@ class Builder(object):
         if git_exe is None:
             return '?'
 
-        args = [git_exe, 'describe']
+        args = [git_exe, 'describe', '--always']
         version = invoke(args=args)
         return version.decode('ascii')
 
