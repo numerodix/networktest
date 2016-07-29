@@ -233,6 +233,8 @@ func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
 }
 
 
+// 2001:db8:908c:f70f:200:5efe:157.60.14.11 ->
+// 2001:db8:908c:f70f:200:5efe:9d3c:eb
 func ip6stringToIP(ip string) net.IP {
     var chunks = strings.Split(ip, ":")
     var rxIp4 = regexp.MustCompile(
