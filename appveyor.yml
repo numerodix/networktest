@@ -11,6 +11,8 @@ build_script:
 - cmd: >-
     python -V
 
+    go version
+
     python winbuild.py
 
 test_script:
