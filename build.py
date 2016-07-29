@@ -49,8 +49,7 @@ def os_is_windows():
 
 def write(msg):
     msg = '%s\n' % msg
-    line = msg.encode('ascii')
-    sys.stdout.write(line)
+    sys.stdout.write(msg)
     sys.stdout.flush()
 
 
@@ -73,7 +72,7 @@ class Builder(object):
             content_b = content.encode('ascii')
             f.write(content_b)
 
-    def build_on_windows(self):
+    def build(self):
         src_dir = "src"
         target = os.path.join("..", "bin", "havenet.exe")
 
@@ -89,17 +88,23 @@ class Builder(object):
 
         invoke(args=args, cwd=cwd)
 
-    def run(self):
+    def run(self, force_build=False):
         version = self.detect_version()
         self.set_version(version)
 
-        # If we're not on windows we let the makefile handle the build
-        if not os_is_windows():
-            return
-
-        self.build_on_windows()
+        # If we're forcing or on Windows build here, otherwise let the makefile
+        # handle it
+        if force_build or os_is_windows():
+            self.build()
 
 
 if __name__ == '__main__':
+    from optparse import OptionParser
+
+    parser = OptionParser()
+    parser.add_option('', '--force', action='store_true',
+                      help='Always build using build.py')
+    (options, args) = parser.parse_args()
+
     builder = Builder()
-    builder.run()
+    builder.run(force_build=options.force)
