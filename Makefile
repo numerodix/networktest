@@ -4,6 +4,7 @@ build: bin/havenet
 
 
 bin/havenet: src/*.go
+	python build.py  # fill in the version
 	# CGO_ENABLED=0 to enable a static build
 	CGO_ENABLED=0 go build -o bin/havenet `ls src/*.go | grep -v '_test.go'`
 
