@@ -234,7 +234,7 @@ func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
 
 
 // 2001:db8:908c:f70f:200:5efe:157.60.14.11 ->
-// 2001:db8:908c:f70f:200:5efe:9d3c:eb
+// 2001:db8:908c:f70f:200:5efe:9d3c:e0b
 func ip6stringToIP(ip string) net.IP {
     var chunks = strings.Split(ip, ":")
     var rxIp4 = regexp.MustCompile(
@@ -247,8 +247,8 @@ func ip6stringToIP(ip string) net.IP {
             var octet3, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[3])
             var octet4, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[4])
 
-            var slot7 = fmt.Sprintf("%x%x", octet1, octet2)
-            var slot8 = fmt.Sprintf("%x%x", octet3, octet4)
+            var slot7 = fmt.Sprintf("%x", (octet1 << 8) + octet2)
+            var slot8 = fmt.Sprintf("%x", (octet3 << 8) + octet4)
             chunks[i] = slot7
             chunks = append(chunks, slot8)
             break

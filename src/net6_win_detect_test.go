@@ -65,7 +65,7 @@ func Test_winParseIpconfig6(t *testing.T) {
                     info.Ips[0].Mask.String(), "Mask does not match")
 
     assertStrEq(t, "if1", info.Ips[1].Iface.Name, "Iface does not match")
-    assertStrEq(t, "2001:db8:908c:f70f:200:5efe:9d3c:eb",
+    assertStrEq(t, "2001:db8:908c:f70f:200:5efe:9d3c:e0b",
                     info.Ips[1].Ip.String(), "Ip does not match")
     assertStrEq(t, "ffff:ffff:ffff:ffff::",
                     info.Ips[1].Mask.String(), "Mask does not match")
