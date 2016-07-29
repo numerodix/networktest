@@ -163,7 +163,7 @@ func maskAsIpToIPMask(mask *net.IP) net.IPMask {
             bits += (int(octet) + 1) / 32
         }
 
-        ipmask = net.CIDRMask(bits, length * 8)
+        ipmask = net.CIDRMask(bits, 16 * 8)
     }
 
     return ipmask
