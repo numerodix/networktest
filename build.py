@@ -24,7 +24,7 @@ def detect_binary_once(binary_name):
             return os.path.join(path, binary_name)
 
 def detect_binary(binary):
-    binary_name = '%s.exe' if os_is_windows() else binary
+    binary_name = '%s.exe' % binary if os_is_windows() else binary
 
     filepath = detect_binary_once(binary_name)
 
