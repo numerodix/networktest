@@ -151,12 +151,11 @@ func maskAsIpToIPMask(mask *net.IP) net.IPMask {
                     (*mask)[14],
                     (*mask)[15])
 
+    // ipv6
     } else {
-        var length = 16
-
         // Count the bits in the netmask
         var bits = 0
-        for i := 0; i < length; i++ {
+        for i := 0; i < 16; i++ {
             var octet = (*mask)[i]
 
             // Round 0-255 up to 1-256
