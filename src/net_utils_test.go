@@ -156,7 +156,7 @@ func Test_maskAsIpToIPMask(t *testing.T) {
     var ip6quarter = net.ParseIP("ffff:ffff::")
     var ip6half = net.ParseIP("ffff:ffff:ffff:ffff::")
 
-    assertStrEq(t, "fffffff0", maskAsIpToIPMask(&ip4half).String(), "wrong ipv4 mask")
+    assertStrEq(t, "ffffff7f", maskAsIpToIPMask(&ip4half).String(), "wrong ipv4 mask")
     assertStrEq(t, "ffffff00", maskAsIpToIPMask(&ip4one).String(), "wrong ipv4 mask")
 
     assertStrEq(t, "ffffffff000000000000000000000000",

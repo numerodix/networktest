@@ -142,25 +142,28 @@ func applyMask(ip *net.IP, mask *net.IPMask) net.IPNet {
 
 
 func maskAsIpToIPMask(mask *net.IP) net.IPMask {
-    var length int
-    var offset int
+    var ipmask net.IPMask
 
     if ipIs4(*mask) {
-        length = 4
-        offset = 12  // skip the first 12 bytes of the array
+        ipmask = net.IPv4Mask(
+                    (*mask)[12],
+                    (*mask)[13],
+                    (*mask)[14],
+                    (*mask)[15])
+
     } else {
-        length = 16
-        offset = 0
-    }
+        var length = 16
+        var offset = 0
 
-    // Count the bits in the netmask
-    var bits = 0
-    for i := 0; i < length; i++ {
-        var octet = (*mask)[i + offset]
-        bits += (int(octet) + 1) >> 5
-    }
+        // Count the bits in the netmask
+        var bits = 0
+        for i := 0; i < length; i++ {
+            var octet = (*mask)[i + offset]
+            bits += (int(octet) + 1) >> 5
+        }
 
-    var ipmask = net.CIDRMask(bits, length * 8)
+        ipmask = net.CIDRMask(bits, length * 8)
+    }
 
     return ipmask
 }
