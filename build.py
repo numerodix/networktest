@@ -36,7 +36,7 @@ def detect_binary(binary):
 
 
 def invoke(args, cwd='.'):
-    print("Invoking [cwd: %s] %s" % (cwd, args))
+    write("Invoking [cwd: %s] %s" % (cwd, args))
     proc = subprocess.Popen(
         args=args, cwd=cwd,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -46,6 +46,12 @@ def invoke(args, cwd='.'):
 
 def os_is_windows():
     return sys.platform.startswith('win')
+
+def write(msg):
+    msg = '%s\n' % msg
+    line = msg.encode('ascii')
+    sys.stdout.write(line)
+    sys.stdout.flush()
 
 
 class Builder(object):
@@ -64,7 +70,7 @@ class Builder(object):
         version = version or '?'
         with open(self.version_module, 'wb') as f:
             content = 'package main\n\n\nconst appVersion = "%s"\n' % version
-            content_b = content.encode(encoding='ascii')
+            content_b = content.encode('ascii')
             f.write(content_b)
 
     def build_on_windows(self):
