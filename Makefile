@@ -19,6 +19,10 @@ test:
 	make clean
 	make run
 
+test-monochrome: bin/havenet
+	bin/havenet -V
+	bin/havenet -nc
+
 unittest:
 	(cd src && go test -v -cover)
 
