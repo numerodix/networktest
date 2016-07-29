@@ -78,7 +78,7 @@ func Test_winParseIpconfig4(t *testing.T) {
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
 
     // Nets
-    assertIntEq(t, 2, len(info.Nets), "wrong number of gateways")
+    assertIntEq(t, 2, len(info.Nets), "wrong number of nets")
 
     assertStrEq(t, "eth1", info.Nets[0].Iface.Name, "Iface does not match")
     assertStrEq(t, "192.168.1.0", info.Nets[0].Ip.IP.String(), "Ip does not match")

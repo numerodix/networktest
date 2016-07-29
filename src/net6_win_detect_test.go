@@ -36,43 +36,44 @@ func Test_winParseIpconfig6(t *testing.T) {
     var detector = NewWinNetDetect6(ctx)
     detector.parseIpconfig6(ipconfig6Output, &info)
     info.normalize()
-    return /// XXX
 
     // Errors
     assertIntEq(t, 0, len(info.Errs), "Errs does not match")
 
     // Nets
-    assertIntEq(t, 2, len(info.Nets), "wrong number of gateways")
+    assertIntEq(t, 2, len(info.Nets), "wrong number of nets")
 
     assertStrEq(t, "eth1", info.Nets[0].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.0", info.Nets[0].Ip.IP.String(), "Ip does not match")
-    assertStrEq(t, "ffffff00", info.Nets[0].Ip.Mask.String(), "Mask does not match")
+    assertStrEq(t, "2001:db8:21da:7::",
+                    info.Nets[0].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ffffffffffffffff0000000000000000",
+                    info.Nets[0].Ip.Mask.String(), "Mask does not match")
 
-    assertStrEq(t, "wlan1", info.Nets[1].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.0", info.Nets[1].Ip.IP.String(), "Ip does not match")
-    assertStrEq(t, "ffffff00", info.Nets[1].Ip.Mask.String(), "Mask does not match")
+    assertStrEq(t, "if1", info.Nets[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "2001:db8:908c:f70f::",
+                    info.Nets[1].Ip.IP.String(), "Ip does not match")
+    assertStrEq(t, "ffffffffffffffff0000000000000000",
+                    info.Nets[1].Ip.Mask.String(), "Mask does not match")
 
     // Ips
     assertIntEq(t, 2, len(info.Ips), "wrong number of ips")
 
     assertStrEq(t, "eth1", info.Ips[0].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.11", info.Ips[0].Ip.String(), "Ip does not match")
-    assertStrEq(t, "255.255.255.0", info.Ips[0].Mask.String(), "Mask does not match")
+    assertStrEq(t, "2001:db8:21da:7:713e:a426:d167:37ab",
+                    info.Ips[0].Ip.String(), "Ip does not match")
+    assertStrEq(t, "ffff:ffff:ffff:ffff::",
+                    info.Ips[0].Mask.String(), "Mask does not match")
 
-    assertStrEq(t, "wlan1", info.Ips[1].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.7", info.Ips[1].Ip.String(), "Ip does not match")
-    assertStrEq(t, "255.255.255.0", info.Ips[1].Mask.String(), "Mask does not match")
+    assertStrEq(t, "if1", info.Ips[1].Iface.Name, "Iface does not match")
+    assertStrEq(t, "2001:db8:908c:f70f:200:5efe:9d3c:eb",
+                    info.Ips[1].Ip.String(), "Ip does not match")
+    assertStrEq(t, "ffff:ffff:ffff:ffff::",
+                    info.Ips[1].Mask.String(), "Mask does not match")
 
     // Gws
-    assertIntEq(t, 1, len(info.Gws), "wrong number of gateways")
-
-    assertStrEq(t, "eth1", info.Gws[0].Iface.Name, "Iface does not match")
-    assertStrEq(t, "192.168.1.1", info.Gws[0].Ip.String(), "Ip does not match")
+    assertIntEq(t, 0, len(info.Gws), "wrong number of gateways")
 
     // Ns hosts
-    assertIntEq(t, 2, len(info.NsHosts), "wrong number of dns servers")
-
-    assertStrEq(t, "192.168.1.1", info.NsHosts[0].Ip.String(), "Ip does not match")
-    assertStrEq(t, "192.168.1.2", info.NsHosts[1].Ip.String(), "Ip does not match")
+    assertIntEq(t, 0, len(info.NsHosts), "wrong number of dns servers")
 }
 

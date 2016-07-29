@@ -1,6 +1,6 @@
 package main
 
-import "fmt"
+//import "fmt"
 import "net"
 import "regexp"
 import "strings"
@@ -51,16 +51,14 @@ func (wnd WinNetDetect6) parseIpconfig6(stdout string, info *IPNetworkInfo) {
 
     // Prepare regex objects
     rxSection := regexp.MustCompile("^([^ ].+):")
-    rxIP6Addr := regexp.MustCompile("[ ]{3}.*IPv6 Address.*: ([A-Fa-f0-9:]+)")
-//    rxSubnet := regexp.MustCompile("[ ]{3}Subnet Mask.*: ([0-9.]+)")
-    rxGw := regexp.MustCompile("[ ]{3}Default Gateway.*: ([0-9.]+)")
-    rxDnsServer1 := regexp.MustCompile("[ ]{3}DNS Servers.*: ([A-Fa-f0-9:]+)")
-    rxDnsServern := regexp.MustCompile("[ ]{39}([A-Fa-f0-9:]+)")
+    rxIP6Addr := regexp.MustCompile("[ ]{3}IPv6 Address.*: ([A-Fa-f0-9:.]+)")
+    rxGw := regexp.MustCompile("[ ]{3}Default Gateway.*: ([A-Fa-f0-9:.]+)")
+    rxDnsServer1 := regexp.MustCompile("[ ]{3}DNS Servers.*: ([A-Fa-f0-9:.]+)")
+    rxDnsServern := regexp.MustCompile("[ ]{39}([A-Fa-f0-9:.]+)")
 
     // Loop variables
     var section = ""
     var ip = ""
-//    var subnet = ""
     var gw = ""
     var dnss []string
 
@@ -76,10 +74,9 @@ func (wnd WinNetDetect6) parseIpconfig6(stdout string, info *IPNetworkInfo) {
                 if ip != "" {
                     var iface = namer.allocateName(section)
 
-                    var ipobj = net.ParseIP(ip)
-                    var maskobj = ipobj
-                    //var maskobj = net.ParseIP("ff:ff:ff:ff::")
-                    fmt.Printf("%s   %s\n", ip, ipobj)
+                    var ipobj = ip6stringToIP(ip)
+                    // we don't know what the subnet is :/
+                    var maskobj = net.ParseIP("ffff:ffff:ffff:ffff::")
 
                     var ipnet = ipAndMaskToIPNet(&ipobj, &maskobj)
                     var netMasked = applyMask(&ipnet.IP, &ipnet.Mask)
@@ -96,10 +93,14 @@ func (wnd WinNetDetect6) parseIpconfig6(stdout string, info *IPNetworkInfo) {
                         Ip: ipobj,
                         Mask: maskobj,
                     })
-                    info.Gws = append(info.Gws, Gateway{
-                        Iface: Interface{Name: iface},
-                        Ip: gwobj,
-                    })
+
+                    // A link-local ip is not a gateway
+                    if !gwobj.IsLinkLocalUnicast() {
+                        info.Gws = append(info.Gws, Gateway{
+                            Iface: Interface{Name: iface},
+                            Ip: gwobj,
+                        })
+                    }
 
                     for _, dns := range dnss {
                         var nsobj = net.ParseIP(dns)
@@ -122,7 +123,6 @@ func (wnd WinNetDetect6) parseIpconfig6(stdout string, info *IPNetworkInfo) {
         if inSection {
             if rxIP6Addr.MatchString(line) {
                 ip = rxIP6Addr.FindStringSubmatch(line)[1]
-                fmt.Printf("ZZZZZZZZZZZZZZZZ %s\n", ip)
                 inDns = false
             }
             if rxGw.MatchString(line) {

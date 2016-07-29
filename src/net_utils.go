@@ -2,6 +2,9 @@ package main
 
 import "fmt"
 import "net"
+import "regexp"
+import "strconv"
+import "strings"
 
 
 func ipIs4(ip net.IP) bool {
@@ -225,6 +228,32 @@ func ipnetMaskAsIP(ipnet *net.IPNet) net.IP {
                             ipnet.Mask[15])
         ipobj = net.ParseIP(ipStr)
     }
+
+    return ipobj
+}
+
+
+func ip6stringToIP(ip string) net.IP {
+    var chunks = strings.Split(ip, ":")
+    var rxIp4 = regexp.MustCompile(
+                    "([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})")
+
+    for i, chunk := range chunks {
+        if rxIp4.MatchString(chunk) {
+            var octet1, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[1])
+            var octet2, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[2])
+            var octet3, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[3])
+            var octet4, _ = strconv.Atoi(rxIp4.FindStringSubmatch(chunk)[4])
+
+            var slot7 = fmt.Sprintf("%x%x", octet1, octet2)
+            var slot8 = fmt.Sprintf("%x%x", octet3, octet4)
+            chunks[i] = slot7
+            chunks = append(chunks, slot8)
+            break
+        }
+    }
+    var ip6 = strings.Join(chunks, ":")
+    var ipobj = net.ParseIP(ip6)
 
     return ipobj
 }
