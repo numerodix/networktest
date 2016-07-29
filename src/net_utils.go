@@ -153,13 +153,15 @@ func maskAsIpToIPMask(mask *net.IP) net.IPMask {
 
     } else {
         var length = 16
-        var offset = 0
 
         // Count the bits in the netmask
         var bits = 0
         for i := 0; i < length; i++ {
-            var octet = (*mask)[i + offset]
-            bits += (int(octet) + 1) >> 5
+            var octet = (*mask)[i]
+
+            // Round 0-255 up to 1-256
+            // Then divide by 32 to count 8 bits per octet
+            bits += (int(octet) + 1) / 32
         }
 
         ipmask = net.CIDRMask(bits, length * 8)
