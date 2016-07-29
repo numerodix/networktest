@@ -11,19 +11,15 @@ bin/havenet: src/*.go
 clean:
 	-@rm -f bin/*
 
-run: bin/havenet
+test-standard: bin/havenet
 	bin/havenet
 	bin/havenet -6
-
-test:
-	make clean
-	make run
 
 test-monochrome: bin/havenet
 	bin/havenet -V
 	bin/havenet -nc
 
-unittest:
+unittest: bin/havenet
 	(cd src && go test -v -cover)
 
 
