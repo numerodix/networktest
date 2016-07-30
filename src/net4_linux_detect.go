@@ -67,16 +67,6 @@ func (lnd LinuxNetDetect4) detectIpRoute4(info *IPNetworkInfo) {
 
 
 func (lnd LinuxNetDetect4) parseIpAddr4(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/ip -4 addr show
-      1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
-          inet 127.0.0.1/8 scope host lo
-             valid_lft forever preferred_lft forever
-      2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
-          inet 192.168.1.6/24 brd 192.168.1.255 scope global eth0
-             valid_lft forever preferred_lft forever
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
@@ -126,12 +116,6 @@ func (lnd LinuxNetDetect4) parseIpAddr4(stdout string, info *IPNetworkInfo) {
 
 
 func (lnd LinuxNetDetect4) parseIpRoute4(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/ip -4 route show
-      default via 192.168.1.1 dev eth0  proto static 
-      192.168.1.0/24 dev eth0  proto kernel  scope link  src 192.168.1.6  metric 1 
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 

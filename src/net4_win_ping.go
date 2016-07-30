@@ -48,18 +48,6 @@ func (wi WinPinger4) ping(host string, cnt int, timeoutMs int) PingExecution {
 
 
 func (wi WinPinger4) parsePing4(stdout string) PingExecution {
-    /* Output:
-      C:\> ping -n 1 -w 2 yahoo.com
-      
-      Pinging yahoo.com [206.190.36.45] with 32 bytes of data:
-      Reply from 206.190.36.45: bytes=32 time=193ms TTL=51
-      
-      Ping statistics for 206.190.36.45:
-          Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
-      Approximate round trip times in milli-seconds:
-          Minimum = 193ms, Maximum = 193ms, Average = 193ms
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 

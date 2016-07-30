@@ -33,7 +33,7 @@ func (und UnixNetDetect4) detectNsHosts4(info *IPNetworkInfo) {
 
 
 func (und UnixNetDetect4) parseResolvConf4(content string,
-                                            info *IPNetworkInfo) {
+                                           info *IPNetworkInfo) {
 
     var nameservers = und.parseResolvConf(content)
 

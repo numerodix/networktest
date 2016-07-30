@@ -171,7 +171,8 @@ func Test_ipnetMaskAsIP(t *testing.T) {
     var _, ipnet6fst, _ = net.ParseCIDR("2001:4860:0:2002::/64")
     var _, ipnet6snd, _ = net.ParseCIDR("2001:4860:0:2002::/96")
 
-    assertStrEq(t, "255.255.255.0", ipnetMaskAsIP(ipnet4).String(), "ipv4 mask extraction failed")
+    assertStrEq(t, "255.255.255.0", ipnetMaskAsIP(ipnet4).String(),
+                                    "ipv4 mask extraction failed")
     assertStrEq(t, "ffff:ffff:ffff:ffff::",
                     ipnetMaskAsIP(ipnet6fst).String(), "ipv6 mask extraction failed")
     assertStrEq(t, "ffff:ffff:ffff:ffff:ffff:ffff::",

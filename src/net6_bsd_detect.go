@@ -69,24 +69,6 @@ func (bnd BsdNetDetect6) detectNetstat6(info *IPNetworkInfo) {
 
 
 func (bnd BsdNetDetect6) parseIfconfig6(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/ifconfig
-      em0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
-      	options=9b<RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM>
-      	ether 08:00:27:f2:34:a1
-      	inet6 fe80::a00:27ff:fef2:34a1%em0 prefixlen 64 scopeid 0x1 
-      	inet 10.0.2.15 netmask 0xffffff00 broadcast 10.0.2.255 
-      	nd6 options=23<PERFORMNUD,ACCEPT_RTADV,AUTO_LINKLOCAL>
-      	media: Ethernet autoselect (1000baseT <full-duplex>)
-      	status: active
-      lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> metric 0 mtu 16384
-      	options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
-      	inet6 ::1 prefixlen 128 
-      	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x2 
-      	inet 127.0.0.1 netmask 0xff000000 
-      	nd6 options=21<PERFORMNUD,AUTO_LINKLOCAL>
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
@@ -144,34 +126,6 @@ func (bnd BsdNetDetect6) parseIfconfig6(stdout string, info *IPNetworkInfo) {
 
 
 func (bnd BsdNetDetect6) parseNetstat6(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/netstat -n -r
-      Routing tables
-      
-      Internet:
-      Destination        Gateway            Flags      Netif Expire
-      default            10.0.2.2           UGS         em0
-      10.0.2.0/24        link#1             U           em0
-      10.0.2.15          link#1             UHS         lo0
-      127.0.0.1          link#2             UH          lo0
-      
-      Internet6:
-      Destination                       Gateway                       Flags      Netif Expire
-      ::/96                             ::1                           UGRS        lo0
-      ::1                               link#2                        UH          lo0
-      ::ffff:0.0.0.0/96                 ::1                           UGRS        lo0
-      fe80::/10                         ::1                           UGRS        lo0
-      fe80::%em0/64                     link#1                        U           em0
-      fe80::a00:27ff:fef2:34a1%em0      link#1                        UHS         lo0
-      fe80::%lo0/64                     link#2                        U           lo0
-      fe80::1%lo0                       link#2                        UHS         lo0
-      ff01::%em0/32                     fe80::a00:27ff:fef2:34a1%em0  U           em0
-      ff01::%lo0/32                     ::1                           U           lo0
-      ff02::/16                         ::1                           UGRS        lo0
-      ff02::%em0/32                     fe80::a00:27ff:fef2:34a1%em0  U           em0
-      ff02::%lo0/32                     ::1                           U           lo0
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 

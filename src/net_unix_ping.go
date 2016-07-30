@@ -110,16 +110,6 @@ func (ui UnixPinger) ping(host string, cnt int, timeoutMs int) PingExecution {
 
 
 func (ui UnixPinger) parsePing(stdout string) PingExecution {
-    /* Output:
-      $ ping -c1 -W2 yahoo.com
-      PING yahoo.com (98.138.253.109) 56(84) bytes of data.
-      64 bytes from ir1.fp.vip.ne1.yahoo.com (98.138.253.109): icmp_seq=1 ttl=48 time=154 ms
-      
-      --- yahoo.com ping statistics ---
-      1 packets transmitted, 1 received, 0% packet loss, time 0ms
-      rtt min/avg/max/mdev = 154.327/154.327/154.327/0.000 ms
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 

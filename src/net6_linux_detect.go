@@ -67,18 +67,6 @@ func (lnd LinuxNetDetect6) detectIpRoute6(info *IPNetworkInfo) {
 
 
 func (lnd LinuxNetDetect6) parseIpAddr6(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/ip -6 addr show
-      1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 
-          inet6 ::1/128 scope host 
-             valid_lft forever preferred_lft forever
-      2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qlen 1000
-          inet6 2a00:a21f:41::a13/64 scope global 
-             valid_lft forever preferred_lft forever
-          inet6 fe80::a31:49ef:12ce:f5a1/64 scope link 
-             valid_lft forever preferred_lft forever
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
@@ -128,13 +116,6 @@ func (lnd LinuxNetDetect6) parseIpAddr6(stdout string, info *IPNetworkInfo) {
 
 
 func (lnd LinuxNetDetect6) parseIpRoute6(stdout string, info *IPNetworkInfo) {
-    /* Output:
-      $ /sbin/ip -6 route show
-      2a00:a21f:41::/64 dev eth0  proto kernel  metric 256 
-      fe80::/64 dev eth0  proto kernel  metric 256 
-      default via 2a00:a21f:41::1 dev eth0  metric 1024 
-    */
-
     // We will read line by line
     var lines = strings.Split(stdout, "\n")
 
