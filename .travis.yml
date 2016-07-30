@@ -20,5 +20,8 @@ script:
     - make test-monochrome
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make all-archs; fi
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 notifications:
     email: false

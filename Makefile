@@ -32,7 +32,7 @@ test-version: bin/havenet
 	bin/havenet -V
 
 unittest: bin/havenet
-	(cd src && go test -v -cover)
+	(cd src && go test -v -coverprofile ../coverage.out)
 
 
 all-archs:
