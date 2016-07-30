@@ -15,6 +15,7 @@ go:
 script:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make unittest; fi
     - make test-version
+    - make test-help
     - make test-standard
     - make test-monochrome
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make all-archs; fi

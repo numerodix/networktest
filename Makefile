@@ -19,6 +19,9 @@ test-monochrome: bin/havenet
 	bin/havenet -nc
 	bin/havenet -nc -6
 
+test-help: bin/havenet
+	bin/havenet -h || true
+
 test-version: bin/havenet
 	bin/havenet -V
 
