@@ -56,8 +56,9 @@ The easiest way to use ``networktest`` to is to download a `binary release
 <https://github.com/numerodix/networktest/releases>`_ for one of the supported
 platforms.
 
-You will need to know whether you need the 32bit or the 64bit (probably)
-version.
+You will need to know whether you need the 32bit or the 64bit version,
+depending on your operating system. Most operating systems these days are
+64bit.
 
 ``networktest`` is written in Go and targets Linux, FreeBSD, OS X (Darwin), and
 Windows.
