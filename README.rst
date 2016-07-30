@@ -8,6 +8,9 @@ networktest
 .. image:: https://ci.appveyor.com/api/projects/status/ojcojhf1wlc837ug/branch/master?svg=true
     :target: https://ci.appveyor.com/project/numerodix/networktest
 
+.. image:: http://codecov.io/github/numerodix/networktest/coverage.svg?branch=master
+    :target: https://codecov.io/github/numerodix/networktest
+
 This tool answers the question: *am I connected to a (local) network and do I
 have internet connectivity?*
 
