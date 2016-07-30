@@ -94,29 +94,31 @@ Usage
 To detect IPv4 networking::
 
     $ havenet
+    Platform: Linux
      + Scanning for networks...
-        <docker0>   172.17.0.0      / 255.255.0.0    
-        <eth0>      192.168.1.0     / 255.255.255.0  
-        <wlan0>     192.168.1.0     / 255.255.255.0  
+        <lo>              127.0.0.0 / 255.0.0.0        
+        <docker0>        172.17.0.0 / 255.255.0.0      
+        <eth0>          192.168.1.0 / 255.255.255.0    
+        <wlan0>         192.168.1.0 / 255.255.255.0    
      + Detecting ips...
-        <lo>        127.0.0.1       / 255.0.0.0         ping: 0.072 ms
-        <docker0>   172.17.0.1      / 255.255.0.0       ping: 0.067 ms
-        <eth0>      192.168.1.6     / 255.255.255.0     ping: 0.065 ms
-        <wlan0>     192.168.1.10    / 255.255.255.0     ping: 0.044 ms
+        <lo>              127.0.0.1 / 255.0.0.0        ping: 0.059 ms
+        <docker0>        172.17.0.1 / 255.255.0.0      ping: 0.066 ms
+        <eth0>          192.168.1.6 / 255.255.255.0    ping: 0.065 ms
+        <wlan0>        192.168.1.10 / 255.255.255.0    ping: 0.052 ms
      + Detecting gateways...
-        <eth0>      192.168.1.1       ping: 0.706 ms
-         ip:        192.168.1.6    
-         ip:        192.168.1.10   
+        <eth0>          192.168.1.1  ping: 0.746 ms
+         ip:            192.168.1.6
+         ip:           192.168.1.10
      + Testing internet connection...
-        b.root-servers.net.  192.228.79.201   ping: 181.0 ms
+        b.root-servers.net.   192.228.79.201  ping: 177.8 ms
      + Detecting dns servers...
-        127.0.1.1         ping: 0.052 ms
+                8.8.8.8  ping: 41.79 ms
      + Testing internet dns...
-        facebook.com      ping: 315.0 ms
-        gmail.com         ping: 37.70 ms
-        google.com        ping: 41.10 ms
-        twitter.com       ping: 130.0 ms
-        yahoo.com         ping: 154.0 ms
+             debian.org  ping: 111.9 ms
+           facebook.com  ping: 133.5 ms
+              gmail.com  ping: 39.29 ms
+             google.com  ping: 83.51 ms
+              yahoo.com  ping: 174.4 ms
 
 To detect IPv6 networking::
 
