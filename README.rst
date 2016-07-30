@@ -83,6 +83,8 @@ If you don't (eg. Windows)::
     
     $ python build.py
 
+You can find the binary in ``bin/havenet``.
+
 
 
 Usage
@@ -91,7 +93,7 @@ Usage
 
 To detect IPv4 networking::
 
-    $ bin/havenet
+    $ havenet
      + Scanning for networks...
         <docker0>   172.17.0.0      / 255.255.0.0    
         <eth0>      192.168.1.0     / 255.255.255.0  
@@ -118,7 +120,7 @@ To detect IPv4 networking::
 
 To detect IPv6 networking::
 
-    $ bin/havenet -6
+    $ havenet -6
      + Scanning for networks...
         <lo>                                            ::1 / 128  [scope: host]
         <eth0>                                       fe80:: /  64  [scope: link]
