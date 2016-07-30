@@ -16,8 +16,10 @@ test-standard: bin/havenet
 	bin/havenet -6
 
 test-monochrome: bin/havenet
-	bin/havenet -V
 	bin/havenet -nc
+
+test-version: bin/havenet
+	bin/havenet -V
 
 unittest: bin/havenet
 	(cd src && go test -v -cover)
