@@ -17,6 +17,7 @@ test-standard: bin/havenet
 
 test-monochrome: bin/havenet
 	bin/havenet -nc
+	bin/havenet -nc -6
 
 test-version: bin/havenet
 	bin/havenet -V
