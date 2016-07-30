@@ -49,15 +49,6 @@ The questions we ask are:
 
 
 
-Supported platforms
-===================
-
-``networktest`` is written in Go and targets Linux, FreeBSD, OS X (Darwin), and
-Windows.
-
-
-
-
 Downloading binaries
 ====================
 
@@ -67,6 +58,9 @@ platforms.
 
 You will need to know whether you need the 32bit or the 64bit (probably)
 version.
+
+``networktest`` is written in Go and targets Linux, FreeBSD, OS X (Darwin), and
+Windows.
 
 
 
