@@ -70,9 +70,9 @@ Building from source
 
 Tools required to build from source:
 
-* go
-* git
-* python
+* go >= 1.5
+* git >= 1.8.1.6
+* python >= 2.6
 * make (optional)
 
 If you have make installed just use that::
