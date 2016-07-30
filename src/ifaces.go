@@ -19,11 +19,6 @@ func (net *Network) ipAsString() string {
     return net.Ip.IP.String()
 }
 
-func (net *Network) maskAsString() string {
-    var mask = ipnetMaskAsIP(&net.Ip)
-    return mask.String()
-}
-
 // Sorting for Network
 type ByNetwork []Network
 func (nets ByNetwork) Len() int {
@@ -50,10 +45,6 @@ func (ipa *IpAddr) getAsIpnet() net.IPNet {
 
 func (ipa *IpAddr) ipAsString() string {
     return ipa.Ip.String()
-}
-
-func (ipa *IpAddr) maskAsString() string {
-    return ipa.Mask.String()
 }
 
 func (ipa *IpAddr) maskAsIPMask() net.IPMask {

@@ -11,6 +11,12 @@ bin/havenet: src/*.go
 clean:
 	-@rm -f bin/*
 
+test-all:
+	make test-version
+	make test-help
+	make test-standard
+	make test-monochrome
+
 test-standard: bin/havenet
 	bin/havenet
 	bin/havenet -6
