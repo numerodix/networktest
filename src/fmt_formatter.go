@@ -76,17 +76,6 @@ func (ft *Formatter) formatIpField(ip net.IP) string {
     return ipFmt
 }
 
-func (ft *Formatter) formatIp6Field(ip net.IP) string {
-    var ipFmt = ft.colorBrush.green(fmt.Sprintf("%39s", ip))
-    return ipFmt
-}
-
-func (ft *Formatter) formatMask6Field(mask net.IPMask) string {
-    var ones, _ = mask.Size()
-    var subnetFmt = ft.colorBrush.cyan(fmt.Sprintf("/ %3d", ones))
-    return subnetFmt
-}
-
 func (ft *Formatter) formatScope6Field(scope string) string {
     var ipFmt = ft.colorBrush.yellow(fmt.Sprintf("[scope: %s]", scope))
     return ipFmt
