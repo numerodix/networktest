@@ -62,7 +62,8 @@ Downloading binaries
 ====================
 
 The easiest way to use ``networktest`` to is to download a `binary release
-<releases>`_ for one of the supported platforms.
+<https://github.com/numerodix/networktest/releases>`_ for one of the supported
+platforms.
 
 You will need to know whether you need the 32bit or the 64bit (probably)
 version.
