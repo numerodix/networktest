@@ -52,17 +52,47 @@ The questions we ask are:
 Supported platforms
 ===================
 
-``networktest`` is written in Go and targets Linux, FreeBSD, OS X, and Windows.
+``networktest`` is written in Go and targets Linux, FreeBSD, OS X (Darwin), and
+Windows.
 
+
+
+
+Downloading binaries
+====================
+
+The easiest way to use ``networktest`` to is to download a `binary release
+<releases>`_ for one of the supported platforms.
+
+You will need to know whether you need the 32bit or the 64bit (probably)
+version.
+
+
+
+
+Building from source
+====================
+
+Tools required to build from source:
+
+* go
+* git
+* python
+* make (optional)
+
+If you have make installed just use that::
+    
+    $ make
+
+If you don't (eg. Windows)::
+    
+    $ python build.py
 
 
 
 Usage
 =====
 
-To build::
-    
-    $ make
 
 To detect IPv4 networking::
 
