@@ -19,8 +19,6 @@ test_script:
 - cmd: >-
     bin\havenet.exe -V
 
-    bin\havenet.exe -h
-
     bin\havenet.exe
 
     bin\havenet.exe -6
