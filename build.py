@@ -92,9 +92,9 @@ class Builder(object):
         version = self.detect_version()
         self.set_version(version)
 
-        # If we're forcing or on Windows build here, otherwise let the makefile
-        # handle it
-        if force_build or os_is_windows():
+        # If we're forcing then build here, otherwise let the makefile handle
+        # it
+        if force_build:
             self.build()
 
 
@@ -102,9 +102,9 @@ if __name__ == '__main__':
     from optparse import OptionParser
 
     parser = OptionParser()
-    parser.add_option('', '--force', action='store_true',
-                      help='Always build using build.py')
+    parser.add_option('', '--build', action='store_true',
+                      help='Build using build.py (otherwise just set up the version)')
     (options, args) = parser.parse_args()
 
     builder = Builder()
-    builder.run(force_build=options.force)
+    builder.run(force_build=options.build)

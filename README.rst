@@ -81,7 +81,7 @@ If you have make installed just use that::
 
 If you don't (eg. Windows)::
     
-    $ python build.py
+    $ python build.py --build
 
 You can find the binary in ``bin/havenet``.
 

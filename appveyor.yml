@@ -13,7 +13,7 @@ build_script:
 
     go version
 
-    python build.py
+    python build.py --build
 
 test_script:
 - cmd: >-
