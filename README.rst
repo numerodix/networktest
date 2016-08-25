@@ -94,7 +94,7 @@ Usage
 =====
 
 
-To detect IPv4 networking::
+To detect IPv4 networking (working internet connection)::
 
     $ havenet
     Platform: Linux
@@ -123,7 +123,7 @@ To detect IPv4 networking::
              google.com  ping: 83.51 ms
               yahoo.com  ping: 174.4 ms
 
-To detect IPv6 networking::
+To detect IPv6 networking (no internet connection)::
 
     $ havenet -6
      + Scanning for networks...
