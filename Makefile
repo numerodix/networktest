@@ -37,22 +37,23 @@ unittest: bin/havenet
 
 all-archs:
 	-@rm -f dist/*
-	# Darwin
-	GOOS=darwin GOARCH=386 make clean build
-	@mv bin/havenet dist/havenet-darwin32
+	# Darwin arm
+	# GOOS=darwin GOARCH=aarch64 make clean build
+	# @mv bin/havenet dist/havenet-darwin64-arm
+	# Darwin x86
 	GOOS=darwin GOARCH=amd64 make clean build
 	@mv bin/havenet dist/havenet-darwin64
-	# Freebsd
+	# Freebsd x86
 	GOOS=freebsd GOARCH=386 make clean build
 	@mv bin/havenet dist/havenet-freebsd32
 	GOOS=freebsd GOARCH=amd64 make clean build
 	@mv bin/havenet dist/havenet-freebsd64
-	# Linux
+	# Linux x86
 	GOOS=linux GOARCH=386 make clean build
 	@mv bin/havenet dist/havenet-linux32
 	GOOS=linux GOARCH=amd64 make clean build
 	@mv bin/havenet dist/havenet-linux64
-	# Windows
+	# Windows x86
 	GOOS=windows GOARCH=386 make clean build
 	@mv bin/havenet dist/havenet-win32.exe
 	GOOS=windows GOARCH=amd64 make clean build
